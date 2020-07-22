@@ -1,10 +1,14 @@
 <template>
-  <p class="control has-icons-left">
-    <input class="input" type="text" placeholder="Search">
-      <span class="icon is-small is-left">
-          <i class="fas fa-lock"></i>
-      </span>
-  </p>
+  <div class="field has-addons">
+  <div class="control is-expanded">
+    <input class="input" type="text" placeholder="Find a repository">
+  </div>
+  <div class="control">
+    <a class="button is-info">
+      Search
+    </a>
+  </div>
+</div>
 </template>
 
 <script>
