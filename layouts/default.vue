@@ -1,7 +1,8 @@
 <template>
   <div>
-    <Nuxt />
+    <SearchBar></SearchBar>
   </div>
+
 </template>
 
 <style>
