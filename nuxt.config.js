@@ -29,6 +29,7 @@ export default {
   ** Global CSS
   */
   css: [
+    {src: '~/assets/main.scss', lang: 'sass'}
   ],
   /*
   ** Plugins to load before mounting the App
@@ -50,8 +51,6 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://github.com/nuxt-community/modules/tree/master/packages/bulma
-    '@nuxtjs/bulma',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     'nuxt-fontawesome',
