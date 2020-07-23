@@ -36,6 +36,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    '~/plugins/jsonld',
+    '~/plugins/vue_number_animation'
   ],
   /*
   ** Auto import components
