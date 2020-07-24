@@ -42,15 +42,37 @@
       <div class="hero-foot">
         <div class="columns is-primary">
           <div class="column has-text-centered">
-            <div class="has-text-white is-size-1">91,016,667</div>
+<!--            <div class="has-text-white is-size-1">91,016,667</div>-->
+            <number
+              class="has-text-white is-size-1"
+              ref="author_count"
+              :from="0"
+              :to="91016667"
+              :duration="1.5"
+              :format="formatNumber"
+            />
             <div class="has-text-white is-size-3">Tác Giả</div>
           </div>
           <div class="column has-text-centered">
-            <div class="has-text-white is-size-1">188,942,513</div>
+            <number
+              class="has-text-white is-size-1"
+              ref="doc_count"
+              :from="0"
+              :to="188942513"
+              :format="formatNumber"
+              :duration="1.5"
+            />
             <div class="has-text-white is-size-3">Văn Bản</div>
           </div>
           <div class="column has-text-centered">
-            <div class="has-text-white is-size-1">720,885</div>
+            <number
+              class="has-text-white is-size-1"
+              ref="field_count"
+              :from="0"
+              :to="720885"
+              :format="formatNumber"
+              :duration="1.5"
+            />
             <div class="has-text-white is-size-3">Lĩnh Vực</div>
           </div>
         </div>
@@ -63,6 +85,8 @@
 <script>
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
+import {formatNumber} from "../assets/utils";
+
 export default {
   components: {BackgroundEffect, SearchBar},
   layout: 'home_layout',
@@ -74,15 +98,13 @@ export default {
           hid: 'info',
           name: 'info',
           content: 'Hệ thống tra cứu văn bản học thuật cập nhật nhất'
-        },
+        }
       ]
     }
   },
-  data() {
-    return {
-      total_authors: 91016667,
-      total_documents: 188942513,
-      total_fields: 720885,
+  methods: {
+    formatNumber(number) {
+      return formatNumber(number)
     }
   }
 }

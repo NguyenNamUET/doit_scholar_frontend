@@ -37,7 +37,7 @@ export default {
   */
   plugins: [
     '~/plugins/jsonld',
-    '~/plugins/vue_number_animation'
+    {src: '~/plugins/vue_number_animation', ssr: false},
   ],
   /*
   ** Auto import components
