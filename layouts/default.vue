@@ -4,7 +4,7 @@
       <nav class="navbar columns is-vcentered" role="navigation" aria-label="main navigation">
         <div class="navbar-brand column is-2" style="display: flex">
           <a class="navbar-item header-icon" href="/">
-            <img src="logo.png">
+            <img src="~/static/logo.png">
           </a>
 
           <div role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"

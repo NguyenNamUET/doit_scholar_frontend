@@ -2,7 +2,12 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child">
-        <nuxt-link class="is-size-4" to="/">{{this.search_result.title}}</nuxt-link>
+        <nuxt-link
+          class="is-size-4"
+          :to="'/paper/' + formatTitle(this.search_result.title) + '-' + this.search_result.id"
+        >
+          {{this.search_result.title}}
+        </nuxt-link>
         <div class="has-text-weight-light is-size-6">
           <a v-for="author in this.search_result.authors">{{author}}, </a>
           |
@@ -37,10 +42,17 @@
 
 <script>
     import CitationBar from "./CitationBar";
+    import {formatTitle} from "../../assets/utils";
+
     export default {
       name: "SearchResult",
       components: {CitationBar},
-      props: ['search_result']
+      props: ['search_result'],
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
 </script>
 

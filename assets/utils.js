@@ -37,8 +37,12 @@ const publication_type = [
   'Phân tích siêu dữ liệu'
 ]
 
+function formatTitle(title) {
+  return title.replace(/\s/g, '-').replace(/\//g, '-')
+}
 export {
   formatNumber,
   fields_type,
-  publication_type
+  publication_type,
+  formatTitle
 }

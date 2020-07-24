@@ -69,6 +69,11 @@
     export default {
       name: "search",
       components: {CitationBar, SearchResult, AuthorInfo, DropDown},
+      head() {
+        return {
+          title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
+        }
+      },
       data() {
         return {
           total_count: 100000,
@@ -93,6 +98,7 @@
           ],
           search_results: [
             {
+              id: '5f25bd23f91240d1fff357d0e2cf8b9923b31638',
               title: 'A content-based recommender system for computer science publications',
               authors: [
                 'Donghui Wang',
