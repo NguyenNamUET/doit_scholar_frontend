@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CitationBar :data="barChartData" :options="barChartOptions" :height="200"></CitationBar>
+    <CitationBar :chartdata="barChartData" :options="barChartOptions" :height="200"></CitationBar>
   </div>
 </template>
 

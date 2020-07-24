@@ -1,16 +1,11 @@
-<template>
-
-</template>
-
 <script>
   import { Bar } from 'vue-chartjs'
 
   export default {
-    name: "CitationBar",
     extends: Bar,
-    props: ['data', 'options'],
+    props: ['chartdata', 'options'],
     mounted () {
-      this.renderChart(this.data, this.options)
+      this.renderChart(this.chartdata, this.options)
     }
   }
 </script>

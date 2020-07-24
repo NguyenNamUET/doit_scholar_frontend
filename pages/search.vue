@@ -65,11 +65,11 @@
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
-    import CitationBar from "../components/search_page/CitationBar";
+
 
     export default {
       name: "search",
-      components: {CitationBar, SearchResult, AuthorInfo, DropDown},
+      components: {SearchResult, AuthorInfo, DropDown},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
