@@ -1,0 +1,9 @@
+/* Import Bulma Utilities */
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+
+/* Variable changes go here */
+$message-header-background-color: white;
+
+/* Import the rest of Bulma */
+@import '~bulma';
