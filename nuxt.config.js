@@ -38,6 +38,7 @@ export default {
   plugins: [
     '~/plugins/jsonld',
     {src: '~/plugins/vue_number_animation', ssr: false},
+    {src: '~/plugins/vue-chartjs.js', mode: 'client'}
   ],
   /*
   ** Auto import components

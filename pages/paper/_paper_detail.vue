@@ -94,8 +94,8 @@
 
       <div class="tile is-parent">
         <div class="tile is-child is-8">
-          <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-item">
+          <div class="columns">
+            <div class="column">
               <div class="select">
                 <select>
                   <option>Tất cả loại trích dẫn</option>
@@ -106,7 +106,7 @@
               </div>
             </div>
 
-            <div class="navbar-item">
+            <div class="column">
               <div class="select">
                 <select>
                   <option>Sắp xếp theo độ liên quan</option>
@@ -115,12 +115,12 @@
                 </select>
               </div>
             </div>
-          </nav>
+          </div>
 
           <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.citations.length}} trích dẫn</p>
 
           <div
-            id="citation_content"
+            class="citation_content"
             v-for="citation in this.paper_detail.citations">
             <nuxt-link
               :to="'/paper/' + formatTitle(citation.title) + '-' + citation.paperId"
@@ -160,8 +160,8 @@
 
       <div class="tile is-parent">
         <div class="tile is-child is-8">
-          <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-item">
+          <div class="columns">
+            <div class="column">
               <div class="select">
                 <select>
                   <option>Tất cả loại trích dẫn</option>
@@ -172,7 +172,7 @@
               </div>
             </div>
 
-            <div class="navbar-item">
+            <div class="column">
               <div class="select">
                 <select>
                   <option>Sắp xếp theo độ liên quan</option>
@@ -181,12 +181,12 @@
                 </select>
               </div>
             </div>
-          </nav>
+          </div>
 
           <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.references.length}} tham chiếu</p>
 
           <div
-            id="citation_content"
+            class="citation_content"
             v-for="ref in this.paper_detail.references">
             <nuxt-link
               :to="'/paper/' + formatTitle(ref.title) + '-' + ref.paperId"
@@ -243,18 +243,21 @@
 
 <style scoped>
   .sticky{
+    background-color: #f7f8fb;
     overflow: hidden;
     position: sticky;
-    top: 2vh;
-    z-index: 10px;
+    top: 0;
   }
   .topic_list {
     display:inline-block;
     margin: 10px;
   }
-  #citation_content {
+  .citation_content {
     margin-bottom: 20px;
     padding: 5px;
     border-bottom: 1px solid;
+  }
+  .select {
+    z-index: -1;
   }
 </style>
