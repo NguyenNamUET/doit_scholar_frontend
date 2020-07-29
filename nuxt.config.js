@@ -37,7 +37,7 @@ export default {
   */
   plugins: [
     '~/plugins/jsonld',
-    {src: '~/plugins/vue_number_animation', ssr: false},
+    {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'}
   ],
   /*
@@ -56,7 +56,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    'nuxt-fontawesome',
+    'nuxt-fontawesome'
   ],
   /*
   ** Axios module configuration

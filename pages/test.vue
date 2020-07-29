@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CitationBar :chartdata="barChartData" :options="barChartOptions" :height="200"></CitationBar>
+    <CitationBar :data="barChartData" :options="barChartOptions" :height="200"></CitationBar>
   </div>
 </template>
 
@@ -19,8 +19,9 @@
 };
     export default {
       name: "test",
-      data() {
+      chart_data() {
         return {
+
           barChartData: {
             labels: ['Jan', 'Feb', 'Mar'],
             datasets: [

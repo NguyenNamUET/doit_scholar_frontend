@@ -1,15 +1,14 @@
 <template>
   <div class="container">
-
     <div class="tile is-ancestor" style="margin-top: 15px;">
       <div class="tile is-parent">
         <div class="tile is-child">
           <h1 class="is-size-3">
-            Tìm được {{total_count | formatNumber}} kết quả
+            Tìm được {{this.total_count | formatNumber}} kết quả
           </h1>
           <div id="sort_section">
-            <DropDown v-bind:msg="field_sort"/>
-            <DropDown v-bind:msg="publication_sort"/>
+            <DropDown v-bind:msg="this.field_sort"/>
+            <DropDown v-bind:msg="this.publication_sort"/>
           </div>
         </div>
       </div>
@@ -18,7 +17,7 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
         <div class="tile is-child">
-          <AuthorInfo v-for="author in author_info" v-bind:author_info="author"></AuthorInfo>
+          <AuthorInfo v-for="author in this.author_info" v-bind:author_info="author"></AuthorInfo>
         </div>
 
         <div class="tile is-child">
@@ -28,10 +27,9 @@
 
       <div class="tile is-parent is-4 is-vertical">
         <div class="tile is-child">
-          <article class="message is-dark">
+          <article class="message is-info">
             <div class="message-header">
               <p>Khoa Học Máy Tính</p>
-              <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">
               Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.
@@ -39,19 +37,25 @@
           </article>
         </div>
 
-        <div class="tile is-child box">
-          <p class="title">Các chủ đề liên quan</p>
-          <ul>
-            <li>
-              <a>Khoa học dữ liệu</a>
-            </li>
-            <li>
-              <a>Công nghệ thông tin</a>
-            </li>
-            <li>
-              <a>Trí tuệ nhân tạo</a>
-            </li>
-          </ul>
+        <div class="tile is-child">
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Các chủ đề liên quan</p>
+            </div>
+            <div class="message-body">
+              <ul>
+                <li>
+                  <a>Khoa học dữ liệu</a>
+                </li>
+                <li>
+                  <a>Công nghệ thông tin</a>
+                </li>
+                <li>
+                  <a>Trí tuệ nhân tạo</a>
+                </li>
+              </ul>
+            </div>
+          </article>
         </div>
       </div>
     </div>

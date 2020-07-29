@@ -14,7 +14,7 @@
 <script>
     export default {
       name: "SearchBar",
-      data() {
+      chart_data() {
         return {
           search_query: '',
         }

@@ -42,7 +42,6 @@
       <div class="hero-foot">
         <div class="columns is-primary">
           <div class="column has-text-centered">
-<!--            <div class="has-text-white is-size-1">91,016,667</div>-->
             <number
               class="has-text-white is-size-1"
               ref="author_count"
@@ -85,7 +84,7 @@
 <script>
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
-import {formatNumber} from "../assets/utils";
+import {formatNumber} from "assets/utils";
 
 export default {
   components: {BackgroundEffect, SearchBar},

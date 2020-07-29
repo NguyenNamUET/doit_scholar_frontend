@@ -40,9 +40,34 @@ const publication_type = [
 function formatTitle(title) {
   return title.replace(/\s/g, '-').replace(/\//g, '-')
 }
+
+const chartColors = {
+  red: 'rgb(255, 99, 132)',
+  orange: 'rgb(255, 159, 64)',
+  yellow: 'rgb(255, 205, 86)',
+  green: 'rgb(75, 192, 192)',
+  blue: 'rgb(54, 162, 235)',
+  purple: 'rgb(153, 102, 255)',
+  grey: 'rgb(201, 203, 207)'
+}
+
+function chart_prep(citations) {
+  let citation_count = {}
+  for (let i=0;i<citations.length;i++) {
+    if (isNaN(citation_count[citations[i].year])) {
+      citation_count[citations[i].year] = 1
+    }
+    else
+      citation_count[citations[i].year]++
+  }
+  return citation_count
+}
+
 export {
   formatNumber,
   fields_type,
   publication_type,
-  formatTitle
+  formatTitle,
+  chartColors,
+  chart_prep
 }

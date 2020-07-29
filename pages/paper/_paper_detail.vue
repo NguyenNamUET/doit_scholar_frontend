@@ -15,7 +15,12 @@
             {{this.paper_detail.title}}
           </h1>
           <div class="is-size-6 mb-4">
-            <a v-for="author in this.paper_detail.authors">{{author.name}}, </a>
+            <a
+              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+              v-for="author in this.paper_detail.authors"
+            >
+              {{author.name}},
+            </a>
             |
             <span>{{this.paper_detail.year}} </span>
             |
@@ -35,10 +40,20 @@
         </div>
       </div>
 
-      <div class="tile is-parent is-4">
-        <div class="tile is-child box">
-          <p class="is-size-5">{{this.paper_detail.citations.length}} trích dẫn từ văn bản khác</p>
-          <p>Ảnh hưởng lớn đến {{this.paper_detail.influentialCitationCount}} văn bản khác</p>
+      <div class="tile is-parent is-4 ">
+        <div class="tile is-child">
+          <article class="message is-info mt-6">
+            <div class="message-body">
+              <a
+                href="#citations"
+                class="is-size-5"
+              >
+                {{this.paper_detail.citations.length}} trích dẫn từ văn bản khác
+              </a>
+              <br>
+              <a href="#citations">Ảnh hưởng lớn đến {{this.paper_detail.influentialCitationCount}} văn bản khác</a>
+            </div>
+          </article>
         </div>
       </div>
     </div>
@@ -60,11 +75,12 @@
       </ul>
     </div>
 
-    <div id="topic" class="tile is-ancestor">
-      <div class="tile is-parent">
-        <div class="tile is-child">
-          <p class="title">Chủ đề được đề cập trong văn bản</p>
+    <div id="topic" class="navigate"></div>
 
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical">
+        <p class="title">Chủ đề được đề cập trong văn bản</p>
+        <div class="tile is-child box">
           <div>
             <ul>
               <li
@@ -84,7 +100,9 @@
       </div>
     </div>
 
-    <div id="citations" class="tile is-ancestor is-vertical">
+    <div id="citations" class="navigate"></div>
+
+    <div class="tile is-ancestor is-vertical">
       <div class="tile is-parent ">
         <div class="tile is-child">
           <p class="title">Trích dẫn</p>
@@ -93,27 +111,23 @@
       </div>
 
       <div class="tile is-parent">
-        <div class="tile is-child is-8">
-          <div class="columns">
-            <div class="column">
-              <div class="select">
-                <select>
-                  <option>Tất cả loại trích dẫn</option>
-                  <option>Trích dẫn kết quả</option>
-                  <option>Trích dẫn phương pháp</option>
-                  <option>Trích dẫn lý lịch</option>
-                </select>
-              </div>
+        <div class="tile is-child is-8 pr-5">
+          <div class="control">
+            <div class="select">
+              <select>
+                <option>Tất cả loại trích dẫn</option>
+                <option>Trích dẫn kết quả</option>
+                <option>Trích dẫn phương pháp</option>
+                <option>Trích dẫn lý lịch</option>
+              </select>
             </div>
 
-            <div class="column">
-              <div class="select">
-                <select>
-                  <option>Sắp xếp theo độ liên quan</option>
-                  <option>Sắp xếp theo ảnh hưởng</option>
-                  <option>Sắp xếp theo thời gian</option>
-                </select>
-              </div>
+            <div class="select">
+              <select>
+                <option>Sắp xếp theo độ liên quan</option>
+                <option>Sắp xếp theo ảnh hưởng</option>
+                <option>Sắp xếp theo thời gian</option>
+              </select>
             </div>
           </div>
 
@@ -139,18 +153,31 @@
         </div>
 
         <div class="tile is-child is-4">
-          <div>
-            <p class="subtitle">Lọc trích dẫn theo năm</p>
-
-          </div>
-          <div>
-            <p class="subtitle">Tình trạng về trích dẫn</p>
-          </div>
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Số trích dẫn theo năm</p>
+            </div>
+            <div class="message-body">
+             <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>
+            </div>
+          </article>
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Tình trạng về trích dẫn</p>
+            </div>
+            <div class="message-body">
+              <p>
+                Trung bình được trích dẫn {{this.paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
+              </p>
+            </div>
+          </article>
         </div>
       </div>
     </div>
 
-    <div id="reference" class="tile is-ancestor is-vertical">
+    <div id="references" class="navigate"></div>
+
+    <div class="tile is-ancestor is-vertical">
       <div class="tile is-parent ">
         <div class="tile is-child">
           <p class="title">Tham chiếu</p>
@@ -159,27 +186,23 @@
       </div>
 
       <div class="tile is-parent">
-        <div class="tile is-child is-8">
-          <div class="columns">
-            <div class="column">
-              <div class="select">
-                <select>
-                  <option>Tất cả loại trích dẫn</option>
-                  <option>Trích dẫn kết quả</option>
-                  <option>Trích dẫn phương pháp</option>
-                  <option>Trích dẫn lý lịch</option>
-                </select>
-              </div>
+        <div class="tile is-child is-8 pr-5">
+          <div class="control">
+            <div class="select">
+              <select>
+                <option>Tất cả loại trích dẫn</option>
+                <option>Trích dẫn kết quả</option>
+                <option>Trích dẫn phương pháp</option>
+                <option>Trích dẫn lý lịch</option>
+              </select>
             </div>
 
-            <div class="column">
-              <div class="select">
-                <select>
-                  <option>Sắp xếp theo độ liên quan</option>
-                  <option>Sắp xếp theo ảnh hưởng</option>
-                  <option>Sắp xếp theo thời gian</option>
-                </select>
-              </div>
+            <div class="select">
+              <select>
+                <option>Sắp xếp theo độ liên quan</option>
+                <option>Sắp xếp theo ảnh hưởng</option>
+                <option>Sắp xếp theo thời gian</option>
+              </select>
             </div>
           </div>
 
@@ -210,9 +233,13 @@
 
 <script>
     import {formatTitle} from "../../assets/utils";
+    import CitationBar from "../../components/search_page/CitationBar";
+    import {chart_prep} from "../../assets/utils";
+    import {chartColors} from "../../assets/utils";
 
     export default {
       name: "_paper_detail",
+      components: {CitationBar},
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar'
@@ -220,8 +247,11 @@
       },
       data() {
         return {
+          chartColors: chartColors,
           paper_id: null,
           paper_detail: null,
+          chart_labels: null,
+          chart_data: null,
         }
       },
       methods: {
@@ -233,7 +263,10 @@
         let id_pattern = /[0-9a-z]+$/g
         let paper_id = id_pattern.exec(route.params.paper_detail)
         let data = await $axios.$get('https://api.semanticscholar.org/v1/paper/' + paper_id[0])
+        let data_dict = chart_prep(data.citations)
         return {
+          chart_labels: Object.keys(data_dict),
+          chart_data: Object.values(data_dict),
           paper_id: paper_id[0],
           paper_detail: data
         }
@@ -242,11 +275,15 @@
 </script>
 
 <style scoped>
+  .tile.is-child.box {
+    background-color: #f7f8fb;
+  }
   .sticky{
     background-color: #f7f8fb;
     overflow: hidden;
     position: sticky;
     top: 0;
+    z-index: 1000;
   }
   .topic_list {
     display:inline-block;
@@ -257,7 +294,7 @@
     padding: 5px;
     border-bottom: 1px solid;
   }
-  .select {
-    z-index: -1;
+  .navigate {
+    height:8vh;
   }
 </style>

@@ -53,7 +53,7 @@
   import SearchBar from "../components/SearchBar";
   export default {
     components: {SearchBar},
-    data() {
+    chart_data() {
       return {
       }
     }
