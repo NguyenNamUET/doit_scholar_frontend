@@ -1,4 +1,4 @@
-const SEARCH_API = 'https://localhost:8000'
+const SEARCH_API = 'http://localhost:8000'
 
 const SEARCH_DOCUMENTS = {
   paper_detail: SEARCH_API + '/s2api/papers',

@@ -132,7 +132,6 @@
         }
       },
       async asyncData({query, store}) {
-        console.log('search page receive query', query)
         await store.dispatch('search_result/paper_by_title', query)
         return {
           query_params: query,
