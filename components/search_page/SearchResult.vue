@@ -4,19 +4,19 @@
       <div class="tile is-child">
         <nuxt-link
           class="is-size-4"
-          :to="'/paper/' + formatTitle(this.search_result.title) + '-' + this.search_result.id"
+          :to="'/paper/' + formatTitle(this.search_result._source.title) + '-' + this.search_result.id"
         >
-          {{this.search_result.title}}
+          {{this.search_result._source.title}}
         </nuxt-link>
         <div class="has-text-weight-light is-size-6">
-          <a v-for="author in this.search_result.authors">{{author}}, </a>
+          <a v-for="author in this.search_result._source.authors">{{author.name}}, </a>
           |
-          <span v-for="topic in this.search_result.topics">{{topic}}, </span>
+          <span v-for="topic in this.search_result._source.topics">{{topic.topic}}, </span>
           |
-          <span v-for="publication in this.search_result.publications">{{publication}}, </span>
+          <span v-for="field in this.search_result._source.fieldsOfStudy">{{field}}, </span>
         </div>
         <p>
-          {{this.search_result.intro}}
+          {{this.search_result._source.abstract}}
         </p>
         <nav class="level is-mobile">
           <div class="level-left is-small has-text-weight-light ">

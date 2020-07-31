@@ -29,11 +29,11 @@
       methods: {
         submitQuery() {
           this.query_params = {
-            query: this.search_query,
-            start: '0',
-            size: '10',
+            searchContent: this.search_query,
+            start: 0,
+            size: 10,
             return_top_author: true,
-            top_author_size: '10'
+            top_author_size: 10
           }
           this.$router.push({name:'search',
             query: this.query_params
