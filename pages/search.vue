@@ -135,9 +135,9 @@
         await store.dispatch('search_result/paper_by_title', query)
         return {
           query_params: query,
-          current_page: parseInt(query['page']),
+          current_page: parseInt(query['start']),
           search_results: store.state.search_result.search_results,
-          keyword: query['query'],
+          keyword: query['searchContent'],
           total_count: store.state.search_result.total
         }
       }

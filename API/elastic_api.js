@@ -37,16 +37,16 @@ const all_field = async () => {
 
 const paper_by_title = async (query_params) => {
   try {
-    console.log('api', query_params)
-    const {result} = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
-      searchContent: query_params['query'],
-      start: query_params['start'],
-      size: query_params['size'],
-      return_top_author: query_params['return_top_author'],
-      top_author_size: query_params['top_author_size']
+    console.log("query_params: "+query_params.searchContent+" "+query_params.start+" "+query_params.size+" "+query_params.top_author_size+query_params.return_top_author+" ")
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
+      searchContent: query_params.searchContent,
+      start: query_params.start,
+      size: query_params.size,
+      return_top_author: query_params.return_top_author,
+      top_author_size: query_params.top_author_size
     })
-    console.log('api', result)
-    return result
+    console.log("paper_by_title:", result)
+    return result.data
   } catch(e) {
     console.log(e)
     return null
