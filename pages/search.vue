@@ -73,6 +73,7 @@
 
     export default {
       name: "search",
+      watchQuery: true,
       components: {SearchResult, AuthorInfo, DropDown},
       head() {
         return {
@@ -84,6 +85,7 @@
           total_count: 100000,
           field_sort: fields_type,
           publication_sort: publication_type,
+          query_params: null,
           author_info: [
             {
               name: 'Nguyễn Nam',
@@ -127,6 +129,17 @@
       filters: {
         formatNumber(number) {
           return formatNumber(number)
+        }
+      },
+      async asyncData({query, store}) {
+        console.log('search page receive query', query)
+        await store.dispatch('search_result/paper_by_title', query)
+        return {
+          query_params: query,
+          current_page: parseInt(query['page']),
+          search_results: store.state.search_result.search_results,
+          keyword: query['query'],
+          total_count: store.state.search_result.total
         }
       }
     }
