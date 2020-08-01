@@ -83,47 +83,11 @@
       data() {
         return {
           total_count: 100000,
-          field_sort: fields_type,
+          field_sort: null,
           publication_sort: publication_type,
           query_params: null,
-          author_info: [
-            {
-              name: 'Nguyễn Nam',
-              publication: 15,
-              citation: 200,
-            },
-            {
-              name: 'Nguyễn Nam',
-              publication: 15,
-              citation: 200,
-            },
-            {
-              name: 'Nguyễn Nam',
-              publication: 15,
-              citation: 200,
-            },
-          ],
-          search_results: [
-            {
-              id: '5f25bd23f91240d1fff357d0e2cf8b9923b31638',
-              title: 'A content-based recommender system for computer science publications',
-              authors: [
-                'Donghui Wang',
-                'Yanchun Liang',
-                'Dong Xu',
-                'Xiaoyue Feng',
-                'Renchu Guan'
-              ],
-              topics: [
-                'Computer Science',
-                'Knowl. Based Syst'
-              ],
-              publications: [
-                '2018 (First Publication: 1 October 2018)'
-              ],
-              intro: 'Abstract As computer science and information technology are making broad and deep impacts on our daily lives, more and more papers are being submitted to computer science journals and conferences. To help authors decide where they should submit their manuscripts, we present the Content-based Journals & Conferences Recommender System on computer science, as well as its web service at http://www.keaml.cn/prs/ . This system recommends suitable journals or conferences with a priority order based on the abstract of a manuscript. To follow the fast development of computer science and technology, a web crawler is employed to continuously update the training set and the learning model. To achieve interactive online response, we propose an efficient hybrid model based on chi-square feature selection and softmax regression. Our test results show that, the system can achieve an accuracy of 61.37% and suggest the best journals or conferences in about 5? s on average.'
-            }
-          ]
+          author_info: null,
+          search_results: null,
         }
       },
       filters: {
@@ -133,12 +97,15 @@
       },
       async asyncData({query, store}) {
         await store.dispatch('search_result/paper_by_title', query)
+        console.log('page', store.state.search_result.aggregation.author_count.buckets)
         return {
           query_params: query,
           current_page: parseInt(query['start']),
           search_results: store.state.search_result.search_results,
           keyword: query['searchContent'],
-          total_count: store.state.search_result.total
+          total_count: store.state.search_result.total,
+          author_info: store.state.search_result.aggregation.author_count.buckets,
+          field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
         }
       }
     }

@@ -64,6 +64,7 @@
 <script>
     import {formatTitle} from "assets/utils";
     import Influence_graph from "@/components/influence_graph/influence_graph";
+    import {author_by_id} from "@/API/elastic_api";
 
     export default {
       name: "_author_detail",
@@ -88,7 +89,8 @@
       async asyncData({route, $axios}) {
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
-        let data = await $axios.$get('https://api.semanticscholar.org/v1/author/' + author_id[0])
+        let data = await author_by_id(author_id)
+        console.log(data)
         return {
           author_id: author_id,
           author_detail: data,

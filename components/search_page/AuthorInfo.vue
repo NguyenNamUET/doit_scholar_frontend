@@ -7,19 +7,27 @@
     </figure>
     <div class="media-content">
       <div class="content">
-          <a>
-            <strong>{{this.author_info.name}}</strong>
+          <a
+            :href="'/author/' + formatTitle(this.author_info.key) + '-' + this.author_info.authorId"
+          >
+            <strong>{{this.author_info.key}}</strong>
           </a>
-          <p>{{this.author_info.publication}} xuất bản | {{this.author_info.citation}} trích dẫn</p>
+          <p>{{this.author_info.doc_count}} xuất bản liên quan đến từ khóa</p>
       </div>
     </div>
   </article>
 </template>
 
 <script>
+    import {formatTitle} from 'assets/utils';
     export default {
       name: "AuthorInfo",
-      props: ['author_info']
+      props: ['author_info'],
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
 </script>
 

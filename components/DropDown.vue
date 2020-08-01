@@ -1,8 +1,11 @@
 <template>
   <div class="select">
     <select>
+      <option>
+        Tất cả
+      </option>
       <option v-for="item in this.msg">
-        {{item}}
+        {{item.key}} ({{item.doc_count}})
       </option>
     </select>
   </div>

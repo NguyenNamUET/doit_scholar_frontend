@@ -236,6 +236,7 @@
     import CitationBar from "../../components/search_page/CitationBar";
     import {chart_prep} from "../../assets/utils";
     import {chartColors} from "../../assets/utils";
+    import {paper_detail} from "@/API/elastic_api";
 
     export default {
       name: "_paper_detail",
@@ -262,7 +263,8 @@
       async asyncData({route, $axios}) {
         let id_pattern = /[0-9a-z]+$/g
         let paper_id = id_pattern.exec(route.params.paper_detail)
-        let data = await $axios.$get('https://api.semanticscholar.org/v1/paper/' + paper_id[0])
+        let data = await paper_detail(paper_id)
+        console.log('page', data)
         let data_dict = chart_prep(data.citations)
         return {
           chart_labels: Object.keys(data_dict),

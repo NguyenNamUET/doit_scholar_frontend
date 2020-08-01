@@ -29,13 +29,15 @@
 
 <script>
     import TimelineItem from "../../components/TimelineItem";
+    import {paper_by_topic} from "@/API/elastic_api";
     export default {
         name: "_topic_detail",
         components: {TimelineItem},
         data(){
           return{
             name: "Transformers",
-            papers:[{"name": "HuggingFace's Transformers: State-of-the-art Natural Language Processing",
+            papers:[
+              {"name": "HuggingFace's Transformers: State-of-the-art Natural Language Processing",
                     "description": "Transformers have a potential of learning longer-term dependency, " +
                       "but are limited by a fixed-length context in the setting of language modeling. " +
                       "We propose a novel neural architecture Transformer-XL that enables learning dependency beyond a fixed length without " +
@@ -64,6 +66,16 @@
                       "but are limited by a fixed-length context in the setting of language modeling. ",
                      "authors":["author_1","author_2","author_3","author_4","author_5"],
                      "year":2010}]
+          }
+        },
+        async asyncData({route}) {
+          let id_pattern = /[0-9]+$/g
+          let author_id = id_pattern.exec(route.params.topic_detail)
+          let data = await paper_by_topic(Array(author_id))
+          console.log(data)
+          return {
+            author_id: author_id,
+            author_detail: data,
           }
         }
     }
