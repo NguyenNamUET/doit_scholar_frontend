@@ -8,7 +8,7 @@
           </h1>
           <div id="sort_section">
             <DropDown v-bind:msg="this.field_sort"/>
-            <DropDown v-bind:msg="this.publication_sort"/>
+<!--            <DropDown v-bind:msg="this.publication_sort"/>-->
           </div>
         </div>
       </div>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="tile is-child">
-          <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
+          <SearchResult v-for="result in this.search_results" v-bind:search_result="result" v-bind:isExpand="false"></SearchResult>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
           query_params: query,
           current_page: parseInt(query['start']),
           search_results: store.state.search_result.search_results,
-          keyword: query['searchContent'],
+          keyword: query['search_content'],
           total_count: store.state.search_result.total,
           author_info: store.state.search_result.aggregation.author_count.buckets,
           field_sort: store.state.search_result.aggregation.fields_of_study.buckets,

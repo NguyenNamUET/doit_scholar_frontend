@@ -10,7 +10,7 @@
             </div>
             <div class="message-body">
               <span>Số văn bản đã xuất bản</span>
-              <span class="has-text-right">{{this.author_detail.papers.length}}</span>
+              <span class="has-text-right">{{this.author_detail.totalPapers}}</span>
               <br>
               <span>Số trích dẫn có ảnh hưởng lớn {{this.author_detail.influentialCitationCount}}</span>
             </div>
@@ -40,7 +40,7 @@
               <div
                 class="paper_content"
                 v-for="paper in this.author_detail.papers">
-                <nuxt-link
+                <nuxt-link class="is-size-6"
                   :to="'/paper/' + formatTitle(paper.title) + '-' + paper.paperId"
                 >
                   {{paper.title}}

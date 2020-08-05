@@ -20,11 +20,21 @@
           |
           <span v-for="field in this.search_result._source.fieldsOfStudy">{{field}}, </span>
         </div>
-        <p>
-          {{this.search_result._source.abstract}}
-        </p>
+        <div v-if="!this.search_result._source.abstract">
+          <p>No abstract information</p>
+        </div>
+        <div v-else class="is-size-6">
+          <p v-if="this.isExpanded">
+              {{this.abstract}}
+              <a @click="collapse()">Collapse</a>
+          </p>
+          <p v-else>
+              {{this.abstract}}
+              <a @click="expand()">...Expand</a>
+          </p>
+        </div>
         <nav class="level is-mobile">
-          <div class="level-left is-small has-text-weight-light ">
+          <div class="level-left is-small has-text-weight-light is-size-6">
             <a class="level-item">
               <span><i class="fas fa-reply"></i>Xem tại nguồn</span>
             </a>
@@ -52,10 +62,31 @@
     export default {
       name: "SearchResult",
       components: {CitationBar},
-      props: ['search_result'],
+      props: ['search_result', "isExpand"],
+      data(){
+        return{
+          abstract: ""
+        }
+      },
+      mounted(){
+        if(!this.search_result._source.abstract){
+          this.abstract = ""
+        }
+        else{
+          this.abstract = this.search_result._source.abstract.slice(0, this.search_result._source.abstract.length*0.2)
+        }
+      },
       methods: {
         formatTitle(title) {
           return formatTitle(title)
+        },
+        expand(){
+          this.abstract = this.search_result._source.abstract;
+          this.isExpanded = true
+        },
+        collapse(){
+          this.abstract = this.search_result._source.abstract.slice(0, this.search_result._source.abstract.length*0.2);
+          this.isExpanded = false
         }
       }
     }

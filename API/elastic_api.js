@@ -38,7 +38,7 @@ const all_field = async () => {
 const paper_by_title = async (query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
-      searchContent: query_params.query,
+      search_content: query_params.query,
       start: query_params.start,
       size: query_params.size,
       return_top_author: query_params.return_top_author,
@@ -81,8 +81,9 @@ const all_topics = async() => {
 const paper_by_topic = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_topic, {
-      topic: query_params.topics
+      topics: query_params.topics
     })
+    console.log("paper_by_topic api: ", result)
     return result.data
   } catch(e) {
     console.log(e)

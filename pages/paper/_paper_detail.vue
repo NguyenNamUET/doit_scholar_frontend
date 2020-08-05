@@ -9,7 +9,7 @@
               {{this.paper_detail.doi}}
             </a>
             |
-            ID văn bản: {{this.paper_detail.corpusId}}
+            ID văn bản: {{this.paper_detail.corpusID}}
           </p>
           <h1 class="title">
             {{this.paper_detail.title}}
@@ -28,7 +28,7 @@
             |
             <span>{{this.paper_detail.venue}}</span>
           </div>
-          <p class="subtitle">
+          <p class="subtitle is-size-6">
             {{this.paper_detail.abstract}}
           </p>
           <nav class="level is-mobile">
@@ -46,7 +46,7 @@
             <div class="message-body">
               <a
                 href="#citations"
-                class="is-size-5"
+                class="is-size-6"
               >
                 {{this.paper_detail.citations.length}} trích dẫn từ văn bản khác
               </a>

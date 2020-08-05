@@ -71,8 +71,9 @@
         async asyncData({route}) {
           let id_pattern = /[0-9]+$/g
           let author_id = id_pattern.exec(route.params.topic_detail)
+          console.log("author_id: ", route.params)
           let data = await paper_by_topic(Array(author_id))
-          console.log(data)
+          console.log("paper_by_topic:", data)
           return {
             author_id: author_id,
             author_detail: data,
