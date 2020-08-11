@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="page_container">
+  <div class="container">
     <div id="abstract" class="tile is-ancestor">
       <div class="tile is-parent is-8">
         <div class="is-child">
@@ -161,7 +161,7 @@
               >
                 <a
                   class="has-text-link"
-                  :href="'/topic/' + formatTitle(item.topic) + '/' + item.topicId "
+                  :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
                 >
                   {{item.topic}}
                 </a>
@@ -380,9 +380,6 @@
   @import "assets/general_styling.scss";
   .container {
     padding: 40px 20px;
-  }
-  .tile.is-child.box {
-    background-color: white;
   }
   .nav-onclick {
     background-color: antiquewhite;

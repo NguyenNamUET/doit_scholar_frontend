@@ -23,7 +23,7 @@
             v-if="!author_hidden"
             v-on:click="author_hidden = true"
           >
-            rút gọn
+            ...rút gọn
           </a>
 
           <a
@@ -57,7 +57,7 @@
             v-if="!topic_hidden"
             v-on:click="topic_hidden = true"
           >
-            rút gọn
+            ...rút gọn
           </a>
 
           <a
@@ -93,7 +93,7 @@
             v-if="!field_hidden"
             v-on:click="field_hidden = true"
           >
-            rút gọn
+            ...rút gọn
           </a>
 
           <span
@@ -113,11 +113,11 @@
         </div>
         <p v-if="!abstract_hidden" class="is-size-6">
           {{search_result._source.abstract}}
-          <a class="text-class-3" v-on:click="abstract_hidden = true">Ẩn bớt</a>
+          <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
         </p>
         <p v-else class="is-size-6">
 <!--          {{search_result._source.abstract.slice(0, search_result._source.abstract.length*0.4)}}-->
-          <a class="text-class-3" v-on:click="abstract_hidden = false">Xem thêm</a>
+          <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
         </p>
         <nav class="level is-mobile">
           <div class="level-left is-small has-text-weight-light ">
