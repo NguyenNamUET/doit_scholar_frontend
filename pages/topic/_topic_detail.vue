@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" id="page_container">
     <div class="tile is-ancestor is-vertical">
 
       <div class="tile is-parent is-8">

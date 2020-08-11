@@ -1,0 +1,36 @@
+a:hover {
+  text-decoration: underline;
+  color: #4e54c8;
+}
+
+.text-class-3 {
+  font-size: 0.8rem;
+}
+
+.text-class-2 {
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.text-class-1 {
+  font-size: 1.5rem;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+#body_container {
+  background-color: rgb(242, 247, 242);
+  margin-top: 5vh;
+}
+
+#layout_header {
+  border-bottom: 1px solid #d9dadb;
+  height: 60px;
+}
+
+.message-body {
+  background-color: white;
+}
+

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" id="page_container">
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child is-4 pr-5">
@@ -22,6 +22,7 @@
               <li v-bind:class="{'is-active' : current_tab === 'publication'}">
                 <a
                   @click="current_tab = 'publication'"
+                  style="text-decoration: none"
                 >
                   Tất cả xuất bản
                 </a>
@@ -29,6 +30,7 @@
               <li v-bind:class="{'is-active' : current_tab === 'influence'}">
                 <a
                   @click="current_tab = 'influence'"
+                  style="text-decoration: none"
                 >
                   Biểu đồ sức ảnh hưởng
                 </a>
@@ -37,19 +39,59 @@
           </div>
           <div class="tab-content">
             <div v-if="this.current_tab === 'publication'">
-              <div
-                class="paper_content"
-                v-for="paper in this.author_detail.papers">
-                <nuxt-link
-                  :to="'/paper/' + formatTitle(paper.title) + '-' + paper.paperId"
-                >
-                  {{paper.title}}
-                </nuxt-link>
+<!--              <div-->
+<!--                class="paper_content"-->
+<!--                v-for="paper in this.author_detail.papers">-->
+<!--                <nuxt-link-->
+<!--                  :to="'/paper/' + formatTitle(paper.title) + '-' + paper.corpusID"-->
+<!--                >-->
+<!--                  {{paper.title}}-->
+<!--                </nuxt-link>-->
 
-                <div class="ml-2 has-text-weight-light is-size-6">
-                  <span>{{paper.year}} </span>
-                </div>
-              </div>
+<!--                <div class="ml-2 has-text-weight-light is-size-6">-->
+<!--                  <span>{{paper.year}} </span>-->
+<!--                </div>-->
+<!--              </div>-->
+              <b-table
+                :data="author_detail.papers"
+                :hoverable="true"
+                :mobile-cards="true"
+                :default-sort-direction="'desc'"
+                style="box-shadow: 0 0 6px rgba(2,20,31,0.1);"
+              >
+
+                <template slot-scope="props">
+                  <b-table-column field="title" label="Tiêu đề" searchable>
+                    <nuxt-link
+                      :to="'/paper/' + formatTitle(props.row.title) + '-' + props.row.corpusID"
+                    >
+                      {{props.row.title}}
+                    </nuxt-link>
+                  </b-table-column>
+
+                  <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >
+                    <ul>
+                      <li v-for="author in props.row.authors">
+                        <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">
+                          {{author.name}}
+                        </a>
+                      </li>
+                    </ul>
+                  </b-table-column>
+
+                  <b-table-column field="year" label="Năm" numeric sortable >
+                    {{ props.row.year }}
+                  </b-table-column>
+                </template>
+
+                <template slot="empty">
+                  <section class="section">
+                    <div class="content has-text-grey has-text-centered">
+                      <p>Không có dữ liệu :(</p>
+                    </div>
+                  </section>
+                </template>
+              </b-table>
             </div>
             <div v-if="this.current_tab === 'influence'">
               <influence_graph></influence_graph>
@@ -65,10 +107,11 @@
     import {formatTitle} from "assets/utils";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import {author_by_id} from "@/API/elastic_api";
+    import PaperTable from "@/components/PaperTable";
 
     export default {
       name: "_author_detail",
-      components: {Influence_graph},
+      components: {PaperTable, Influence_graph},
       head() {
         return {
           title: this.author_detail.name + ' | DoIT Scholar'
@@ -100,5 +143,9 @@
 </script>
 
 <style scoped>
-
+  @import "assets/general_styling.scss";
+  .container {
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
 </style>

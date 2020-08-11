@@ -61,7 +61,8 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    'nuxt-fontawesome'
+    'nuxt-fontawesome',
+    'nuxt-buefy'
   ],
   /*
   ** Axios module configuration
