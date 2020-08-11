@@ -1,7 +1,7 @@
 
 export default {
   server: {
-    port: 3333,
+    port: 3400,
     host: '0.0.0.0',
   },
   /*
