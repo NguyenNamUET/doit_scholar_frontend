@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="page_container">
+  <div class="container">
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child is-4 pr-5">

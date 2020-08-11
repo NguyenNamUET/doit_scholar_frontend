@@ -8,10 +8,10 @@
             <span>{{author}}    </span>
           </div>
           <p v-if="isExpanded">
-            {{this.description}}<a @click="collapse()">Collapse</a>
+            {{this.description}}<a @click="collapse()">...Rút gọn</a>
           </p>
           <p v-else>
-            {{this.description}}<a @click="expand()">...Expand</a>
+            {{this.description}}<a @click="expand()">...Xem thêm</a>
           </p>
       </div>
     </div>
