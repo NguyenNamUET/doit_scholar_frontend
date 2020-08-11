@@ -5,14 +5,19 @@
         <div class="tile is-child is-4 pr-5">
           <article class="message is-info">
             <div class="message-header">
-              <p class="is-size-4">{{this.author_detail.name}}</p>
+              <p class="is-size-4">{{author_detail.name}}</p>
               <button class="button is-link is-rounded">Theo dõi</button>
             </div>
             <div class="message-body">
               <span>Số văn bản đã xuất bản</span>
-              <span class="has-text-right">{{this.author_detail.papers.length}}</span>
+              <span
+                class="has-text-right"
+                v-if="author_detail.papers.length !== undefined"
+              >
+                {{author_detail.papers.length}}
+              </span>
               <br>
-              <span>Số trích dẫn có ảnh hưởng lớn {{this.author_detail.influentialCitationCount}}</span>
+              <span>Số trích dẫn có ảnh hưởng lớn {{author_detail.influentialCitationCount}}</span>
             </div>
           </article>
         </div>
@@ -133,7 +138,6 @@
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
         let data = await author_by_id(author_id)
-        console.log(data)
         return {
           author_id: author_id,
           author_detail: data,

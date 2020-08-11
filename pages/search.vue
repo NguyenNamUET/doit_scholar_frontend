@@ -37,19 +37,28 @@
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
 
-          <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-            <a class="pagination-previous">Trang trước</a>
-            <a class="pagination-next">Trang sau</a>
-            <ul class="pagination-list">
-              <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
-              <li><span class="pagination-ellipsis">&hellip;</span></li>
-              <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-              <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
-              <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-              <li><span class="pagination-ellipsis">&hellip;</span></li>
-              <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-            </ul>
-          </nav>
+          <b-pagination
+            :total="total_count"
+            :current.sync="current_page"
+            :range-before="4"
+            :range-after="4"
+            :order="'is-centered'"
+            :per-page="per_page"
+            :icon-prev="'chevron-left'"
+            :icon-next="'chevron-right'"
+            aria-next-label="Next page"
+            aria-previous-label="Previous page"
+            aria-page-label="Page"
+            aria-current-label="Current page"
+          >
+            <b-pagination-button
+              slot-scope="props"
+              :page="props.page"
+              :id="`page${props.page.number}`"
+              >
+              <span v-on:click="handlePageChange(props.page.number)">{{props.page.number}}</span>
+            </b-pagination-button>
+          </b-pagination>
         </div>
       </div>
 
@@ -116,6 +125,8 @@
       },
       data() {
         return {
+          per_page: 10,
+          current_page: 1,
           total_count: 100000,
           field_sort: null,
           publication_sort: publication_type,
@@ -135,11 +146,20 @@
           return formatNumber(number)
         }
       },
+      methods: {
+        handlePageChange(page_num) {
+          let query_params = this.query_params
+          query_params.start = (page_num*this.per_page) - this.per_page
+          query_params.page = page_num
+          console.log(query_params)
+          this.$router.push({name: 'search', query: query_params})
+        }
+      },
       async asyncData({query, store}) {
         await store.dispatch('search_result/paper_by_title', query)
         return {
           query_params: query,
-          current_page: parseInt(query['start']),
+          current_page: parseInt(query['page']),
           search_results: store.state.search_result.search_results,
           keyword: query['searchContent'],
           total_count: store.state.search_result.total,

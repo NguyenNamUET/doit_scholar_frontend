@@ -348,19 +348,29 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
-
-        if (data.citations.length > 0)
-          data_dict = chart_prep(data.citations)
+        if (data !== null) {
+          if (data.citations.length > 0)
+            data_dict = chart_prep(data.citations)
           is_citation_empty = false
-        if (data.references.length > 0)
-          is_ref_empty = false
-        return {
-          is_citation_empty: is_citation_empty,
-          is_ref_empty: is_ref_empty,
-          chart_labels: Object.keys(data_dict),
-          chart_data: Object.values(data_dict),
-          paper_id: paper_id[0],
-          paper_detail: data
+          if (data.references.length > 0)
+            is_ref_empty = false
+          return {
+            is_citation_empty: is_citation_empty,
+            is_ref_empty: is_ref_empty,
+            chart_labels: Object.keys(data_dict),
+            chart_data: Object.values(data_dict),
+            paper_id: paper_id[0],
+            paper_detail: data
+          }
+        } else {
+          return {
+            is_citation_empty: is_citation_empty,
+            is_ref_empty: is_ref_empty,
+            chart_labels: {},
+            chart_data: {},
+            paper_id: paper_id[0],
+            paper_detail: {}
+          }
         }
       }
     }
