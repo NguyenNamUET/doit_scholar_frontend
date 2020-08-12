@@ -1,5 +1,5 @@
 <template>
-  <div class="background-effect" >
+  <div class="background-effect" :style="{height: background_height}">
     <ul class="circles">
       <li></li>
       <li></li>
@@ -17,16 +17,26 @@
 
 <script>
     export default {
-        name: "BackgroundEffect"
+      name: "BackgroundEffect",
+      props: ['content_height'],
+      data() {
+        return {
+          background_height: 0
+        }
+      },
+      mounted() {
+        this.background_height = this.$parent.$el.clientHeight
+        console.log(this.$parent.$el.clientHeight)
+      }
     }
 </script>
 
 <style scoped>
+
   .background-effect{
     background: #4e54c8;
     background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
     width: 100%;
-    height: 100vh;
   }
 
   .circles{

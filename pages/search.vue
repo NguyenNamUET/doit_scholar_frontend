@@ -1,14 +1,14 @@
 <template>
-  <div class="container">
-    <div class="tile is-ancestor" style="margin-top: 15px;">
+  <div class="container" id="page_container">
+    <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <h1 class="is-size-3">
-            Tìm được {{this.total_count | formatNumber}} kết quả
+          <h1 class="text-class-1">
+            <strong>Tìm được {{this.total_count | formatNumber}} kết quả</strong>
           </h1>
           <div id="sort_section">
             <DropDown v-bind:msg="this.field_sort"/>
-<!--            <DropDown v-bind:msg="this.publication_sort"/>-->
+            <DropDown v-bind:msg="this.publication_sort"/>
           </div>
         </div>
       </div>
@@ -16,31 +16,74 @@
 
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
-        <div class="tile is-child">
-          <AuthorInfo v-for="author in this.author_info" v-bind:author_info="author"></AuthorInfo>
+        <div class="tile is-child" v-if="author_hidden">
+          <AuthorInfo
+            v-for="author in author_info.slice(0,3)"
+            v-bind:author_info="author"
+          >
+          </AuthorInfo>
+          <a class="text-class-3" v-on:click="author_hidden = false">Xem thêm tác giả</a>
+        </div>
+
+        <div class="tile is-child" v-else>
+          <AuthorInfo
+            v-for="author in this.author_info"
+            v-bind:author_info="author"
+          >
+          </AuthorInfo>
+          <a class="text-class-3" v-on:click="author_hidden = true">Ẩn bớt tác giả</a>
         </div>
 
         <div class="tile is-child">
-          <SearchResult v-for="result in this.search_results" v-bind:search_result="result" v-bind:isExpand="false"></SearchResult>
+          <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
+
+          <b-pagination
+            :total="total_count"
+            :current.sync="current_page"
+            :range-before="4"
+            :range-after="4"
+            :order="'is-centered'"
+            :per-page="per_page"
+            :icon-prev="'chevron-left'"
+            :icon-next="'chevron-right'"
+            aria-next-label="Next page"
+            aria-previous-label="Previous page"
+            aria-page-label="Page"
+            aria-current-label="Current page"
+          >
+            <b-pagination-button
+              slot-scope="props"
+              :page="props.page"
+              :id="`page${props.page.number}`"
+              >
+              <span v-on:click="handlePageChange(props.page.number)">{{props.page.number}}</span>
+            </b-pagination-button>
+          </b-pagination>
         </div>
       </div>
 
       <div class="tile is-parent is-4 is-vertical">
         <div class="tile is-child">
           <article class="message is-info">
-            <div class="message-header">
-              <p>Khoa Học Máy Tính</p>
+            <div class="message-header clickable">
+              <nuxt-link :to="'/topic' + '/Computer-science'" class="text-class-2">{{topic.name}}</nuxt-link>
+              <i class="fas fa-chevron-right"></i>
             </div>
             <div class="message-body">
-              Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.
+              <div v-if="msg_hidden">
+                <p>{{topic.description}}</p>
+                <a class="text-class-3" v-on:click="msg_hidden = false">Ẩn bớt</a>
+              </div>
+
+              <div v-else>
+                <p>{{topic.description.slice(0, topic.description.length*0.4)}}</p>
+                <a class="text-class-3" v-on:click="msg_hidden = true">Xem thêm</a>
+              </div>
             </div>
           </article>
-        </div>
-
-        <div class="tile is-child">
           <article class="message is-info">
             <div class="message-header">
-              <p>Các chủ đề liên quan</p>
+              <span>Các chủ đề liên quan</span>
             </div>
             <div class="message-body">
               <ul>
@@ -82,12 +125,20 @@
       },
       data() {
         return {
+          per_page: 10,
+          current_page: 1,
           total_count: 100000,
           field_sort: null,
           publication_sort: publication_type,
           query_params: null,
           author_info: null,
           search_results: null,
+          author_hidden: true,
+          msg_hidden: false,
+          topic: {
+            name: 'Khoa Học Máy Tính',
+            description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
+          }
         }
       },
       filters: {
@@ -95,16 +146,24 @@
           return formatNumber(number)
         }
       },
+      methods: {
+        handlePageChange(page_num) {
+          let query_params = this.query_params
+          query_params.start = (page_num*this.per_page) - this.per_page
+          query_params.page = page_num
+          console.log(query_params)
+          this.$router.push({name: 'search', query: query_params})
+        }
+      },
       async asyncData({query, store}) {
         await store.dispatch('search_result/paper_by_title', query)
-        console.log('page', store.state.search_result.aggregation.author_count.buckets)
         return {
           query_params: query,
-          current_page: parseInt(query['start']),
+          current_page: parseInt(query['page']),
           search_results: store.state.search_result.search_results,
-          keyword: query['search_content'],
+          keyword: query['searchContent'],
           total_count: store.state.search_result.total,
-          author_info: store.state.search_result.aggregation.author_count.buckets,
+          author_info: store.state.search_result.aggregation.author_count.name.buckets,
           field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
         }
       }
@@ -112,12 +171,16 @@
 </script>
 
 <style scoped>
+  @import "assets/general_styling.scss";
   .container {
-    margin-bottom: 5px;
+    padding: 40px 20px;
   }
   #sort_section {
-    border-top: 1px solid;
-    padding: 5px;
-    border-bottom: 1px solid;
+    border-top: 1px solid #d9dadb;
+    padding: 10px;
+    border-bottom: 1px solid #d9dadb;
+  }
+  p {
+    color: black;
   }
 </style>

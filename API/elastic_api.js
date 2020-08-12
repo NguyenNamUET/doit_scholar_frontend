@@ -41,8 +41,9 @@ const paper_by_title = async (query_params) => {
       search_content: query_params.query,
       start: query_params.start,
       size: query_params.size,
-      return_top_author: query_params.return_top_author,
-      top_author_size: query_params.top_author_size
+      return_top_author: true,
+      top_author_size: 10,
+      return_fos_aggs: true,
     })
     return result.data
   } catch(e) {

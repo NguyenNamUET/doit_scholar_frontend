@@ -3,20 +3,16 @@
     <div class="tile is-ancestor is-vertical">
 
       <div class="tile is-parent is-8">
-        <div class="tile is-child ">
-          <article class="box">
+        <div class="tile is-child">
+          <h1 class="is-size-2">
             <b>{{this.name}}</b>
-          </article>
-        </div>
-
-        <div class="tile is-child ">
-          <article class="box">Topic</article>
+          </h1>
         </div>
       </div>
 
       <div class="tile is-parent is-vertical">
+        <h3 class="subtitle">Tổng hợp văn bản</h3>
         <div class="timeline">
-
           <div  v-for="item in this.papers">
             <TimelineItem v-bind:paper="item"></TimelineItem>
           </div>
@@ -83,5 +79,8 @@
 </script>
 
 <style scoped>
-
+  @import "assets/general_styling.scss";
+  .container {
+    padding: 40px 20px;
+  }
 </style>

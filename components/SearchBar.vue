@@ -33,7 +33,8 @@
             start: 0,
             size: 10,
             return_top_author: true,
-            top_author_size: 10
+            top_author_size: 10,
+            page: 1
           }
           this.$router.push({name:'search',
             query: this.query_params

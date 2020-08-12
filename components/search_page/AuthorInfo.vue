@@ -8,11 +8,11 @@
     <div class="media-content">
       <div class="content">
           <a
-            :href="'/author/' + formatTitle(this.author_info.key) + '-' + this.author_info.authorId"
+            :href="'/author/' + formatTitle(author_name) + '-' + author_id"
           >
-            <strong>{{this.author_info.key}}</strong>
+            <strong class="text-class-2">{{author_name}}</strong>
           </a>
-          <p>{{this.author_info.doc_count}} xuất bản liên quan đến từ khóa</p>
+          <p class="text-class-3">{{doc_count}} xuất bản liên quan đến từ khóa</p>
       </div>
     </div>
   </article>
@@ -23,6 +23,13 @@
     export default {
       name: "AuthorInfo",
       props: ['author_info'],
+      data() {
+        return {
+          author_id: this.author_info.key,
+          doc_count: this.author_info.doc_count,
+          author_name: this.author_info.name.buckets[0].key
+        }
+      },
       methods: {
         formatTitle(title) {
           return formatTitle(title)
@@ -32,5 +39,5 @@
 </script>
 
 <style scoped>
-
+  @import "assets/general_styling.scss";
 </style>
