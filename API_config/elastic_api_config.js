@@ -2,6 +2,7 @@ const SEARCH_API = 'http://localhost:8000'
 
 const SEARCH_DOCUMENTS = {
   paper_detail: SEARCH_API + '/s2api/papers',
+  all_author: SEARCH_API + '/s2api/authors/getAllAuthor',
   all_paper: SEARCH_API + '/s2api/papers/getAllpapers',
   all_field: SEARCH_API + '/s2api/papers/getAllFieldOfStudy',
   paper_by_title: SEARCH_API + '/s2api/papers/searchPaperTitle',

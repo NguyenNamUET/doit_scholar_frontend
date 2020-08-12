@@ -46,33 +46,33 @@
               class="has-text-white is-size-1"
               ref="author_count"
               :from="0"
-              :to="91016667"
+              :to=author_count
               :duration="1.5"
               :format="formatNumber"
             />
-            <div class="has-text-white is-size-3">Tác Giả</div>
+            <div class="has-text-white is-size-3">Tác Giả {{author_count}}</div>
           </div>
           <div class="column has-text-centered">
             <number
               class="has-text-white is-size-1"
               ref="doc_count"
               :from="0"
-              :to="188942513"
+              :to=paper_count
               :format="formatNumber"
               :duration="1.5"
             />
-            <div class="has-text-white is-size-3">Văn Bản</div>
+            <div class="has-text-white is-size-3">Văn Bản {{paper_count}}</div>
           </div>
           <div class="column has-text-centered">
             <number
               class="has-text-white is-size-1"
               ref="field_count"
               :from="0"
-              :to="720885"
+              :to=fos_count
               :format="formatNumber"
               :duration="1.5"
             />
-            <div class="has-text-white is-size-3">Lĩnh Vực</div>
+            <div class="has-text-white is-size-3">Lĩnh Vực {{fos_count}}</div>
           </div>
         </div>
       </div>
@@ -99,6 +99,10 @@
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
 import {formatNumber} from "assets/utils";
+import {all_author} from "@/API/elastic_api";
+import {all_paper} from "@/API/elastic_api";
+import {all_field} from "@/API/elastic_api";
+
 
 export default {
   components: {BackgroundEffect, SearchBar},
@@ -117,8 +121,19 @@ export default {
   },
   data() {
     return {
-      parent_height: 0,
+      parent_height: 0
     }
+  },
+  asyncData(){
+    Promise.all([all_author({start:0, size:0}),
+                       all_paper({start:0, size:0}),
+                       all_field({size:0})])
+      .then(results => {
+        console.log(results)
+      return {  author_count: results[0]["total"]["value"],
+                paper_count: results[1]["total"]["value"],
+                fos_count: results[2]["aggregations"]["fos_unique_count"]["value"]}
+      });
   },
   methods: {
     formatNumber(number) {
