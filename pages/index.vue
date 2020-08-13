@@ -124,8 +124,8 @@ export default {
       parent_height: 0
     }
   },
-  asyncData(){
-    Promise.all([all_author({start:0, size:0}),
+  async asyncData(){
+    await Promise.all([all_author({start:0, size:0}),
                        all_paper({start:0, size:0}),
                        all_field({size:0})])
       .then(results => {
