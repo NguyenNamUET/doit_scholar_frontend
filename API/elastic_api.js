@@ -13,13 +13,12 @@ const paper_detail = async (paper_id) => {
 
 const all_author = async (query_params) => {
   try {
-    const {result} = await axios.post(SEARCH_DOCUMENTS.all_author, {
+    const result = await axios.post(SEARCH_DOCUMENTS.all_author, {
         start: query_params.start,
         size: query_params.size,
       }
     )
-    console.log("authors", query_params.start, query_params.size, result)
-    return result
+    return result.data
   } catch(e) {
     console.log(e)
     return null
@@ -29,13 +28,12 @@ const all_author = async (query_params) => {
 
 const all_paper = async (query_params) => {
   try {
-    const {result} = await axios.post(SEARCH_DOCUMENTS.all_paper, {
-        start: query_params.start,
-        size: query_params.size,
+    const result = await axios.post(SEARCH_DOCUMENTS.all_paper, {
+        start: 0,
+        size: 0,
       }
     )
-    console.log("papers", query_params.start, query_params.size, result)
-    return result
+    return result.data
   } catch(e) {
     console.log(e)
     return null
@@ -44,11 +42,10 @@ const all_paper = async (query_params) => {
 
 const all_field = async (query_params) => {
   try {
-    const {result} = await axios.post(SEARCH_DOCUMENTS.all_field, {
+    const result = await axios.post(SEARCH_DOCUMENTS.all_field, {
       size: query_params.size
     })
-    console.log("fields", query_params.size, result)
-    return result
+    return result.data
   } catch(e) {
     console.log(e)
     return null

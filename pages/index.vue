@@ -50,7 +50,7 @@
               :duration="1.5"
               :format="formatNumber"
             />
-            <div class="has-text-white is-size-3">Tác Giả {{author_count}}</div>
+            <div class="has-text-white is-size-3">Tác Giả</div>
           </div>
           <div class="column has-text-centered">
             <number
@@ -61,7 +61,7 @@
               :format="formatNumber"
               :duration="1.5"
             />
-            <div class="has-text-white is-size-3">Văn Bản {{paper_count}}</div>
+            <div class="has-text-white is-size-3">Văn Bản</div>
           </div>
           <div class="column has-text-centered">
             <number
@@ -72,11 +72,10 @@
               :format="formatNumber"
               :duration="1.5"
             />
-            <div class="has-text-white is-size-3">Lĩnh Vực {{fos_count}}</div>
+            <div class="has-text-white is-size-3">Lĩnh Vực</div>
           </div>
         </div>
       </div>
-<!--      <BackgroundEffect :content_height="content_height"/>-->
     </section>
     <div class="background-effect">
       <ul class="circles">
@@ -99,10 +98,9 @@
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
 import {formatNumber} from "assets/utils";
-import {all_author} from "@/API/elastic_api";
-import {all_paper} from "@/API/elastic_api";
-import {all_field} from "@/API/elastic_api";
-
+import axios from "axios"
+import {SEARCH_DOCUMENTS} from "@/API_config/elastic_api_config";
+import {all_author, all_field, all_paper} from "@/API/elastic_api";
 
 export default {
   components: {BackgroundEffect, SearchBar},
@@ -121,19 +119,22 @@ export default {
   },
   data() {
     return {
-      parent_height: 0
+      parent_height: 0,
+      paper_count: 100000,
+      fos_count: 10000,
+      author_count: 0
     }
   },
-  asyncData(){
-    Promise.all([all_author({start:0, size:0}),
-                       all_paper({start:0, size:0}),
-                       all_field({size:0})])
-      .then(results => {
-        console.log(results)
-      return {  author_count: results[0]["total"]["value"],
-                paper_count: results[1]["total"]["value"],
-                fos_count: results[2]["aggregations"]["fos_unique_count"]["value"]}
-      });
+  async asyncData({query, store}) {
+    let author_count = await all_author({start:0, size:0})
+    let paper_count = await all_paper({start:0, size:0})
+    let fos_count = await all_field({size:0})
+    console.log(author_count)
+    return {
+      author_count: author_count.total.value,
+      paper_count: paper_count.total.value,
+      fos_count: fos_count.fos_unique_count.value
+    }
   },
   methods: {
     formatNumber(number) {
