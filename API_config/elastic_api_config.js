@@ -9,6 +9,8 @@ const SEARCH_DOCUMENTS = {
   paper_by_abstract: SEARCH_API + '/s2api/papers/searchPaperAbstract',
   all_topics: SEARCH_API + '/s2api/papers/getAllTopics',
   paper_by_topic: SEARCH_API + '/s2api/papers/searchPaperByTopics',
+  paper_by_title_and_fos: SEARCH_API + '/s2api/papers/searchPaperByTitleAndFOS',
+
   author_by_id: SEARCH_API + '/s2api/authors',
   author_by_name: SEARCH_API + '/s2api/authors/getAuthorByName'
 }

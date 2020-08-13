@@ -341,6 +341,7 @@
           return formatTitle(title)
         }
       },
+      //Try catch empty citations and references
       async asyncData({route, $axios}) {
         let id_pattern = /[0-9a-z]+$/g
         let paper_id = id_pattern.exec(route.params.paper_detail)

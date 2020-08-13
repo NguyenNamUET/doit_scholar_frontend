@@ -7,7 +7,7 @@
             <strong>Tìm được {{this.total_count | formatNumber}} kết quả</strong>
           </h1>
           <div id="sort_section">
-            <DropDown v-bind:msg="this.field_sort"/>
+            <DropDown v-bind:msg="this.field_sort" @update-fos-checked="updateFOSChecked"/>
 <!--            <DropDown v-bind:msg="this.publication_sort"/>-->
           </div>
         </div>
@@ -112,6 +112,7 @@
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
+    import {paper_by_fos_and_title} from "@/API/elastic_api";
 
 
     export default {
@@ -138,21 +139,14 @@
           topic: {
             name: 'Khoa Học Máy Tính',
             description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
-          }
+          },
+          //Nam added this for dropdown
+          checkedCategories: []
         }
       },
       filters: {
         formatNumber(number) {
           return formatNumber(number)
-        }
-      },
-      methods: {
-        handlePageChange(page_num) {
-          let query_params = this.query_params
-          query_params.start = (page_num*this.per_page) - this.per_page
-          query_params.page = page_num
-          console.log(query_params)
-          this.$router.push({name: 'search', query: query_params})
         }
       },
       async asyncData({query, store}) {
@@ -165,6 +159,36 @@
           total_count: store.state.search_result.total,
           author_info: store.state.search_result.aggregation.author_count.name.buckets,
           field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
+        }
+      },
+      methods: {
+        handlePageChange(page_num) {
+          let query_params = this.query_params
+          query_params.start = (page_num * this.per_page) - this.per_page
+          query_params.page = page_num
+          console.log(query_params)
+          this.$router.push({name: 'search', query: query_params})
+        },
+        //Nam added this for dropdown search
+        async updateFOSChecked(checkedCategories) {
+          this.checkedCategories = checkedCategories
+          let query_params = {search_content: this.$route.query.query,
+                              fields_of_study: checkedCategories,
+                              fos_is_should: true, //if True then search by OR rule, else then by AND rule
+                              return_fos_aggs: false,
+                              return_top_author: true,
+                              top_author_size: 10,
+                              start: 0,
+                              size: 10}
+          try{
+            const data = await paper_by_fos_and_title(query_params)
+            console.log(data.hits.hits)
+          }catch (e) {
+            console.log(e)
+          }
+          // let data = await paper_by_fos_and_title()
+          console.log(this.$route.query.query)
+          console.log("from paprent: ", this.checkedCategories)
         }
       }
     }
