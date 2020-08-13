@@ -113,7 +113,7 @@ const paper_by_topic = async(query_params) => {
 const paper_by_fos_and_title = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title_and_fos, {
-      search_content: query_params.search_content,
+      search_content: query_params.query,
       fields_of_study: query_params.fields_of_study,
       fos_is_should: query_params.fos_is_should,
       return_fos_aggs: query_params.return_fos_aggs,

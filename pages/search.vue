@@ -141,7 +141,8 @@
             description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
           },
           //Nam added this for dropdown
-          checkedCategories: []
+          checkedCategories: [],
+          query_params2: null
         }
       },
       filters: {
@@ -172,23 +173,28 @@
         //Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
           this.checkedCategories = checkedCategories
-          let query_params = {search_content: this.$route.query.query,
+          let query_params = {query: this.$route.query.query,
                               fields_of_study: checkedCategories,
                               fos_is_should: true, //if True then search by OR rule, else then by AND rule
-                              return_fos_aggs: false,
+                              return_fos_aggs: true,
                               return_top_author: true,
                               top_author_size: 10,
                               start: 0,
-                              size: 10}
-          try{
-            const data = await paper_by_fos_and_title(query_params)
-            console.log(data.hits.hits)
-          }catch (e) {
-            console.log(e)
-          }
-          // let data = await paper_by_fos_and_title()
-          console.log(this.$route.query.query)
-          console.log("from paprent: ", this.checkedCategories)
+                              size: 10,
+                              page: 1}
+
+          //Bug here
+          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
+          //
+          // this.current_page= parseInt(query_params['page']);
+          // this.search_results= this.$store.state.search_result.search_results;
+          // this.keyword= query_params['search_content'];
+          // this.total_count= this.$store.state.search_result.total;
+          // this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
+          // this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
+          //
+          // console.log(this.query_params)
+          // console.log(this.search_results)
         }
       }
     }

@@ -1,4 +1,4 @@
-import {paper_by_title} from "@/API/elastic_api";
+import {paper_by_fos_and_title, paper_by_title} from "@/API/elastic_api";
 import {paper_by_abstract} from "@/API/elastic_api";
 
 export const state = () => ({
@@ -35,5 +35,8 @@ export const actions = {
     let result = await paper_by_abstract(payload);
     context.commit('submit_search_result', result)
   },
-
+  async paper_by_fos_and_title(context, payload) {
+    let result = await paper_by_fos_and_title(payload);
+    context.commit('submit_search_result', result);
+  },
 };
