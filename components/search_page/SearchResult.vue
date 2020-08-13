@@ -47,7 +47,7 @@
             v-if="!topic_hidden"
             class="text-class-3"
             v-for="(topic, index) in search_result._source.topics"
-            :href="'/topic/' + formatTitle(topic.topic)"
+            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
           >
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>
@@ -64,7 +64,7 @@
             v-if="topic_hidden"
             class="text-class-3"
             v-for="(topic, index) in search_result._source.topics.slice(0,1)"
-            :href="'/topic/' + formatTitle(topic.topic)"
+            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
           >
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>

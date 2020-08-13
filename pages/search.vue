@@ -8,7 +8,7 @@
           </h1>
           <div id="sort_section">
             <DropDown v-bind:msg="this.field_sort"/>
-            <DropDown v-bind:msg="this.publication_sort"/>
+<!--            <DropDown v-bind:msg="this.publication_sort"/>-->
           </div>
         </div>
       </div>

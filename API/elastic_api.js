@@ -99,9 +99,10 @@ const all_topics = async() => {
 const paper_by_topic = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_topic, {
-      topics: query_params.topics
+      topics: query_params.topics,
+      source: query_params.source
     })
-    console.log("paper_by_topic api: ", result)
+    console.log("paper_by_topic api: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
