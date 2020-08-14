@@ -4,14 +4,14 @@
       <div class="tile is-child">
         <nuxt-link
           class="text-class-1"
-          :to="'/paper/' + formatTitle(search_result._source.title) + '-' + search_result._id"
+          :to="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
         >
           {{search_result._source.title}}
         </nuxt-link>
         <div class="has-text-weight-light is-size-6">
           <a
             v-if="!author_hidden"
-            class="text-class-3"
+            class="text-class-3 secondary_description"
             :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             v-for="(author, index) in search_result._source.authors"
           >
@@ -28,7 +28,7 @@
 
           <a
             v-if="author_hidden"
-            class="text-class-3"
+            class="text-class-3 secondary_description"
             :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             v-for="(author, index) in search_result._source.authors.slice(0,3)"
           >
@@ -45,9 +45,9 @@
           |
           <a
             v-if="!topic_hidden"
-            class="text-class-3"
+            class="text-class-3 secondary_description"
             v-for="(topic, index) in search_result._source.topics"
-            :href="'/topic/' + formatTitle(topic.topic)"
+            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
           >
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>
@@ -62,9 +62,9 @@
 
           <a
             v-if="topic_hidden"
-            class="text-class-3"
+            class="text-class-3 secondary_description"
             v-for="(topic, index) in search_result._source.topics.slice(0,1)"
-            :href="'/topic/' + formatTitle(topic.topic)"
+            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
           >
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>

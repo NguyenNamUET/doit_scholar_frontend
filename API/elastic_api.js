@@ -11,24 +11,41 @@ const paper_detail = async (paper_id) => {
   }
 }
 
-const all_paper = async (query_params) => {
+const all_author = async (query_params) => {
   try {
-    const {result} = await axios.post(SEARCH_DOCUMENTS.all_paper, {
+    const result = await axios.post(SEARCH_DOCUMENTS.all_author, {
         start: query_params.start,
         size: query_params.size,
       }
     )
-    return result
+    return result.data
   } catch(e) {
     console.log(e)
     return null
   }
 }
 
-const all_field = async () => {
+
+const all_paper = async (query_params) => {
   try {
-    const {result} = await axios.post(SEARCH_DOCUMENTS.all_paper)
-    return result
+    const result = await axios.post(SEARCH_DOCUMENTS.all_paper, {
+        start: 0,
+        size: 0,
+      }
+    )
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const all_field = async (query_params) => {
+  try {
+    const result = await axios.post(SEARCH_DOCUMENTS.all_field, {
+      size: query_params.size
+    })
+    return result.data
   } catch(e) {
     console.log(e)
     return null
@@ -82,8 +99,10 @@ const all_topics = async() => {
 const paper_by_topic = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_topic, {
-      topic: query_params.topics
+      topics: query_params.topics,
+      source: query_params.source
     })
+    console.log("paper_by_topic api: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -91,6 +110,27 @@ const paper_by_topic = async(query_params) => {
   }
 }
 
+const paper_by_fos_and_title = async(query_params) => {
+  try {
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title_and_fos, {
+      search_content: query_params.query,
+      fields_of_study: query_params.fields_of_study,
+      fos_is_should: query_params.fos_is_should,
+      return_fos_aggs: query_params.return_fos_aggs,
+      return_top_author: query_params.return_top_author,
+      top_author_size: query_params.top_author_size,
+      start: query_params.start,
+      size: query_params.size
+    })
+    console.log("paper_by_fos_and_title api: ", result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+/////////////////AUTHOR/////////////////////////////////
 const author_by_id = async (author_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id)
@@ -117,9 +157,14 @@ export {
   paper_by_abstract,
   paper_by_title,
   paper_by_topic,
+  paper_by_fos_and_title,
   paper_detail,
+
   all_topics,
   all_paper,
+  all_author,
+  all_field,
+
   author_by_id,
   author_by_name
 }

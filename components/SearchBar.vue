@@ -10,9 +10,9 @@
     >
   </div>
   <div class="control">
-    <a class="button is-primary" v-on:click="submitQuery">
+    <p class="button is-primary" v-on:click="submitQuery">
       Tìm kiếm
-    </a>
+    </p>
   </div>
 </div>
 </template>

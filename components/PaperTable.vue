@@ -4,13 +4,12 @@
     :hoverable="true"
     :mobile-cards="true"
     :default-sort-direction="'desc'"
-    style="box-shadow: 0 0 6px rgba(2,20,31,0.1);"
   >
 
     <template slot-scope="props">
       <b-table-column field="title" label="Tiêu đề" searchable>
         <nuxt-link
-          :to="'/paper/' + formatTitle(props.row.title) + '-' + props.row.corpusID"
+          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.corpusID"
         >
           {{props.row.title}}
         </nuxt-link>
@@ -26,12 +25,15 @@
         </ul>
       </b-table-column>
 
-      <b-table-column field="year" label="Năm" numeric sortable >
+      <b-table-column field="year" label="Năm" numeric sortable>
         {{ props.row.year }}
       </b-table-column>
 
       <b-table-column field="venue" label="Hội nghị" searchable>
-        2018 IEEE International Workshop on Signal Processing Systems (SiPS)
+        <span v-if="props.row.venue !== ''">{{props.row.venue}}</span>
+        <span v-else>
+          Chưa có thông tin
+        </span>
       </b-table-column>
 
       <!--              <b-table-column field="intent" label="Kiểu trích dẫn">-->

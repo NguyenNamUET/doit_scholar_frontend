@@ -47,7 +47,9 @@ export default {
   plugins: [
     '~/plugins/jsonld',
     {src: '~/plugins/vue_number_animation.js', ssr: false},
-    {src: '~/plugins/vue-chartjs.js', mode: 'client'}
+    {src: '~/plugins/vue-chartjs.js', mode: 'client'},
+    {src: '~/plugins/vuetimeline.js' },
+    {src: '~plugins/vue-infinite-scroll.js', ssr: false}
   ],
   /*
   ** Auto import components
@@ -68,6 +70,7 @@ export default {
     'nuxt-fontawesome',
     'nuxt-buefy'
   ],
+
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options

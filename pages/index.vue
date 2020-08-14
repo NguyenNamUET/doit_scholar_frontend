@@ -46,7 +46,7 @@
               class="has-text-white is-size-1"
               ref="author_count"
               :from="0"
-              :to="91016667"
+              :to=author_count
               :duration="1.5"
               :format="formatNumber"
             />
@@ -57,7 +57,7 @@
               class="has-text-white is-size-1"
               ref="doc_count"
               :from="0"
-              :to="188942513"
+              :to=paper_count
               :format="formatNumber"
               :duration="1.5"
             />
@@ -68,7 +68,7 @@
               class="has-text-white is-size-1"
               ref="field_count"
               :from="0"
-              :to="720885"
+              :to=fos_count
               :format="formatNumber"
               :duration="1.5"
             />
@@ -76,7 +76,6 @@
           </div>
         </div>
       </div>
-<!--      <BackgroundEffect :content_height="content_height"/>-->
     </section>
     <div class="background-effect">
       <ul class="circles">
@@ -99,6 +98,7 @@
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
 import {formatNumber} from "assets/utils";
+import {all_author, all_field, all_paper} from "@/API/elastic_api";
 
 export default {
   components: {BackgroundEffect, SearchBar},
@@ -117,7 +117,18 @@ export default {
   },
   data() {
     return {
-      parent_height: 0,
+      parent_height: 0
+    }
+  },
+  async asyncData({query, store}) {
+    let author_count = await all_author({start:0, size:0})
+    let paper_count = await all_paper({start:0, size:0})
+    let fos_count = await all_field({size:0})
+    console.log(author_count)
+    return {
+      author_count: author_count.total.value,
+      paper_count: paper_count.total.value,
+      fos_count: fos_count.fos_unique_count.value
     }
   },
   methods: {

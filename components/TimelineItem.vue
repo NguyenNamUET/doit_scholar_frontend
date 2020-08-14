@@ -2,50 +2,69 @@
     <div class="timeline-item is-primary">
       <div class="timeline-marker"></div>
       <div class="timeline-content">
-          <p class="title is-5">{{paper.year}}</p>
-          <h1 class="title">{{paper.name}}</h1>
-          <div v-for="author in paper.authors" class="author-timeline">
-            <span>{{author}}    </span>
+        <p class="title is-5">{{paper.year}}</p>
+        <div class="custom-timeline-conent">
+          <h1 class="text-class-1">
+              <a :href="'/paper/' + formatTitle(paper.title) + '.p' + '-' + paper.corpusID"
+              style="color: #1f6de2">
+                {{paper.title}}
+              </a>
+          </h1>
+          <div v-for="(author, index) in paper.authors" class="author-timeline">
+            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+            style="color: #8c9296" class="text-class-3">
+              {{author.name}}
+              <span v-if="index < paper.authors.length - 1">,</span>
+            </a>
           </div>
-          <p v-if="isExpanded">
-            {{this.description}}<a @click="collapse()">...Rút gọn</a>
-          </p>
-          <p v-else>
-            {{this.description}}<a @click="expand()">...Xem thêm</a>
-          </p>
+          <div v-if="paper.abstract !== null">
+            <p v-if="!abstract_hidden" class="is-size-6">
+              {{paper.abstract}}
+              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+            </p>
+            <p v-else class="is-size-6">
+              {{paper.abstract.slice(0, paper.abstract.length*0.2)}}
+              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
+
 </template>
 
 <script>
+    import {formatTitle} from "assets/utils";
+
     export default {
-        name: "TimelineItem",
-        data(){
-          return{
-            isExpanded: false,
-            description: this.paper.description.slice(0, this.paper.description.length*0.2)
-          }
-        },
-        props: {
-                paper: {
-                    type: Object
-                }
-        },
-        methods:{
-          collapse(){
-            this.description = this.paper.description.slice(0, this.paper.description.length*0.2);
-            this.isExpanded = false
-          },
-          expand(){
-            this.description = this.paper.description;
-            this.isExpanded = true
-          }
+      name: "TimelineItem",
+      data(){
+        return{
+          abstract_hidden: true,
+          abstract: this.paper.abstract
         }
+      },
+      props: {
+        paper: {
+          type: Object
+        }
+      },
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
 </script>
 
 <style scoped>
 .author-timeline{
   display:inline;
+}
+.custom-timeline-conent{
+    background-color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 0 6px rgba(2,20,31,0.1);
+    padding: 10px
 }
 </style>

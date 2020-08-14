@@ -68,7 +68,7 @@
                 <template slot-scope="props">
                   <b-table-column field="title" label="Tiêu đề" searchable>
                     <nuxt-link
-                      :to="'/paper/' + formatTitle(props.row.title) + '-' + props.row.corpusID"
+                      :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.corpusID"
                     >
                       {{props.row.title}}
                     </nuxt-link>
