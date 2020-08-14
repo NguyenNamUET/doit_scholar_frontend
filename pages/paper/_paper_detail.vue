@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.paper_detail" class="container" id="abstract">
+  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
     <div  class="tile is-ancestor" id="abstract_box">
       <div class="tile is-parent is-7">
         <div class="is-child">
@@ -242,14 +242,8 @@
     </div>
   </div>
 
-  <div v-else class="container">
-    <div class="tile is-ancestor">
-      <div class="tile is-parent">
-        <h1 class="text-class-1">
-          <strong>Khong tim thay van ban</strong>
-        </h1>
-      </div>
-    </div>
+  <div v-else>
+    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy văn bản'}"></NuxtError>
   </div>
 </template>
 
@@ -260,9 +254,11 @@
     import {chartColors} from "assets/utils";
     import {paper_detail} from "@/API/elastic_api";
     import PaperTable from "@/components/PaperTable";
+    import NuxtError from "@/components/ErrorPage";
+
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar},
+      components: {PaperTable, CitationBar, NuxtError},
       validate({route, redirect}) {
         if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
           return true
@@ -305,7 +301,7 @@
           this.scroll_position = window.scrollY
         },
         getComponentHeight() {
-          if(!this.paper_detail){
+          if(Object.keys(this.paper_detail).length !== 0){
             return [
             document.getElementById('abstract_box').offsetHeight,
             document.getElementById('topic_box').offsetHeight,
@@ -354,7 +350,7 @@
             chart_labels: {},
             chart_data: {},
             paper_id: paper_id[0],
-            paper_detail: null
+            paper_detail: {}
           }
         }
       }

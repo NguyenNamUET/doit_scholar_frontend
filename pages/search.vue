@@ -122,14 +122,8 @@
     </div>
   </div>
 
-  <div v-else class="container">
-    <div class="tile is-ancestor">
-      <div class="tile is-parent">
-        <h1 class="text-class-1">
-          <strong>Tìm được 0 kết quả</strong>
-        </h1>
-      </div>
-    </div>
+  <div v-else>
+    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></NuxtError>
   </div>
 
 </template>
@@ -141,13 +135,12 @@
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
-
-
+    import NuxtError from "@/components/ErrorPage";
 
     export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorInfo, DropDown},
+      components: {SearchResult, AuthorInfo, DropDown, NuxtError},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
