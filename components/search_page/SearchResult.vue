@@ -4,7 +4,7 @@
       <div class="tile is-child">
         <nuxt-link
           class="text-class-1"
-          :to="'/paper/' + formatTitle(search_result._source.title) + '-' + search_result._id"
+          :to="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
         >
           {{search_result._source.title}}
         </nuxt-link>

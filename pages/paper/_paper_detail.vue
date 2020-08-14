@@ -1,13 +1,16 @@
 <template>
-  <div class="container">
-    <div id="abstract" class="tile is-ancestor">
-      <div class="tile is-parent is-8">
+  <div class="container" id="abstract">
+    <div  class="tile is-ancestor">
+      <div class="tile is-parent is-7">
         <div class="is-child">
           <p class="is-size-6">
             DOI:
-            <a :href="'https://doi.org/' + this.paper_detail.doi">
-              {{this.paper_detail.doi}}
+            <a v-if="paper_detail.doi !== undefined" :href="'https://doi.org/' + paper_detail.doi">
+              {{paper_detail.doi}}
             </a>
+            <span v-else>
+              Chưa có thông tin
+            </span>
             |
             ID văn bản: {{this.paper_detail.corpusID}}
           </p>
@@ -95,30 +98,49 @@
               + {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
             </a>
           </div>
-          <p class="subtitle is-size-6">
-            {{this.paper_detail.abstract}}
+          <p v-if="!abstract_hidden" class="is-size-6">
+            {{paper_detail.abstract}}
+            <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
           </p>
-          <nav class="level is-mobile">
+          <p v-else class="is-size-6">
+                      {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+            <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+          </p>
+          <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
-              <button class="level-item button is-info">Xem tại nguồn</button>
-              <button class="level-item button are-small has-text-link">Doi.org</button>
+              <button class="level-item button is-info">Xem PDF</button>
+              <a
+                :href="'http://doi.org/' + paper_detail.doi"
+                class="level-item button are-small has-text-link"
+              >
+                Doi.org
+              </a>
             </div>
           </nav>
         </div>
       </div>
 
-      <div class="tile is-parent is-4 ">
-        <div class="tile is-child">
-          <article class="message is-info mt-6">
+      <div class="tile is-parent is-4">
+        <div class="is-child ">
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Số trích dẫn theo năm</p>
+            </div>
             <div class="message-body">
-              <a
-                href="#citations"
-                class="is-size-6"
-              >
-                {{this.paper_detail.citations.length}} trích dẫn từ văn bản khác
-              </a>
-              <br>
-              <a href="#citations">Ảnh hưởng lớn đến {{this.paper_detail.influentialCitationCount}} văn bản khác</a>
+              <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>
+            </div>
+          </article>
+          <article class="message is-info">
+            <div class="message-header">
+              <p>Tình trạng về trích dẫn</p>
+            </div>
+            <div class="message-body">
+              <p v-if="paper_detail.citationVelocity !== undefined" style="color: black;">
+                Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
+              </p>
+              <p v-else style="color: black;">
+                Chưa có thông tin
+              </p>
             </div>
           </article>
         </div>
@@ -129,20 +151,39 @@
       <ul>
         <li>
           <a
-            class="has-text-link"
+            class="nav-item"
             href="#abstract"
+            :class="{'in-view': scroll_position < 220}"
           >
             Tóm tắt
           </a>
         </li>
         <li>
-          <a class="has-text-link" href="#topic">Chủ đề</a>
+          <a
+            class="nav-item"
+            href="#topic"
+            :class="{'in-view': scroll_position > 750 && scroll_position < 1260}"
+          >
+            Chủ đề
+          </a>
         </li>
         <li>
-          <a class="has-text-link" href="#citations">{{this.paper_detail.citations.length}} trích dẫn</a>
+          <a
+            class="nav-item"
+            href="#citations"
+            :class="{'in-view': scroll_position > 1260 && scroll_position < 3440}"
+          >
+            {{this.paper_detail.citations.length}} trích dẫn
+          </a>
         </li>
         <li>
-          <a class="has-text-link" href="#references">{{this.paper_detail.references.length}} tham chiếu</a>
+          <a
+            class="nav-item"
+            href="#references"
+            :class="{'in-view': scroll_position > 3440}"
+          >
+            {{this.paper_detail.references.length}} tham chiếu
+          </a>
         </li>
       </ul>
     </div>
@@ -150,9 +191,9 @@
     <div id="topic" class="navigate"></div>
 
     <div class="tile is-ancestor">
-      <div class="tile is-parent is-vertical">
-        <p class="title">Chủ đề được đề cập trong văn bản</p>
-        <div class="tile is-child box" id="topic_box">
+      <div class="tile is-parent is-vertical ">
+        <div class="tile is-child content_box" id="topic_box">
+          <p class="title content_title">Chủ đề được đề cập trong văn bản</p>
           <div>
             <ul>
               <li
@@ -175,75 +216,12 @@
     <div id="citations" class="navigate"></div>
 
     <div class="tile is-ancestor is-vertical">
-      <div class="tile is-parent ">
-        <div class="tile is-child">
-          <p class="title">Trích dẫn</p>
-          <p class="subtitle">Các văn bản có nhắc tới văn bản này</p>
-        </div>
-      </div>
-
       <div class="tile is-parent">
-        <div class="tile is-child is-8 pr-5">
-<!--          <div class="control">-->
-<!--            <div class="select">-->
-<!--              <select>-->
-<!--                <option>Tất cả loại trích dẫn</option>-->
-<!--                <option>Trích dẫn kết quả</option>-->
-<!--                <option>Trích dẫn phương pháp</option>-->
-<!--                <option>Trích dẫn lý lịch</option>-->
-<!--              </select>-->
-<!--            </div>-->
-
-<!--            <div class="select">-->
-<!--              <select>-->
-<!--                <option>Sắp xếp theo độ liên quan</option>-->
-<!--                <option>Sắp xếp theo ảnh hưởng</option>-->
-<!--                <option>Sắp xếp theo thời gian</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--          </div>-->
-
+        <div class="tile is-child pr-5 content_box">
+          <p class="title">Trích dẫn</p>
+          <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
           <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.citations.length}} trích dẫn</p>
-
-<!--          <div-->
-<!--            class="citation_content"-->
-<!--            v-for="citation in this.paper_detail.citations">-->
-<!--            <nuxt-link-->
-<!--              :to="'/paper/' + formatTitle(citation.title) + '-' + citation.paperId"-->
-<!--            >-->
-<!--              {{citation.title}}-->
-<!--            </nuxt-link>-->
-
-<!--            <div class="ml-2 has-text-weight-light is-size-6">-->
-<!--              <a v-for="author in citation.authors"> {{author.name}}, </a>-->
-<!--              |-->
-<!--              <span>{{citation.year}} </span>-->
-<!--              |-->
-<!--              <span>{{citation.venue}}</span>-->
-<!--            </div>-->
-<!--          </div>-->
           <PaperTable v-bind:paper_data="paper_detail.citations" v-bind:is_empty="is_citation_empty"></PaperTable>
-        </div>
-
-        <div class="tile is-child is-4">
-          <article class="message is-info">
-            <div class="message-header">
-              <p>Số trích dẫn theo năm</p>
-            </div>
-            <div class="message-body">
-             <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>
-            </div>
-          </article>
-          <article class="message is-info">
-            <div class="message-header">
-              <p>Tình trạng về trích dẫn</p>
-            </div>
-            <div class="message-body">
-              <p>
-                Trung bình được trích dẫn {{this.paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
-              </p>
-            </div>
-          </article>
         </div>
       </div>
     </div>
@@ -251,58 +229,15 @@
     <div id="references" class="navigate"></div>
 
     <div class="tile is-ancestor is-vertical">
-      <div class="tile is-parent ">
-        <div class="tile is-child">
-          <p class="title">Tham chiếu</p>
-          <p class="subtitle">Các văn bản được nhắc tới trong văn bản này</p>
-        </div>
-      </div>
-
       <div class="tile is-parent">
-        <div class="tile is-child is-8 pr-5">
-<!--          <div class="control">-->
-<!--            <div class="select">-->
-<!--              <select>-->
-<!--                <option>Tất cả loại trích dẫn</option>-->
-<!--                <option>Trích dẫn kết quả</option>-->
-<!--                <option>Trích dẫn phương pháp</option>-->
-<!--                <option>Trích dẫn lý lịch</option>-->
-<!--              </select>-->
-<!--            </div>-->
-
-<!--            <div class="select">-->
-<!--              <select>-->
-<!--                <option>Sắp xếp theo độ liên quan</option>-->
-<!--                <option>Sắp xếp theo ảnh hưởng</option>-->
-<!--                <option>Sắp xếp theo thời gian</option>-->
-<!--              </select>-->
-<!--            </div>-->
-<!--          </div>-->
-
+        <div class="tile is-child content_box">
+          <p class="title">Tham chiếu</p>
+          <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
           <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.references.length}} tham chiếu</p>
-
           <PaperTable v-bind:paper_data="paper_detail.references" v-bind:is_empty="is_ref_empty"></PaperTable>
-<!--          <div-->
-<!--            class="citation_content"-->
-<!--            v-for="ref in this.paper_detail.references">-->
-<!--            <nuxt-link-->
-<!--              :to="'/paper/' + formatTitle(ref.title) + '-' + ref.paperId"-->
-<!--            >-->
-<!--              {{ref.title}}-->
-<!--            </nuxt-link>-->
-
-<!--            <div class="ml-2 has-text-weight-light is-size-6">-->
-<!--              <a v-for="author in ref.authors"> {{author.name}}, </a>-->
-<!--              |-->
-<!--              <span>{{ref.year}} </span>-->
-<!--              |-->
-<!--              <span>{{ref.venue}}</span>-->
-<!--            </div>-->
-<!--          </div>-->
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -313,10 +248,16 @@
     import {chartColors} from "assets/utils";
     import {paper_detail} from "@/API/elastic_api";
     import PaperTable from "@/components/PaperTable";
-
     export default {
       name: "_paper_detail",
       components: {PaperTable, CitationBar},
+      validate({route, redirect}) {
+        if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
+          return true
+        }
+        else
+          redirect('/')
+      },
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar'
@@ -324,6 +265,7 @@
       },
       data() {
         return {
+          scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
           chartColors: chartColors,
@@ -334,16 +276,24 @@
           author_hidden: true,
           field_hidden: true,
           navigate: '',
+          abstract_hidden: true,
+          currentPage:0,
+          pageCount: 0
         }
       },
       methods: {
         formatTitle(title) {
           return formatTitle(title)
+        },
+        updateScrollPosition() {
+          this.scroll_position = window.scrollY
         }
       },
+      mounted() {
+        window.addEventListener('scroll', this.updateScrollPosition);
+      },
       async asyncData({route, $axios}) {
-        let id_pattern = /[0-9a-z]+$/g
-        let paper_id = id_pattern.exec(route.params.paper_detail)
+        let paper_id = /[0-9]+$/g.exec(route.params.paper_detail)
         let data = await paper_detail(paper_id)
         let data_dict = {}
         let is_citation_empty = true
@@ -378,12 +328,24 @@
 
 <style scoped>
   @import "assets/general_styling.scss";
+  .content_title {
+    border-bottom: 1px solid #d9dadb;
+    padding-bottom: 5px;
+  }
+  .content_box {
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 6px rgba(2,20,31,0.1);
+  }
+  .nav-item:hover {
+    text-decoration: none;
+    color: #4e54c8;
+  }
   .container {
     padding: 40px 20px;
   }
-  .nav-onclick {
+  .in-view {
     background-color: antiquewhite;
-    text-decoration: underline;
   }
   .sticky-nav {
     background-color: rgb(242, 247, 242);
@@ -396,12 +358,7 @@
     display:inline-block;
     margin: 10px;
   }
-  .citation_content {
-    margin-bottom: 20px;
-    padding: 5px;
-    border-bottom: 1px solid;
-  }
   .navigate {
-    height:8vh;
+    height:16vh;
   }
 </style>

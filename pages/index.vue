@@ -98,8 +98,6 @@
 import SearchBar from "../components/SearchBar";
 import BackgroundEffect from "../components/BackgroundEffect";
 import {formatNumber} from "assets/utils";
-import axios from "axios"
-import {SEARCH_DOCUMENTS} from "@/API_config/elastic_api_config";
 import {all_author, all_field, all_paper} from "@/API/elastic_api";
 
 export default {
