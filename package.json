@@ -27,7 +27,6 @@
     "vue-number-animation": "^1.0.5",
     "vue-pdf": "^4.1.0",
     "vue-infinite-loading": "^2.4.5"
-
   },
   "devDependencies": {
     "@nuxt/types": "^2.13.3",

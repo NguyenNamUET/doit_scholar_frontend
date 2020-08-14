@@ -4,26 +4,29 @@
       <div class="timeline-content">
         <p class="title is-5">{{paper.year}}</p>
         <div class="custom-timeline-conent">
-          <h1 class="title">
-              <a :href="'/paper/' + formatTitle(paper.title) + '-' + paper.corpusID"
+          <h1 class="text-class-1">
+              <a :href="'/paper/' + formatTitle(paper.title) + '.p' + '-' + paper.corpusID"
               style="color: #1f6de2">
                 {{paper.title}}
               </a>
           </h1>
           <div v-for="(author, index) in paper.authors" class="author-timeline">
             <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-            style="color: #8c9296">
+            style="color: #8c9296" class="text-class-3">
               {{author.name}}
               <span v-if="index < paper.authors.length - 1">,</span>
             </a>
           </div>
-          <p v-if="!abstract_hidden" class="is-size-6">
-            {{paper.abstract}}
-            <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
-          </p>
-          <p v-else class="is-size-6">
-            <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
-          </p>
+          <div v-if="paper.abstract !== null">
+            <p v-if="!abstract_hidden" class="is-size-6">
+              {{paper.abstract}}
+              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+            </p>
+            <p v-else class="is-size-6">
+              {{paper.abstract.slice(0, paper.abstract.length*0.2)}}
+              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -34,23 +37,23 @@
     import {formatTitle} from "assets/utils";
 
     export default {
-        name: "TimelineItem",
-        data(){
-          return{
-            abstract_hidden: true,
-            abstract: this.paper.abstract
-          }
-        },
-        props: {
-                paper: {
-                    type: Object
-                }
-        },
-        methods: {
-          formatTitle(title) {
-            return formatTitle(title)
-          }
+      name: "TimelineItem",
+      data(){
+        return{
+          abstract_hidden: true,
+          abstract: this.paper.abstract
         }
+      },
+      props: {
+        paper: {
+          type: Object
+        }
+      },
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
 </script>
 

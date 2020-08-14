@@ -37,70 +37,86 @@
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
 
-          <b-pagination
-            :total="total_count"
-            :current.sync="current_page"
-            :range-before="4"
-            :range-after="4"
-            :order="'is-centered'"
-            :per-page="per_page"
-            :icon-prev="'chevron-left'"
-            :icon-next="'chevron-right'"
-            aria-next-label="Next page"
-            aria-previous-label="Previous page"
-            aria-page-label="Page"
-            aria-current-label="Current page"
-          >
-            <b-pagination-button
-              slot-scope="props"
-              :page="props.page"
-              :id="`page${props.page.number}`"
-              >
-              <span v-on:click="handlePageChange(props.page.number)">{{props.page.number}}</span>
-            </b-pagination-button>
-          </b-pagination>
+<!--          <b-pagination-->
+<!--            :total="total_count"-->
+<!--            :current.sync="current_page"-->
+<!--            :range-before="4"-->
+<!--            :range-after="4"-->
+<!--            :order="'is-centered'"-->
+<!--            :per-page="per_page"-->
+<!--            :icon-prev="'chevron-left'"-->
+<!--            :icon-next="'chevron-right'"-->
+<!--            aria-next-label="Next page"-->
+<!--            aria-previous-label="Previous page"-->
+<!--            aria-page-label="Page"-->
+<!--            aria-current-label="Current page"-->
+<!--          >-->
+<!--            <b-pagination-button-->
+<!--              slot-scope="props"-->
+<!--              :page="props.page"-->
+<!--              :id="`page${props.page.number}`"-->
+<!--              v-on:click="handlePageChange(props.page.number)"-->
+<!--              >-->
+<!--              <span>{{props.page.number}}</span>-->
+<!--            </b-pagination-button>-->
+<!--          </b-pagination>-->
+<!--          <nav class="pagination is-centered" role="navigation" aria-label="pagination">-->
+<!--            <button class="pagination-previous">Trang trước</button>-->
+<!--            <button class="pagination-next">Trang sau</button>-->
+<!--            <ul class="pagination-list">-->
+<!--              <li v-for="">-->
+<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(1)">1</button>-->
+<!--              </li>-->
+<!--              <li v-for="">-->
+<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(2)">1</button>-->
+<!--              </li>-->
+<!--              <li v-for="">-->
+<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(3)">1</button>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </nav>-->
         </div>
       </div>
 
-      <div class="tile is-parent is-4 is-vertical">
-        <div class="tile is-child">
-          <article class="message is-info">
-            <div class="message-header clickable">
-              <nuxt-link :to="'/topic' + '/Computer-science'" class="text-class-2">{{topic.name}}</nuxt-link>
-              <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="message-body">
-              <div v-if="msg_hidden">
-                <p>{{topic.description}}</p>
-                <a class="text-class-3" v-on:click="msg_hidden = false">Ẩn bớt</a>
-              </div>
+<!--      <div class="tile is-parent is-4 is-vertical">-->
+<!--        <div class="tile is-child">-->
+<!--          <article class="message is-info">-->
+<!--            <div class="message-header clickable">-->
+<!--              <nuxt-link :to="'/topic' + '/Computer-science'" class="text-class-2">{{topic.name}}</nuxt-link>-->
+<!--              <i class="fas fa-chevron-right"></i>-->
+<!--            </div>-->
+<!--            <div class="message-body">-->
+<!--              <div v-if="msg_hidden">-->
+<!--                <p>{{topic.description}}</p>-->
+<!--                <a class="text-class-3" v-on:click="msg_hidden = false">Ẩn bớt</a>-->
+<!--              </div>-->
 
-              <div v-else>
-                <p>{{topic.description.slice(0, topic.description.length*0.4)}}</p>
-                <a class="text-class-3" v-on:click="msg_hidden = true">Xem thêm</a>
-              </div>
-            </div>
-          </article>
-          <article class="message is-info">
-            <div class="message-header">
-              <span>Các chủ đề liên quan</span>
-            </div>
-            <div class="message-body">
-              <ul>
-                <li>
-                  <a>Khoa học dữ liệu</a>
-                </li>
-                <li>
-                  <a>Công nghệ thông tin</a>
-                </li>
-                <li>
-                  <a>Trí tuệ nhân tạo</a>
-                </li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </div>
+<!--              <div v-else>-->
+<!--                <p>{{topic.description.slice(0, topic.description.length*0.4)}}</p>-->
+<!--                <a class="text-class-3" v-on:click="msg_hidden = true">Xem thêm</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </article>-->
+<!--          <article class="message is-info">-->
+<!--            <div class="message-header">-->
+<!--              <span>Các chủ đề liên quan</span>-->
+<!--            </div>-->
+<!--            <div class="message-body">-->
+<!--              <ul>-->
+<!--                <li>-->
+<!--                  <a>Khoa học dữ liệu</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a>Công nghệ thông tin</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a>Trí tuệ nhân tạo</a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--          </article>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -151,6 +167,7 @@
         }
       },
       async asyncData({query, store}) {
+        console.log('hello')
         await store.dispatch('search_result/paper_by_title', query)
         return {
           query_params: query,
@@ -167,8 +184,8 @@
           let query_params = this.query_params
           query_params.start = (page_num * this.per_page) - this.per_page
           query_params.page = page_num
-          console.log(query_params)
-          this.$router.push({name: 'search', query: query_params})
+          console.log('pagi', query_params)
+          this.$router.push({path: 'search', query: query_params})
         },
         //Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
@@ -212,5 +229,8 @@
   }
   p {
     color: black;
+  }
+  button:hover {
+    cursor: pointer;
   }
 </style>

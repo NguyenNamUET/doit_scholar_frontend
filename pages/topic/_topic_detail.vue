@@ -30,26 +30,27 @@
     import TimelineItem from "../../components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
     export default {
-        name: "_topic_detail",
-        components: {TimelineItem},
-
-        async asyncData({route}) {
-          let id_pattern = /[0-9]+$/g
-          let topic_id = id_pattern.exec(route.params.topic_detail)
-          console.log(topic_id)
-          let name_pattern = /.+(?=\-[0-9]+$)/g
-          let topic_name = name_pattern.exec(route.params.topic_detail)
-
-          let query_params = {topics: Array(topic_id[0]),
-                              source: ["title","abstract","year","authors","corpusID"]
-          }
-
-          let data = await paper_by_topic(query_params)
-          return {
-            topic_name: topic_name[0],
-            papers: data.hits.hits,
-          }
+      name: "_topic_detail",
+      components: {TimelineItem},
+      head() {
+        return {
+          title: this.topic_name + ' | DoIT Scholar'
         }
+      },
+      async asyncData({route}) {
+        let id_pattern = /[0-9]+$/g
+        let topic_id = id_pattern.exec(route.params.topic_detail)
+        let name_pattern = /.+(?=\-[0-9]+$)/g
+        let topic_name = name_pattern.exec(route.params.topic_detail)
+        let query_params = {topics: Array(topic_id[0]),
+          source: ["title","abstract","year","authors","corpusID"]
+        }
+        let data = await paper_by_topic(query_params)
+        return {
+          topic_name: topic_name[0],
+          papers: data.hits.hits,
+        }
+      }
     }
 </script>
 
