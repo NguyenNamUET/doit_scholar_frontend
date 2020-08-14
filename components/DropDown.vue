@@ -38,6 +38,7 @@
       methods: {
         check(e) {
           console.log(this.checkedCategories)
+          this.$emit("update-fos-checked", this.checkedCategories)
           //do searching here
         }
       }

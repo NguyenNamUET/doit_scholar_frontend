@@ -13,6 +13,7 @@
     "@antv/g6": "^3.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@growthbunker/vuetimeline": "^0.1.17",
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/bulma": "^1.2.7",
     "bulma": "^0.9.0",
@@ -24,7 +25,9 @@
     "nuxt-jsonld": "^1.4.10",
     "vue-chartjs": "^3.5.0",
     "vue-number-animation": "^1.0.5",
-    "vue-pdf": "^4.1.0"
+    "vue-pdf": "^4.1.0",
+    "vue-infinite-loading": "^2.4.5"
+
   },
   "devDependencies": {
     "@nuxt/types": "^2.13.3",

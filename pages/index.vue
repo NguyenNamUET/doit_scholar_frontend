@@ -117,10 +117,7 @@ export default {
   },
   data() {
     return {
-      parent_height: 0,
-      paper_count: 100000,
-      fos_count: 10000,
-      author_count: 0
+      parent_height: 0
     }
   },
   async asyncData({query, store}) {
