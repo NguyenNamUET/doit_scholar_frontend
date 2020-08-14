@@ -1,5 +1,7 @@
 <template>
-  <div class="container" id="page_container">
+  <div v-if="this.search_results.length !== 0"
+       class="container"
+       id="page_container">
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
@@ -119,6 +121,17 @@
 <!--      </div>-->
     </div>
   </div>
+
+  <div v-else class="container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <h1 class="text-class-1">
+          <strong>Tìm được 0 kết quả</strong>
+        </h1>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -128,7 +141,7 @@
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
-    import {paper_by_fos_and_title} from "@/API/elastic_api";
+
 
 
     export default {
@@ -169,14 +182,28 @@
       async asyncData({query, store}) {
         console.log('hello')
         await store.dispatch('search_result/paper_by_title', query)
-        return {
-          query_params: query,
-          current_page: parseInt(query['page']),
-          search_results: store.state.search_result.search_results,
-          keyword: query['searchContent'],
-          total_count: store.state.search_result.total,
-          author_info: store.state.search_result.aggregation.author_count.name.buckets,
-          field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
+        console.log(store.state.search_result)
+        if(store.state.search_result.search_results.length > 0) {
+          return {
+            query_params: query,
+            current_page: parseInt(query['page']),
+            search_results: store.state.search_result.search_results,
+            keyword: query['searchContent'],
+            total_count: store.state.search_result.total,
+            author_info: store.state.search_result.aggregation.author_count.name.buckets,
+            field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
+          }
+        }
+        else{
+           return {
+            query_params: query,
+            current_page: parseInt(query['page']),
+            search_results: store.state.search_result.search_results,
+            keyword: query['searchContent'],
+            total_count: 0,
+            author_info: [],
+            field_sort: [],
+          }
         }
       },
       methods: {
@@ -192,7 +219,7 @@
           this.checkedCategories = checkedCategories
           let query_params = {query: this.$route.query.query,
                               fields_of_study: checkedCategories,
-                              fos_is_should: true, //if True then search by OR rule, else then by AND rule
+                              fos_is_should: false, //if True then search by OR rule, else then by AND rule
                               return_fos_aggs: true,
                               return_top_author: true,
                               top_author_size: 10,
@@ -200,18 +227,18 @@
                               size: 10,
                               page: 1}
 
-          //Bug here
+          //this.query_params = query_params (URL wont change after setting this -> BUG)
           await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
-          //
-          // this.current_page= parseInt(query_params['page']);
-          // this.search_results= this.$store.state.search_result.search_results;
-          // this.keyword= query_params['search_content'];
-          // this.total_count= this.$store.state.search_result.total;
-          // this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
-          // this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-          //
-          // console.log(this.query_params)
-          // console.log(this.search_results)
+
+          this.current_page= parseInt(query_params['page']);
+          this.search_results= this.$store.state.search_result.search_results;
+          this.keyword= query_params['search_content'];
+          this.total_count= this.$store.state.search_result.total;
+          this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
+          this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
+
+          console.log(this.query_params)
+          console.log(this.search_results)
         }
       }
     }

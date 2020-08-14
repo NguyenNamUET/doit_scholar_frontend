@@ -9,9 +9,17 @@ export const state = () => ({
 
 export const mutations = {
   submit_search_result(state, search_results) {
-    state.search_results = search_results.hits.hits;
-    state.total = search_results.hits.total.value;
-    state.aggregation = search_results.aggregations;
+    if(Object.keys(search_results).length !== 0){
+      state.search_results = search_results.hits.hits;
+      state.total = search_results.hits.total.value;
+      state.aggregation = search_results.aggregations;
+    }
+    else{
+      state.search_results = [];
+      state.total = null;
+      state.aggregation = null;
+    }
+
   },
   filter_doc(state, search_results) {
     if (search_results.hits.hits !== undefined && search_results.aggregations['count_is']['buckets'] !== undefined) {

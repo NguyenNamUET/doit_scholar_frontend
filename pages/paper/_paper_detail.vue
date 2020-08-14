@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="abstract">
+  <div v-if="!this.paper_detail" class="container" id="abstract">
     <div  class="tile is-ancestor" id="abstract_box">
       <div class="tile is-parent is-7">
         <div class="is-child">
@@ -241,6 +241,16 @@
       </div>
     </div>
   </div>
+
+  <div v-else class="container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <h1 class="text-class-1">
+          <strong>Khong tim thay van ban</strong>
+        </h1>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -295,18 +305,23 @@
           this.scroll_position = window.scrollY
         },
         getComponentHeight() {
-          return [
+          if(!this.paper_detail){
+            return [
             document.getElementById('abstract_box').offsetHeight,
             document.getElementById('topic_box').offsetHeight,
             document.getElementById('citation_box').offsetHeight,
             document.getElementById('reference_box').offsetHeight
           ]
+          }
+          else{
+            return [0,0,0,0]
+          }
         }
       },
       mounted() {
         window.addEventListener('scroll', this.updateScrollPosition);
         let heights = this.getComponentHeight()
-        console.log(heights)
+        console.log("heights: ", heights)
         this.abstract_height = heights[0]
         this.topic_height = heights[1]
         this.citation_height = heights[2]
@@ -318,7 +333,7 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
-        if (data !== null) {
+        if (Object.keys(data).length !== 0) {
           if (data.citations.length > 0)
             data_dict = chart_prep(data.citations)
           is_citation_empty = false
@@ -339,7 +354,7 @@
             chart_labels: {},
             chart_data: {},
             paper_id: paper_id[0],
-            paper_detail: {}
+            paper_detail: null
           }
         }
       }
