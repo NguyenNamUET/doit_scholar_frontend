@@ -10,7 +10,6 @@
           </h1>
           <div id="sort_section">
             <DropDown v-bind:msg="this.field_sort" @update-fos-checked="updateFOSChecked"/>
-<!--            <DropDown v-bind:msg="this.publication_sort"/>-->
           </div>
         </div>
       </div>
@@ -46,14 +45,14 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-          <a class="pagination-previous" @click="handlePreviousandNext(true)">Previous</a>
-          <a class="pagination-next" @click="handlePreviousandNext(false)">Next page</a>
+          <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>
+          <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>
 
           <!-- for example 1 2 3 4 ... 10 11 12 13-->
           <ul class="pagination-list" v-if="isPaginationReStyle === 0">
             <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(0,4)"
             @click="handlePageChange(page+1)">
-              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
                 {{page + 1}}
               </a>
             </li>
@@ -62,7 +61,7 @@
             </li>
             <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
             @click="handlePageChange(page)">
-              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
                 {{page + 1}}
               </a>
             </li>
@@ -71,7 +70,7 @@
           <!-- for example 1 ... 4 5 6 7... 10 11 12 13-->
           <ul class="pagination-list" v-if="isPaginationReStyle === 1">
             <li>
-              <a class="pagination-link" aria-label="Goto page 1">
+              <a class="pagination-link pagi-button" aria-label="Goto page 1">
                 1
               </a>
             </li>
@@ -80,7 +79,7 @@
             </li>
             <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,Math.min(this.current_page+3, this.total_count-4))"
             @click="handlePageChange(page+1)">
-              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
                 {{page + 1}}
               </a>
             </li>
@@ -89,7 +88,7 @@
             </li>
             <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
             @click="handlePageChange(page)">
-              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
                 {{page + 1}}
               </a>
             </li>
@@ -98,7 +97,7 @@
           <!-- for example 1 ... 9 10 11 12 13-->
           <ul class="pagination-list" v-if="isPaginationReStyle === 2">
             <li>
-              <a class="pagination-link" aria-label="Goto page 1">
+              <a class="pagination-link pagi-button" aria-label="Goto page 1">
                 1
               </a>
             </li>
@@ -108,7 +107,7 @@
 
             <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,this.current_page+4)"
             @click="handlePageChange(page)">
-              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
                 {{page + 1}}
               </a>
             </li>
@@ -147,7 +146,7 @@
       },
       data() {
         return {
-          per_page: 10,
+          per_page: 1,
           current_page: 1,
           total_count: 0,
           field_sort: null,
@@ -175,7 +174,6 @@
         }
       },
       async asyncData({query, store}) {
-
         await store.dispatch('search_result/paper_by_title', query)
 
         if(store.state.search_result.search_results.length > 0) {
@@ -203,13 +201,6 @@
         }
       },
       methods: {
-        // handlePageChange(page_num) {
-        //   let query_params = this.query_params
-        //   query_params.start = (page_num * this.per_page) - this.per_page
-        //   query_params.page = page_num
-        //   console.log('pagi', query_params)
-        //   this.$router.push({path: 'search', query: query_params})
-        // },
         //Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
           this.checkedCategories = checkedCategories
@@ -263,7 +254,7 @@
             this.isPaginationReStyle = 2
             this.current_page = current_page
           }
-          else{
+          else {
             this.isPaginationReStyle = 0
             this.current_page = current_page
           }
@@ -275,35 +266,36 @@
 
           //Nam added this to jump tp random page
           //Cannot jump to more than 10k results
-          let query_params = {
-                                query: this.$route.query.query,
-                                start: (this.current_page-1)*this.per_page,
-                                size: this.per_page,
-                                return_top_author: true,
-                                top_author_size: 10,
-                                return_fos_aggs: true,
-                                page: current_page
-                              }
-          await this.$store.dispatch('search_result/paper_by_title', query_params)
+          // let query_params = {
+          //                       query: this.$route.query.query,
+          //                       start: (this.current_page-1)*this.per_page,
+          //                       size: this.per_page,
+          //                       return_top_author: true,
+          //                       top_author_size: 10,
+          //                       return_fos_aggs: true,
+          //                       page: current_page
+          //                     }
+          // await this.$store.dispatch('search_result/paper_by_title', query_params)
+          //
+          //
+          // this.current_page= parseInt(query_params['page']);
+          // this.search_results= this.$store.state.search_result.search_results;
+          // this.keyword= query_params['query'];
+          // this.total_count= this.$store.state.search_result.total;
+          // this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
+          // this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
 
-
-          this.current_page= parseInt(query_params['page']);
-          this.search_results= this.$store.state.search_result.search_results;
-          this.keyword= query_params['query'];
-          this.total_count= this.$store.state.search_result.total;
-          this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
-          this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-
-          let router_query = {query: this.keyword,
+          let router_query = {query: this.$route.query.query,
                               start: (this.current_page-1)*this.per_page,
                               size: this.per_page,
                               return_top_author: true,
                               top_author_size: 10,
                               page: this.current_page}
-          await this.$router.push({path: 'search', query: router_query})
+          await this.$router.push({name: 'search', query: router_query})
 
 
         },
+
         handlePreviousandNext(isPrevious){
           if(isPrevious){
             this.current_page = Math.max(1, this.current_page-1)
@@ -313,9 +305,7 @@
             this.current_page = Math.min(this.current_page+1, this.total_count)
             this.handlePageChange(this.current_page)
           }
-          console.log(this.current_page)
         }
-
       }
     }
 </script>
@@ -335,5 +325,8 @@
   }
   button:hover {
     cursor: pointer;
+  }
+  .pagi-button:hover {
+    text-decoration: none;
   }
 </style>
