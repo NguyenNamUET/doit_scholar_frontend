@@ -18,108 +18,106 @@
 
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
-        <div class="tile is-child" v-if="author_hidden">
-          <AuthorInfo
-            v-for="author in author_info.slice(0,3)"
-            v-bind:author_info="author"
-          >
-          </AuthorInfo>
-          <a class="text-class-3" v-on:click="author_hidden = false">Xem thêm tác giả</a>
+        <div class="tile is-child columns is-multiline" v-if="author_hidden">
+            <AuthorInfo
+              v-for="author in author_info.slice(0,3)"
+              v-bind:author_info="author"
+            >
+            </AuthorInfo>
+            <a class="column is-full text-class-3" v-on:click="author_hidden = false">Xem thêm tác giả</a>
         </div>
 
-        <div class="tile is-child" v-else>
+        <div class="tile is-child columns is-multiline" v-else>
           <AuthorInfo
             v-for="author in this.author_info"
             v-bind:author_info="author"
           >
           </AuthorInfo>
-          <a class="text-class-3" v-on:click="author_hidden = true">Ẩn bớt tác giả</a>
+          <a class="column is-full text-class-3" v-on:click="author_hidden = true">Ẩn bớt tác giả</a>
         </div>
 
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
-
-<!--          <b-pagination-->
-<!--            :total="total_count"-->
-<!--            :current.sync="current_page"-->
-<!--            :range-before="4"-->
-<!--            :range-after="4"-->
-<!--            :order="'is-centered'"-->
-<!--            :per-page="per_page"-->
-<!--            :icon-prev="'chevron-left'"-->
-<!--            :icon-next="'chevron-right'"-->
-<!--            aria-next-label="Next page"-->
-<!--            aria-previous-label="Previous page"-->
-<!--            aria-page-label="Page"-->
-<!--            aria-current-label="Current page"-->
-<!--          >-->
-<!--            <b-pagination-button-->
-<!--              slot-scope="props"-->
-<!--              :page="props.page"-->
-<!--              :id="`page${props.page.number}`"-->
-<!--              v-on:click="handlePageChange(props.page.number)"-->
-<!--              >-->
-<!--              <span>{{props.page.number}}</span>-->
-<!--            </b-pagination-button>-->
-<!--          </b-pagination>-->
-<!--          <nav class="pagination is-centered" role="navigation" aria-label="pagination">-->
-<!--            <button class="pagination-previous">Trang trước</button>-->
-<!--            <button class="pagination-next">Trang sau</button>-->
-<!--            <ul class="pagination-list">-->
-<!--              <li v-for="">-->
-<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(1)">1</button>-->
-<!--              </li>-->
-<!--              <li v-for="">-->
-<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(2)">1</button>-->
-<!--              </li>-->
-<!--              <li v-for="">-->
-<!--                <button class="pagination-link" aria-label="Goto page 1" v-on:click="handlePageChange(3)">1</button>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </nav>-->
         </div>
+
       </div>
-
-<!--      <div class="tile is-parent is-4 is-vertical">-->
-<!--        <div class="tile is-child">-->
-<!--          <article class="message is-info">-->
-<!--            <div class="message-header clickable">-->
-<!--              <nuxt-link :to="'/topic' + '/Computer-science'" class="text-class-2">{{topic.name}}</nuxt-link>-->
-<!--              <i class="fas fa-chevron-right"></i>-->
-<!--            </div>-->
-<!--            <div class="message-body">-->
-<!--              <div v-if="msg_hidden">-->
-<!--                <p>{{topic.description}}</p>-->
-<!--                <a class="text-class-3" v-on:click="msg_hidden = false">Ẩn bớt</a>-->
-<!--              </div>-->
-
-<!--              <div v-else>-->
-<!--                <p>{{topic.description.slice(0, topic.description.length*0.4)}}</p>-->
-<!--                <a class="text-class-3" v-on:click="msg_hidden = true">Xem thêm</a>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </article>-->
-<!--          <article class="message is-info">-->
-<!--            <div class="message-header">-->
-<!--              <span>Các chủ đề liên quan</span>-->
-<!--            </div>-->
-<!--            <div class="message-body">-->
-<!--              <ul>-->
-<!--                <li>-->
-<!--                  <a>Khoa học dữ liệu</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a>Công nghệ thông tin</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a>Trí tuệ nhân tạo</a>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </article>-->
-<!--        </div>-->
-<!--      </div>-->
     </div>
+
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-8 is-vertical">
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+          <a class="pagination-previous" @click="handlePreviousandNext(true)">Previous</a>
+          <a class="pagination-next" @click="handlePreviousandNext(false)">Next page</a>
+
+          <!-- for example 1 2 3 4 ... 10 11 12 13-->
+          <ul class="pagination-list" v-if="isPaginationReStyle === 0">
+            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(0,4)"
+            @click="handlePageChange(page+1)">
+              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+                {{page + 1}}
+              </a>
+            </li>
+            <li>
+              <span class="pagination-ellipsis">&hellip;</span>
+            </li>
+            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
+            @click="handlePageChange(page)">
+              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+                {{page + 1}}
+              </a>
+            </li>
+          </ul>
+
+          <!-- for example 1 ... 4 5 6 7... 10 11 12 13-->
+          <ul class="pagination-list" v-if="isPaginationReStyle === 1">
+            <li>
+              <a class="pagination-link" aria-label="Goto page 1">
+                1
+              </a>
+            </li>
+            <li>
+              <span class="pagination-ellipsis">&hellip;</span>
+            </li>
+            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,Math.min(this.current_page+3, this.total_count-4))"
+            @click="handlePageChange(page+1)">
+              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+                {{page + 1}}
+              </a>
+            </li>
+            <li>
+              <span class="pagination-ellipsis">&hellip;</span>
+            </li>
+            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
+            @click="handlePageChange(page)">
+              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+                {{page + 1}}
+              </a>
+            </li>
+          </ul>
+
+          <!-- for example 1 ... 9 10 11 12 13-->
+          <ul class="pagination-list" v-if="isPaginationReStyle === 2">
+            <li>
+              <a class="pagination-link" aria-label="Goto page 1">
+                1
+              </a>
+            </li>
+            <li>
+              <span class="pagination-ellipsis">&hellip;</span>
+            </li>
+
+            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,this.current_page+4)"
+            @click="handlePageChange(page)">
+              <a class="pagination-link" :aria-label="'Goto page ' + (page+1)">
+                {{page + 1}}
+              </a>
+            </li>
+          </ul>
+
+        </nav>
+      </div>
+    </div>
+
   </div>
 
   <div v-else>
@@ -136,6 +134,7 @@
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
     import NuxtError from "@/components/ErrorPage";
+    import {paper_by_title} from "@/API/elastic_api";
 
     export default {
       name: "search",
@@ -150,7 +149,7 @@
         return {
           per_page: 10,
           current_page: 1,
-          total_count: 100000,
+          total_count: 0,
           field_sort: null,
           publication_sort: publication_type,
           query_params: null,
@@ -164,7 +163,10 @@
           },
           //Nam added this for dropdown
           checkedCategories: [],
-          query_params2: null
+          query_params2: null,
+
+          //Nam added this for pagination
+          isPaginationReStyle: 0
         }
       },
       filters: {
@@ -173,9 +175,9 @@
         }
       },
       async asyncData({query, store}) {
-        console.log('hello')
+
         await store.dispatch('search_result/paper_by_title', query)
-        console.log(store.state.search_result)
+
         if(store.state.search_result.search_results.length > 0) {
           return {
             query_params: query,
@@ -185,6 +187,7 @@
             total_count: store.state.search_result.total,
             author_info: store.state.search_result.aggregation.author_count.name.buckets,
             field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
+            last_paper_id: store.state.search_result.last_paper_id
           }
         }
         else{
@@ -200,13 +203,13 @@
         }
       },
       methods: {
-        handlePageChange(page_num) {
-          let query_params = this.query_params
-          query_params.start = (page_num * this.per_page) - this.per_page
-          query_params.page = page_num
-          console.log('pagi', query_params)
-          this.$router.push({path: 'search', query: query_params})
-        },
+        // handlePageChange(page_num) {
+        //   let query_params = this.query_params
+        //   query_params.start = (page_num * this.per_page) - this.per_page
+        //   query_params.page = page_num
+        //   console.log('pagi', query_params)
+        //   this.$router.push({path: 'search', query: query_params})
+        // },
         //Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
           this.checkedCategories = checkedCategories
@@ -218,21 +221,101 @@
                               top_author_size: 10,
                               start: 0,
                               size: 10,
-                              page: 1}
+                              page: this.current_page}
 
-          //this.query_params = query_params (URL wont change after setting this -> BUG)
-          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
+
+          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params).then()
+          if(this.$store.state.search_result.search_results.length > 0){
+            this.current_page= parseInt(query_params['page']);
+            this.search_results= this.$store.state.search_result.search_results;
+            this.keyword= query_params['query'];
+            this.total_count= this.$store.state.search_result.total;
+            this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
+            this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
+
+            // let router_query = {query: this.keyword,
+            //                     fos: query_params["fields_of_study"].join(','),
+            //                     start: (this.current_page-1)*this.per_page,
+            //                     size: this.per_page,
+            //                     return_top_author: true,
+            //                     top_author_size: 10,
+            //                     page: this.current_page}
+            // await this.$router.push({path: 'search', query: router_query})
+           }
+          else{
+            this.current_page= parseInt(query_params['page']);
+            this.search_results= this.$store.state.search_result.search_results;
+            this.keyword= query_params['query'];
+            this.total_count= 0;
+            this.author_info= [];
+            this.field_sort= [];
+          }
+
+
+        },
+
+        async handlePageChange(current_page){
+          if (current_page >=4 && current_page <= this.total_count-5){
+            this.isPaginationReStyle = 1
+            this.current_page = current_page
+          }
+          else if (current_page === this.total_count-4){
+            this.isPaginationReStyle = 2
+            this.current_page = current_page
+          }
+          else{
+            this.isPaginationReStyle = 0
+            this.current_page = current_page
+          }
+
+          //These commented codes are testing
+          // let data = await paper_by_title({query: this.$route.query.query,start: (this.current_page-1)*10,size: 10,})
+          // let last_previoud_paper_id = data.hits.hits[-1]._source.corpusID
+          // let query_params = {query: this.$route.query.query,start: 0,size: 10,deep_pagination: true,last_paper_id: last_previoud_paper_id,return_top_author: true,top_author_size: 10,return_fos_aggs: true,page: current_page}
+
+          //Nam added this to jump tp random page
+          //Cannot jump to more than 10k results
+          let query_params = {
+                                query: this.$route.query.query,
+                                start: (this.current_page-1)*this.per_page,
+                                size: this.per_page,
+                                return_top_author: true,
+                                top_author_size: 10,
+                                return_fos_aggs: true,
+                                page: current_page
+                              }
+          await this.$store.dispatch('search_result/paper_by_title', query_params)
+
 
           this.current_page= parseInt(query_params['page']);
           this.search_results= this.$store.state.search_result.search_results;
-          this.keyword= query_params['search_content'];
+          this.keyword= query_params['query'];
           this.total_count= this.$store.state.search_result.total;
           this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
           this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
 
-          console.log(this.query_params)
-          console.log(this.search_results)
+          let router_query = {query: this.keyword,
+                              start: (this.current_page-1)*this.per_page,
+                              size: this.per_page,
+                              return_top_author: true,
+                              top_author_size: 10,
+                              page: this.current_page}
+          await this.$router.push({path: 'search', query: router_query})
+
+
+        },
+        handlePreviousandNext(isPrevious){
+          if(isPrevious){
+            this.current_page = Math.max(1, this.current_page-1)
+            this.handlePageChange(this.current_page)
+          }
+          else{
+            this.current_page = Math.min(this.current_page+1, this.total_count)
+            this.handlePageChange(this.current_page)
+          }
+          console.log(this.current_page)
         }
+
       }
     }
 </script>

@@ -4,7 +4,8 @@ import {paper_by_abstract} from "@/API/elastic_api";
 export const state = () => ({
   search_results: [],
   aggregation: null,
-  total: null
+  total: null,
+
 });
 
 export const mutations = {

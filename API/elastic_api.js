@@ -58,10 +58,15 @@ const paper_by_title = async (query_params) => {
       search_content: query_params.query,
       start: query_params.start,
       size: query_params.size,
+      deep_pagination: query_params.deep_pagination,
+      last_paper_id: query_params.last_paper_id,
+      source: query_params.source,
       return_top_author: true,
       top_author_size: 10,
       return_fos_aggs: true,
     })
+    console.log("paper_by_title query_params: ", query_params)
+    console.log("paper_by_title result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)

@@ -1,19 +1,18 @@
 <template>
-  <article class="media">
-    <figure class="media-left">
-
-    </figure>
-    <div class="media-content">
-      <div class="content">
-          <a
-            :href="'/author/' + formatTitle(author_name) + '-' + author_id"
-          >
-            <strong class="text-class-2">{{author_name}}</strong>
-          </a>
-          <p class="text-class-3">{{doc_count}} xuất bản liên quan đến từ khóa</p>
+  <div class="column is-one-third">
+    <article class="media">
+      <div class="media-content">
+        <div class="content">
+            <a
+              :href="'/author/' + formatTitle(author_name) + '-' + author_id"
+            >
+              <strong class="text-class-2">{{author_name}}</strong>
+            </a>
+            <p class="text-class-3">{{doc_count}} xuất bản liên quan đến từ khóa</p>
+        </div>
       </div>
-    </div>
-  </article>
+    </article>
+  </div>
 </template>
 
 <script>
