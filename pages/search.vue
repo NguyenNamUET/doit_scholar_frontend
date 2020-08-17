@@ -146,7 +146,7 @@
       },
       data() {
         return {
-          per_page: 1,
+          per_page: 10,
           current_page: 1,
           total_count: 0,
           field_sort: null,
@@ -174,7 +174,9 @@
         }
       },
       async asyncData({query, store}) {
-        await store.dispatch('search_result/paper_by_title', query)
+        let query_params = query
+        query_params["return_fos_aggs"]= true
+        await store.dispatch('search_result/paper_by_title', query_params)
 
         if(store.state.search_result.search_results.length > 0) {
           return {
@@ -215,7 +217,7 @@
                               page: this.current_page}
 
 
-          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params).then()
+          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
           if(this.$store.state.search_result.search_results.length > 0){
             this.current_page= parseInt(query_params['page']);
             this.search_results= this.$store.state.search_result.search_results;

@@ -7,7 +7,7 @@
 
       <div class="title">{{ message }}</div>
       <p v-if="statusCode === 404" class="description">
-        <NuxtLink class="error-link" to="/search">Trở lại trang tìm kiếm</NuxtLink>
+        <NuxtLink class="error-link" to="/">Trở lại trang tìm kiếm</NuxtLink>
       </p>
 
       <p class="description" v-else></p>
