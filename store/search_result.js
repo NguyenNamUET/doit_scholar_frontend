@@ -48,4 +48,8 @@ export const actions = {
     let result = await paper_by_title(payload);
     context.commit('submit_search_result', result);
   },
+  async paper_by_authors_and_title(context, payload) {
+    let result = await paper_by_title(payload);
+    context.commit('submit_search_result', result);
+  },
 };

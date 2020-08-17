@@ -8,13 +8,17 @@
           <h1 class="text-class-1">
             <strong>Tìm được {{this.total_count | formatNumber}} kết quả</strong>
           </h1>
+          <!------------------------      DROPDOWN HERE   --------------------------->
           <div id="sort_section">
-            <DropDown v-bind:msg="this.field_sort" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg:'Lĩnh vực',fields: this.field_sort, type:0}" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg:'Tác giả',fields: this.author_info, type:1}" @update-authors-checked="updateAuthorsChecked"/>
           </div>
+          <!-------------------------------------------------------------------------->
         </div>
       </div>
     </div>
 
+    <!------------------------      AUTHORS CARD HERE   --------------------------->
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
         <div class="tile is-child columns is-multiline" v-if="author_hidden">
@@ -38,10 +42,12 @@
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
         </div>
-
       </div>
     </div>
+    <!-------------------------------------------------------------------------->
 
+
+    <!------------------------      PAGINATION HERE   --------------------------->
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
@@ -116,7 +122,7 @@
         </nav>
       </div>
     </div>
-
+    <!-------------------------------------------------------------------------->
   </div>
 
   <div v-else>
@@ -202,51 +208,8 @@
           }
         }
       },
+
       methods: {
-        //Nam added this for dropdown search
-        async updateFOSChecked(checkedCategories) {
-          this.checkedCategories = checkedCategories
-          let query_params = {query: this.$route.query.query,
-                              fields_of_study: checkedCategories,
-                              fos_is_should: false, //if True then search by OR rule, else then by AND rule
-                              return_fos_aggs: true,
-                              return_top_author: true,
-                              top_author_size: 10,
-                              start: 0,
-                              size: 10,
-                              page: this.current_page}
-
-
-          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
-          if(this.$store.state.search_result.search_results.length > 0){
-            this.current_page= parseInt(query_params['page']);
-            this.search_results= this.$store.state.search_result.search_results;
-            this.keyword= query_params['query'];
-            this.total_count= this.$store.state.search_result.total;
-            this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
-            this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-
-            // let router_query = {query: this.keyword,
-            //                     fos: query_params["fields_of_study"].join(','),
-            //                     start: (this.current_page-1)*this.per_page,
-            //                     size: this.per_page,
-            //                     return_top_author: true,
-            //                     top_author_size: 10,
-            //                     page: this.current_page}
-            // await this.$router.push({path: 'search', query: router_query})
-           }
-          else{
-            this.current_page= parseInt(query_params['page']);
-            this.search_results= this.$store.state.search_result.search_results;
-            this.keyword= query_params['query'];
-            this.total_count= 0;
-            this.author_info= [];
-            this.field_sort= [];
-          }
-
-
-        },
-
         async handlePageChange(current_page){
           if (current_page >=4 && current_page <= this.total_count-5){
             this.isPaginationReStyle = 1
@@ -297,7 +260,6 @@
 
 
         },
-
         handlePreviousandNext(isPrevious){
           if(isPrevious){
             this.current_page = Math.max(1, this.current_page-1)
@@ -306,6 +268,87 @@
           else{
             this.current_page = Math.min(this.current_page+1, this.total_count)
             this.handlePageChange(this.current_page)
+          }
+        },
+        //Nam added this for dropdown search
+        async updateFOSChecked(checkedCategories) {
+          this.checkedCategories = checkedCategories
+          let query_params = {query: this.$route.query.query,
+                              fields_of_study: checkedCategories,
+                              fos_is_should: false, //if True then search by OR rule, else then by AND rule
+                              return_fos_aggs: true,
+                              return_top_author: true,
+                              top_author_size: 10,
+                              start: 0,
+                              size: 10,
+                              page: this.current_page}
+
+
+          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
+          if(this.$store.state.search_result.search_results.length > 0){
+            this.current_page= parseInt(query_params['page']);
+            this.search_results= this.$store.state.search_result.search_results;
+            this.keyword= query_params['query'];
+            this.total_count= this.$store.state.search_result.total;
+            this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
+            this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
+
+            // let router_query = {query: this.keyword,
+            //                     fos: query_params["fields_of_study"].join(','),
+            //                     start: (this.current_page-1)*this.per_page,
+            //                     size: this.per_page,
+            //                     return_top_author: true,
+            //                     top_author_size: 10,
+            //                     page: this.current_page}
+            // await this.$router.push({path: 'search', query: router_query})
+           }
+          else{
+            this.current_page= parseInt(query_params['page']);
+            this.search_results= this.$store.state.search_result.search_results;
+            this.keyword= query_params['query'];
+            this.total_count= 0;
+            this.author_info= [];
+            this.field_sort= [];
+          }
+        },
+        async updateAuthorsChecked(checkedCategories) {
+          this.checkedCategories = checkedCategories
+          let query_params = {
+            query: this.$route.query.query,
+            authors: checkedCategories,
+            author_is_should: false, //if True then search by OR rule, else then by AND rule
+            return_fos_aggs: true,
+            return_top_author: true,
+            top_author_size: 10,
+            start: 0,
+            size: 10,
+            page: this.current_page
+          }
+
+          await this.$store.dispatch('search_result/paper_by_authors_and_title', query_params)
+          if (this.$store.state.search_result.search_results.length > 0) {
+            this.current_page = parseInt(query_params['page']);
+            this.search_results = this.$store.state.search_result.search_results;
+            this.keyword = query_params['query'];
+            this.total_count = this.$store.state.search_result.total;
+            this.author_info = this.$store.state.search_result.aggregation.author_count.name.buckets;
+            this.field_sort = this.$store.state.search_result.aggregation.fields_of_study.buckets;
+
+            // let router_query = {query: this.keyword,
+            //                     fos: query_params["fields_of_study"].join(','),
+            //                     start: (this.current_page-1)*this.per_page,
+            //                     size: this.per_page,
+            //                     return_top_author: true,
+            //                     top_author_size: 10,
+            //                     page: this.current_page}
+            // await this.$router.push({path: 'search', query: router_query})
+          } else {
+            this.current_page = parseInt(query_params['page']);
+            this.search_results = this.$store.state.search_result.search_results;
+            this.keyword = query_params['query'];
+            this.total_count = 0;
+            this.author_info = [];
+            this.field_sort = [];
           }
         }
       }
