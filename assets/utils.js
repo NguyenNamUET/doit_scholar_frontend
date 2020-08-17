@@ -38,7 +38,7 @@ const publication_type = [
 ]
 
 function formatTitle(title) {
-  return title.replace(/\s/g, '-').replace(/\//g, '-')
+  return title.replace(/\s|\W/g, '-').replace(/\-{2,}/g, '-')
 }
 
 const chartColors = {

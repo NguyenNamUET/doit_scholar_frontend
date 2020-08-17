@@ -1,6 +1,6 @@
 <template>
-  <div class="container" id="abstract">
-    <div  class="tile is-ancestor">
+  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
+    <div  class="tile is-ancestor" id="abstract_box">
       <div class="tile is-parent is-7">
         <div class="is-child">
           <p class="is-size-6">
@@ -153,7 +153,7 @@
           <a
             class="nav-item"
             href="#abstract"
-            :class="{'in-view': scroll_position < 220}"
+            :class="{'in-view': scroll_position < abstract_height}"
           >
             Tóm tắt
           </a>
@@ -162,7 +162,8 @@
           <a
             class="nav-item"
             href="#topic"
-            :class="{'in-view': scroll_position > 750 && scroll_position < 1260}"
+            :class="{'in-view': scroll_position > abstract_height
+            && scroll_position < (abstract_height + topic_height + 200)}"
           >
             Chủ đề
           </a>
@@ -171,7 +172,8 @@
           <a
             class="nav-item"
             href="#citations"
-            :class="{'in-view': scroll_position > 1260 && scroll_position < 3440}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height + 200)
+            && scroll_position < (abstract_height + topic_height + citation_height + 200)}"
           >
             {{this.paper_detail.citations.length}} trích dẫn
           </a>
@@ -180,7 +182,7 @@
           <a
             class="nav-item"
             href="#references"
-            :class="{'in-view': scroll_position > 3440}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height + 200)}"
           >
             {{this.paper_detail.references.length}} tham chiếu
           </a>
@@ -190,9 +192,9 @@
 
     <div id="topic" class="navigate"></div>
 
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-vertical ">
-        <div class="tile is-child content_box" id="topic_box">
+    <div class="tile is-ancestor" id="topic_box">
+      <div class="tile is-parent is-vertical">
+        <div class="tile is-child content_box">
           <p class="title content_title">Chủ đề được đề cập trong văn bản</p>
           <div>
             <ul>
@@ -215,7 +217,7 @@
 
     <div id="citations" class="navigate"></div>
 
-    <div class="tile is-ancestor is-vertical">
+    <div class="tile is-ancestor is-vertical" id="citation_box">
       <div class="tile is-parent">
         <div class="tile is-child pr-5 content_box">
           <p class="title">Trích dẫn</p>
@@ -228,7 +230,7 @@
 
     <div id="references" class="navigate"></div>
 
-    <div class="tile is-ancestor is-vertical">
+    <div class="tile is-ancestor is-vertical"id="reference_box">
       <div class="tile is-parent">
         <div class="tile is-child content_box">
           <p class="title">Tham chiếu</p>
@@ -239,6 +241,10 @@
       </div>
     </div>
   </div>
+
+  <div v-else>
+    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy văn bản'}"></NuxtError>
+  </div>
 </template>
 
 <script>
@@ -248,9 +254,11 @@
     import {chartColors} from "assets/utils";
     import {paper_detail} from "@/API/elastic_api";
     import PaperTable from "@/components/PaperTable";
+    import NuxtError from "@/components/ErrorPage";
+
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar},
+      components: {PaperTable, CitationBar, NuxtError},
       validate({route, redirect}) {
         if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
           return true
@@ -265,6 +273,10 @@
       },
       data() {
         return {
+          abstract_height: null,
+          topic_height: null,
+          citation_height: null,
+          reference_height: null,
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
@@ -287,10 +299,29 @@
         },
         updateScrollPosition() {
           this.scroll_position = window.scrollY
+        },
+        getComponentHeight() {
+          if(Object.keys(this.paper_detail).length !== 0){
+            return [
+            document.getElementById('abstract_box').offsetHeight,
+            document.getElementById('topic_box').offsetHeight,
+            document.getElementById('citation_box').offsetHeight,
+            document.getElementById('reference_box').offsetHeight
+          ]
+          }
+          else{
+            return [0,0,0,0]
+          }
         }
       },
       mounted() {
         window.addEventListener('scroll', this.updateScrollPosition);
+        let heights = this.getComponentHeight()
+        console.log("heights: ", heights)
+        this.abstract_height = heights[0]
+        this.topic_height = heights[1]
+        this.citation_height = heights[2]
+        this.reference_height = heights[3]
       },
       async asyncData({route, $axios}) {
         let paper_id = /[0-9]+$/g.exec(route.params.paper_detail)
@@ -298,7 +329,7 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
-        if (data !== null) {
+        if (Object.keys(data).length !== 0) {
           if (data.citations.length > 0)
             data_dict = chart_prep(data.citations)
           is_citation_empty = false
