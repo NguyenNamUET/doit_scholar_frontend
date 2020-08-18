@@ -98,14 +98,19 @@
               + {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
             </a>
           </div>
-          <p v-if="!abstract_hidden" class="is-size-6">
-            {{paper_detail.abstract}}
-            <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
-          </p>
-          <p v-else class="is-size-6">
-                      {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
-            <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
-          </p>
+          <div v-if="paper_detail.abstract.length !== 0">
+            <p v-if="!abstract_hidden" class="is-size-6">
+              {{paper_detail.abstract}}
+              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+            </p>
+            <p v-else class="is-size-6">
+              {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+            </p>
+          </div>
+          <div v-else>
+            <p class="is-size-6">Không có thông tin về Tóm tắt</p>
+          </div>
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
               <button class="level-item button is-info">Xem PDF</button>
@@ -329,10 +334,12 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
+        console.log(data.abstract)
         if (Object.keys(data).length !== 0) {
-          if (data.citations.length > 0)
+          if (data.citations.length > 0){
             data_dict = chart_prep(data.citations)
-          is_citation_empty = false
+            is_citation_empty = false
+          }
           if (data.references.length > 0)
             is_ref_empty = false
           return {

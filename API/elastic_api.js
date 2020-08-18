@@ -4,6 +4,7 @@ import axios from "axios";
 const paper_detail = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
+
     return result.data
   } catch(e) {
     console.log(e)
