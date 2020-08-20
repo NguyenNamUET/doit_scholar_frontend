@@ -31,7 +31,7 @@
           this.query_params = {
             query: this.search_query,
             start: 0,
-            size: 10,
+            size: 1,
             return_top_author: true,
             top_author_size: 10,
             page: 1

@@ -48,81 +48,9 @@
 
 
     <!------------------------      PAGINATION HERE   --------------------------->
-<!--    <div class="tile is-ancestor">-->
-<!--      <div class="tile is-parent is-8 is-vertical">-->
-<!--        <nav class="pagination is-centered" role="navigation" aria-label="pagination">-->
-<!--          <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>-->
-<!--          <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>-->
-
-<!--          &lt;!&ndash; for example 1 2 3 4 ... 10 11 12 13&ndash;&gt;-->
-<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 0">-->
-<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(0,4)"-->
-<!--            @click="handlePageChange(page+1)">-->
-<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
-<!--                {{page + 1}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--              <span class="pagination-ellipsis">&hellip;</span>-->
-<!--            </li>-->
-<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"-->
-<!--            @click="handlePageChange(page)">-->
-<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
-<!--                {{page + 1}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-
-<!--          &lt;!&ndash; for example 1 ... 4 5 6 7... 10 11 12 13&ndash;&gt;-->
-<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 1">-->
-<!--            <li>-->
-<!--              <a class="pagination-link pagi-button" aria-label="Goto page 1">-->
-<!--                1-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--              <span class="pagination-ellipsis">&hellip;</span>-->
-<!--            </li>-->
-<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,Math.min(this.current_page+3, this.total_count-4))"-->
-<!--            @click="handlePageChange(page+1)">-->
-<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
-<!--                {{page + 1}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--              <span class="pagination-ellipsis">&hellip;</span>-->
-<!--            </li>-->
-<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"-->
-<!--            @click="handlePageChange(page)">-->
-<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
-<!--                {{page + 1}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-
-<!--          &lt;!&ndash; for example 1 ... 9 10 11 12 13&ndash;&gt;-->
-<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 2">-->
-<!--            <li>-->
-<!--              <a class="pagination-link pagi-button" aria-label="Goto page 1">-->
-<!--                1-->
-<!--              </a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--              <span class="pagination-ellipsis">&hellip;</span>-->
-<!--            </li>-->
-
-<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,this.current_page+4)"-->
-<!--            @click="handlePageChange(page)">-->
-<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
-<!--                {{page + 1}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-
-<!--        </nav>-->
-<!--      </div>-->
-<!--    </div>-->
-    <Pagination v-bind:total_count="this.total_count" @update_page="updatePage"></Pagination>
+    <Pagination :total_count="this.total_count"
+                :current_page="this.current_page"
+                @update_page="updatePage"></Pagination>
     <!-------------------------------------------------------------------------->
   </div>
 
@@ -167,7 +95,10 @@
             description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
           },
           //Nam added this for dropdown
-          checkedCategories: []
+          checkedCategories: [],
+
+          //20/08/2020: Nam changed this for pagination
+          current_page: this.$route.params.page
         }
       },
       filters: {
@@ -239,7 +170,7 @@
                               top_author_size: 10,
                               page: current_page}
 
-          await this.$router.push({name: 'search', query: router_query})
+          this.$router.push({name: 'search', query: router_query})
         },
         //18/08/2020: Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
