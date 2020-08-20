@@ -1,6 +1,6 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
-    <div  class="tile is-ancestor" id="abstract_box">
+    <div class="tile is-ancestor" id="abstract_box">
       <div class="tile is-parent is-7">
         <div class="is-child">
           <p class="is-size-6">
@@ -98,7 +98,7 @@
               + {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
             </a>
           </div>
-          <div v-if="paper_detail.abstract.length !== 0">
+          <div v-if="paper_detail.abstract">
             <p v-if="!abstract_hidden" class="is-size-6">
               {{paper_detail.abstract}}
               <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
@@ -235,7 +235,7 @@
 
     <div id="references" class="navigate"></div>
 
-    <div class="tile is-ancestor is-vertical"id="reference_box">
+    <div class="tile is-ancestor is-vertical" id="reference_box">
       <div class="tile is-parent">
         <div class="tile is-child content_box">
           <p class="title">Tham chiếu</p>
@@ -312,7 +312,7 @@
             document.getElementById('topic_box').offsetHeight,
             document.getElementById('citation_box').offsetHeight,
             document.getElementById('reference_box').offsetHeight
-          ]
+            ]
           }
           else{
             return [0,0,0,0]

@@ -1,4 +1,4 @@
-const SEARCH_API = 'http://112.137.142.8:8080'
+const SEARCH_API = 'http://112.137.142.8:8080' //'http://localhost:8000'
 
 const SEARCH_DOCUMENTS = {
   paper_detail: SEARCH_API + '/s2api/papers',
@@ -12,7 +12,9 @@ const SEARCH_DOCUMENTS = {
   paper_by_title_and_fos: SEARCH_API + '/s2api/papers/searchPaperByTitleAndFOS',
 
   author_by_id: SEARCH_API + '/s2api/authors',
-  author_by_name: SEARCH_API + '/s2api/authors/getAuthorByName'
+  author_by_name: SEARCH_API + '/s2api/authors/getAuthorByName',
+
+  wiki_summary: SEARCH_API + '/s2api/wiki/getTermSummary'
 }
 
 export {

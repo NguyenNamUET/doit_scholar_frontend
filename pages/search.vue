@@ -48,80 +48,81 @@
 
 
     <!------------------------      PAGINATION HERE   --------------------------->
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-8 is-vertical">
-        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-          <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>
-          <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>
+<!--    <div class="tile is-ancestor">-->
+<!--      <div class="tile is-parent is-8 is-vertical">-->
+<!--        <nav class="pagination is-centered" role="navigation" aria-label="pagination">-->
+<!--          <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>-->
+<!--          <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>-->
 
-          <!-- for example 1 2 3 4 ... 10 11 12 13-->
-          <ul class="pagination-list" v-if="isPaginationReStyle === 0">
-            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(0,4)"
-            @click="handlePageChange(page+1)">
-              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-                {{page + 1}}
-              </a>
-            </li>
-            <li>
-              <span class="pagination-ellipsis">&hellip;</span>
-            </li>
-            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
-            @click="handlePageChange(page)">
-              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-                {{page + 1}}
-              </a>
-            </li>
-          </ul>
+<!--          &lt;!&ndash; for example 1 2 3 4 ... 10 11 12 13&ndash;&gt;-->
+<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 0">-->
+<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(0,4)"-->
+<!--            @click="handlePageChange(page+1)">-->
+<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
+<!--                {{page + 1}}-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span class="pagination-ellipsis">&hellip;</span>-->
+<!--            </li>-->
+<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"-->
+<!--            @click="handlePageChange(page)">-->
+<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
+<!--                {{page + 1}}-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
 
-          <!-- for example 1 ... 4 5 6 7... 10 11 12 13-->
-          <ul class="pagination-list" v-if="isPaginationReStyle === 1">
-            <li>
-              <a class="pagination-link pagi-button" aria-label="Goto page 1">
-                1
-              </a>
-            </li>
-            <li>
-              <span class="pagination-ellipsis">&hellip;</span>
-            </li>
-            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,Math.min(this.current_page+3, this.total_count-4))"
-            @click="handlePageChange(page+1)">
-              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-                {{page + 1}}
-              </a>
-            </li>
-            <li>
-              <span class="pagination-ellipsis">&hellip;</span>
-            </li>
-            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"
-            @click="handlePageChange(page)">
-              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-                {{page + 1}}
-              </a>
-            </li>
-          </ul>
+<!--          &lt;!&ndash; for example 1 ... 4 5 6 7... 10 11 12 13&ndash;&gt;-->
+<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 1">-->
+<!--            <li>-->
+<!--              <a class="pagination-link pagi-button" aria-label="Goto page 1">-->
+<!--                1-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span class="pagination-ellipsis">&hellip;</span>-->
+<!--            </li>-->
+<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,Math.min(this.current_page+3, this.total_count-4))"-->
+<!--            @click="handlePageChange(page+1)">-->
+<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
+<!--                {{page + 1}}-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span class="pagination-ellipsis">&hellip;</span>-->
+<!--            </li>-->
+<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(Math.max(this.total_count - 4, 1))"-->
+<!--            @click="handlePageChange(page)">-->
+<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
+<!--                {{page + 1}}-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
 
-          <!-- for example 1 ... 9 10 11 12 13-->
-          <ul class="pagination-list" v-if="isPaginationReStyle === 2">
-            <li>
-              <a class="pagination-link pagi-button" aria-label="Goto page 1">
-                1
-              </a>
-            </li>
-            <li>
-              <span class="pagination-ellipsis">&hellip;</span>
-            </li>
+<!--          &lt;!&ndash; for example 1 ... 9 10 11 12 13&ndash;&gt;-->
+<!--          <ul class="pagination-list" v-if="isPaginationReStyle === 2">-->
+<!--            <li>-->
+<!--              <a class="pagination-link pagi-button" aria-label="Goto page 1">-->
+<!--                1-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <span class="pagination-ellipsis">&hellip;</span>-->
+<!--            </li>-->
 
-            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,this.current_page+4)"
-            @click="handlePageChange(page)">
-              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-                {{page + 1}}
-              </a>
-            </li>
-          </ul>
+<!--            <li v-for="page in Array.from(Array(Math.ceil(this.total_count/this.per_page)).keys()).slice(this.current_page-1,this.current_page+4)"-->
+<!--            @click="handlePageChange(page)">-->
+<!--              <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">-->
+<!--                {{page + 1}}-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
 
-        </nav>
-      </div>
-    </div>
+<!--        </nav>-->
+<!--      </div>-->
+<!--    </div>-->
+    <Pagination v-bind:total_count="this.total_count" @update_page="updatePage"></Pagination>
     <!-------------------------------------------------------------------------->
   </div>
 
@@ -139,12 +140,13 @@
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
     import NuxtError from "@/components/ErrorPage";
+    import Pagination from "@/components/Pagination";
     import {paper_by_title} from "@/API/elastic_api";
 
     export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorInfo, DropDown, NuxtError},
+      components: {SearchResult, AuthorInfo, DropDown, Pagination, NuxtError},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
@@ -152,8 +154,6 @@
       },
       data() {
         return {
-          per_page: 10,
-          current_page: 1,
           total_count: 0,
           field_sort: null,
           publication_sort: publication_type,
@@ -167,11 +167,7 @@
             description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
           },
           //Nam added this for dropdown
-          checkedCategories: [],
-          query_params2: null,
-
-          //Nam added this for pagination
-          isPaginationReStyle: 0
+          checkedCategories: []
         }
       },
       filters: {
@@ -208,22 +204,9 @@
           }
         }
       },
-
       methods: {
-        async handlePageChange(current_page){
-          if (current_page >=4 && current_page <= this.total_count-5){
-            this.isPaginationReStyle = 1
-            this.current_page = current_page
-          }
-          else if (current_page === this.total_count-4){
-            this.isPaginationReStyle = 2
-            this.current_page = current_page
-          }
-          else {
-            this.isPaginationReStyle = 0
-            this.current_page = current_page
-          }
-
+        //20/08/2020: Nam added this for pagination (view Pagination.vue for details)
+        async updatePage(start, size, current_page){
           //These commented codes are testing
           // let data = await paper_by_title({query: this.$route.query.query,start: (this.current_page-1)*10,size: 10,})
           // let last_previoud_paper_id = data.hits.hits[-1]._source.corpusID
@@ -249,28 +232,16 @@
           // this.total_count= this.$store.state.search_result.total;
           // this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
           // this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-
           let router_query = {query: this.$route.query.query,
-                              start: (this.current_page-1)*this.per_page,
-                              size: this.per_page,
+                              start: start,
+                              size: size,
                               return_top_author: true,
                               top_author_size: 10,
-                              page: this.current_page}
+                              page: current_page}
+
           await this.$router.push({name: 'search', query: router_query})
-
-
         },
-        handlePreviousandNext(isPrevious){
-          if(isPrevious){
-            this.current_page = Math.max(1, this.current_page-1)
-            this.handlePageChange(this.current_page)
-          }
-          else{
-            this.current_page = Math.min(this.current_page+1, this.total_count)
-            this.handlePageChange(this.current_page)
-          }
-        },
-        //Nam added this for dropdown search
+        //18/08/2020: Nam added this for dropdown search
         async updateFOSChecked(checkedCategories) {
           this.checkedCategories = checkedCategories
           let query_params = {query: this.$route.query.query,
