@@ -32,7 +32,7 @@
 <script>
     import TimelineItem from "../../components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
-    import {wiki_summary} from "@/API/elastic_api";
+    //import {wiki_summary} from "@/API/elastic_api";
     export default {
       name: "_topic_detail",
       components: {TimelineItem},
@@ -50,11 +50,11 @@
           source: ["title","abstract","year","authors","corpusID"]
         }
         let data = await paper_by_topic(query_params)
-        let wiki_topic_summary = await wiki_summary({name: topic_name})
+        //let wiki_topic_summary = await wiki_summary({name: topic_name})
         return {
           topic_name: topic_name[0],
           papers: data.hits.hits,
-          wiki_topic_summary: wiki_topic_summary
+          //wiki_topic_summary: wiki_topic_summary
         }
       }
     }

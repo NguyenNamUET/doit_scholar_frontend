@@ -5,11 +5,12 @@
         <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>
         <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>
 
-<!--         for example 1 2 3 ... 13-->
+        <!-- for example 1 2 3 ... 13-->
         <ul class="pagination-list" v-if="isPaginationReStyle === 0">
           <li v-for="page in page_array.slice(0,3)"
             @click="handlePageChange(page+1)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)"
+            :class="{'is-current': activePage === (page+1)}">
               {{page + 1}}
             </a>
           </li>
@@ -17,8 +18,9 @@
             <span class="pagination-ellipsis">&hellip;</span>
           </li>
           <li @click="handlePageChange(page_num)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page_num+1)">
-              {{page_num + 1}}
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + page_num"
+            :class="{'is-current': activePage === page_num}">
+              {{page_num}}
             </a>
           </li>
         </ul>
@@ -30,51 +32,37 @@
               1
             </a>
           </li>
-          <li>
+          <li v-if="current_page > 3">
             <span class="pagination-ellipsis">&hellip;</span>
           </li>
 
           <li @click="handlePreviousandNext(true)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page - 1)">
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page-1)"
+            :class="{'is-current': activePage === (current_page-1)}">
               {{current_page - 1}}
             </a>
           </li>
           <li>
-            <a class="pagination-link pagi-button is-current" :aria-label="'Goto page ' + (current_page)">
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page)"
+            :class="{'is-current': activePage === current_page}">
               {{current_page}}
             </a>
           </li>
-           <li @click="handlePreviousandNext(false)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page + 1)">
+           <li v-if="current_page<page_num-1" @click="handlePreviousandNext(false)">
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page+1)"
+            :class="{'is-current': activePage === (current_page+1)}">
               {{current_page + 1}}
             </a>
           </li>
 
-          <li>
-            <span class="pagination-ellipsis">&hellip;</span>
-          </li>
-          <li @click="handlePageChange(page_num)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page_num+1)">
-              {{page_num + 1}}
-            </a>
-          </li>
-        </ul>
-
-        <!-- for example 1 ... 11 12 13-->
-        <ul class="pagination-list" v-if="isPaginationReStyle === 2">
-          <li @click="handlePageChange(1)">
-            <a class="pagination-link pagi-button" aria-label="Goto page 1">
-              1
-            </a>
-          </li>
-          <li>
+          <li v-if="current_page < page_num-2">
             <span class="pagination-ellipsis">&hellip;</span>
           </li>
 
-          <li v-for="page in page_array.slice(current_page-1,current_page+3)"
-            @click="handlePageChange(page)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)">
-              {{page + 1}}
+          <li v-if="current_page<page_num" @click="handlePageChange(page_num)">
+            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + page_num"
+            :class="{'is-current': activePage === page_num}">
+              {{page_num}}
             </a>
           </li>
         </ul>
@@ -91,6 +79,7 @@ export default {
   data() {
     return {
       per_page: 1,
+      activePage: null,
       isPaginationReStyle: 0
     }
   },
@@ -104,10 +93,8 @@ export default {
   },
   mounted(){
     if ((this.total_count/this.per_page) > 5) {
-        if (this.current_page >= 3 && this.current_page <= (this.total_count / this.per_page) - 5) {
+        if (this.current_page >= 3 && this.current_page <= (this.total_count / this.per_page)) {
           this.isPaginationReStyle = 1
-        } else if (this.current_page === (this.total_count / this.per_page) - 3) {
-          this.isPaginationReStyle = 2
         } else {
           this.isPaginationReStyle = 0
         }
@@ -115,15 +102,13 @@ export default {
       else{
         this.isPaginationReStyle = 0
       }
+      this.activePage = this.current_page
   },
   methods:{
     async handlePageChange(current_page) {
       if ((this.total_count/this.per_page) > 5) {
-        if (current_page >= 3 && current_page <= (this.total_count / this.per_page) - 5) {
+        if (current_page >= 3 && current_page <= (this.total_count / this.per_page)) {
           this.isPaginationReStyle = 1
-          this.current_page = current_page
-        } else if (current_page === (this.total_count / this.per_page) - 3) {
-          this.isPaginationReStyle = 2
           this.current_page = current_page
         } else {
           this.isPaginationReStyle = 0
@@ -134,6 +119,9 @@ export default {
         this.isPaginationReStyle = 0
       }
 
+      this.activePage = current_page
+
+      console.log(this.isPaginationReStyle)
       let start = (current_page - 1) * this.per_page;
       let size = this.per_page;
       let page = this.current_page;
