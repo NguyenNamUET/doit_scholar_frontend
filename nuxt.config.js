@@ -43,6 +43,7 @@ export default {
   */
   plugins: [
     '~/plugins/jsonld',
+    '~/plugins/vue-scrollto.js',
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
