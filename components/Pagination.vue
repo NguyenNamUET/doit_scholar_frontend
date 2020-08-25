@@ -2,145 +2,179 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-8 is-vertical">
       <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-previous pagi-button" @click="handlePreviousandNext(true)">Trang trước</a>
-        <a class="pagination-next pagi-button" @click="handlePreviousandNext(false)">Trang sau</a>
+        <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
+           @click="prevPage()" @keyup.enter="prevPage()">Trước</a>
+        <a v-if="!(lastPageSelected() && hidePrevNext)" class="pagination-next"
+           @click="nextPage()" @keyup.enter="nextPage()">Sau</a>
 
-        <!-- for example 1 2 3 ... 13-->
-        <ul class="pagination-list" v-if="isPaginationReStyle === 0">
-          <li v-for="page in page_array.slice(0,3)"
-            @click="handlePageChange(page+1)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (page+1)"
-            :class="{'is-current': activePage === (page+1)}">
-              {{page + 1}}
+        <ul class="pagination-list">
+          <li v-for="page in pages">
+            <span v-if="page.breakView" class="pagination-ellipsis">&hellip;</span>
+            <a v-else-if="page.disabled" class="pagination-link is-text" :aria-label="'Goto page '+page.content">{{ page.content }}</a>
+            <a v-else class="pagination-link is-text" :aria-label="'Goto page '+page.content"
+               :class="[page.selected ? 'is-current' : '']"
+               @click="handlePageSelected(page.index + 1)" @keyup.enter="handlePageSelected(page.index + 1)">
+                  {{page.content}}
             </a>
-          </li>
-          <li v-if="page_num-5 > 0">
-            <span class="pagination-ellipsis">&hellip;</span>
-          </li>
-          <li @click="handlePageChange(page_num)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + page_num"
-            :class="{'is-current': activePage === page_num}">
-              {{page_num}}
-            </a>
-          </li>
+         </li>
         </ul>
-
-        <!-- for example 1 ... 4 5 6 ... 13-->
-        <ul class="pagination-list" v-if="isPaginationReStyle === 1">
-          <li @click="handlePageChange(1)">
-            <a class="pagination-link pagi-button" aria-label="Goto page 1">
-              1
-            </a>
-          </li>
-          <li v-if="current_page > 3">
-            <span class="pagination-ellipsis">&hellip;</span>
-          </li>
-
-          <li @click="handlePreviousandNext(true)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page-1)"
-            :class="{'is-current': activePage === (current_page-1)}">
-              {{current_page - 1}}
-            </a>
-          </li>
-          <li>
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page)"
-            :class="{'is-current': activePage === current_page}">
-              {{current_page}}
-            </a>
-          </li>
-           <li v-if="current_page<page_num-1" @click="handlePreviousandNext(false)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + (current_page+1)"
-            :class="{'is-current': activePage === (current_page+1)}">
-              {{current_page + 1}}
-            </a>
-          </li>
-
-          <li v-if="current_page < page_num-2">
-            <span class="pagination-ellipsis">&hellip;</span>
-          </li>
-
-          <li v-if="current_page<page_num" @click="handlePageChange(page_num)">
-            <a class="pagination-link pagi-button" :aria-label="'Goto page ' + page_num"
-            :class="{'is-current': activePage === page_num}">
-              {{page_num}}
-            </a>
-          </li>
-        </ul>
-
       </nav>
     </div>
   </div>
+
 </template>
 
 <script>
 export default {
   name: "Pagination",
-  props: ["total_count", "current_page"],
+  props: {
+    value: {
+      type: Number
+    },
+    pageCount: {
+      type: Number,
+      required: true
+    },
+    forcePage: {
+      type: Number
+    },
+    clickHandler: {
+      type: Function,
+      default: () => { }
+    },
+    pageRange: {
+      type: Number,
+      default: 3
+    },
+    marginPages: {
+      type: Number,
+      default: 1
+    },
+    firstLastButton: {
+      type: Boolean,
+      default: false
+    },
+    hidePrevNext: {
+      type: Boolean,
+      default: false
+    }
+  },
+  beforeUpdate() {
+    if (this.forcePage === undefined) return
+    if (this.forcePage !== this.selected) {
+      this.selected = this.forcePage
+    }
+  },
+  computed: {
+    selected: {
+      get: function() {
+        return this.value || this.innerValue
+      },
+      set: function(newValue) {
+        this.innerValue = newValue
+      }
+    },
+    pages: function () {
+      let items = {}
+      if (this.pageCount <= this.pageRange) {
+        for (let index = 0; index < this.pageCount; index++) {
+          let page = {
+            index: index,
+            content: index + 1,
+            selected: index === (this.selected - 1)
+          }
+          items[index] = page
+        }
+      } else {
+        const halfPageRange = Math.floor(this.pageRange / 2)
+        let setPageItem = index => {
+          let page = {
+            index: index,
+            content: index + 1,
+            selected: index === (this.selected - 1)
+          }
+          items[index] = page
+        }
+        let setBreakView = index => {
+          let breakView = {
+            disabled: true,
+            breakView: true
+          }
+          items[index] = breakView
+        }
+        // 1st - loop thru low end of margin pages
+        for (let i = 0; i < this.marginPages; i++) {
+          setPageItem(i);
+        }
+        // 2nd - loop thru selected range
+        let selectedRangeLow = 0;
+        if (this.selected - halfPageRange > 0) {
+          selectedRangeLow = this.selected - 1 - halfPageRange;
+        }
+        let selectedRangeHigh = selectedRangeLow + this.pageRange - 1;
+        if (selectedRangeHigh >= this.pageCount) {
+          selectedRangeHigh = this.pageCount - 1;
+          selectedRangeLow = selectedRangeHigh - this.pageRange + 1;
+        }
+        for (let i = selectedRangeLow; i <= selectedRangeHigh && i <= this.pageCount - 1; i++) {
+          setPageItem(i);
+        }
+        // Check if there is breakView in the left of selected range
+        if (selectedRangeLow > this.marginPages) {
+          setBreakView(selectedRangeLow - 1)
+        }
+        // Check if there is breakView in the right of selected range
+        if (selectedRangeHigh + 1 < this.pageCount - this.marginPages) {
+          setBreakView(selectedRangeHigh + 1)
+        }
+        // 3rd - loop thru high end of margin pages
+        for (let i = this.pageCount - 1; i >= this.pageCount - this.marginPages; i--) {
+          setPageItem(i);
+        }
+      }
+      return items
+    }
+  },
   data() {
     return {
-      per_page: 1,
-      activePage: null,
-      isPaginationReStyle: 0
+      innerValue: 1,
     }
   },
-  computed:{
-    page_num: function () {
-      return Math.ceil(this.total_count/this.per_page)
+  methods: {
+    handlePageSelected(selected) {
+      if (this.selected === selected) return
+      this.innerValue = selected
+      this.$emit('input', selected)
+      this.clickHandler(selected)
     },
-    page_array: function() {
-      return Array.from(Array(this.page_num).keys())
-    }
-  },
-  mounted(){
-    if ((this.total_count/this.per_page) > 5) {
-        if (this.current_page >= 3 && this.current_page <= (this.total_count / this.per_page)) {
-          this.isPaginationReStyle = 1
-        } else {
-          this.isPaginationReStyle = 0
-        }
-      }
-      else{
-        this.isPaginationReStyle = 0
-      }
-      this.activePage = this.current_page
-  },
-  methods:{
-    async handlePageChange(current_page) {
-      if ((this.total_count/this.per_page) > 5) {
-        if (current_page >= 3 && current_page <= (this.total_count / this.per_page)) {
-          this.isPaginationReStyle = 1
-          this.current_page = current_page
-        } else {
-          this.isPaginationReStyle = 0
-          this.current_page = current_page
-        }
-      }
-      else{
-        this.isPaginationReStyle = 0
-      }
-
-      this.activePage = current_page
-
-      console.log(this.isPaginationReStyle)
-      let start = (current_page - 1) * this.per_page;
-      let size = this.per_page;
-      let page = this.current_page;
-      this.$emit("update_page", start, size, page)
+    prevPage() {
+      if (this.selected <= 1) return
+      this.handlePageSelected(this.selected - 1)
     },
-
-    handlePreviousandNext(isPrevious) {
-      if (isPrevious) {
-        this.current_page = Math.max(1, this.current_page - 1)
-        this.handlePageChange(this.current_page)
-      } else {
-        this.current_page = Math.min(this.current_page + 1, this.page_num)
-        this.handlePageChange(this.current_page)
-      }
+    nextPage() {
+      if (this.selected >= this.pageCount) return
+      this.handlePageSelected(this.selected + 1)
+    },
+    firstPageSelected() {
+      return this.selected === 1
+    },
+    lastPageSelected() {
+      return (this.selected === this.pageCount) || (this.pageCount === 0)
+    },
+    selectFirstPage() {
+      if (this.selected <= 1) return
+      this.handlePageSelected(1)
+    },
+    selectLastPage() {
+      if (this.selected >= this.pageCount) return
+      this.handlePageSelected(this.pageCount)
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="css" scoped>
+a:hover {
+ text-decoration: none;
+}
 </style>

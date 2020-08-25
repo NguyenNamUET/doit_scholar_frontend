@@ -48,9 +48,14 @@
 
 
     <!------------------------      PAGINATION HERE   --------------------------->
-    <Pagination :total_count="this.total_count"
-                :current_page="this.current_page"
-                @update_page="updatePage"></Pagination>
+    <Pagination :page-count="this.total_count"
+                v-model="current_page"
+                :click-handler="updatePage"
+                :page-range="3"
+                :margin-pages="2"
+                :container-class="'pagination'"
+                :page-class="'page-item'">
+    </Pagination>
     <!-------------------------------------------------------------------------->
   </div>
 
@@ -62,14 +67,13 @@
 
 <script>
     import {formatNumber} from "../assets/utils";
+    import {filtered_keys} from "../assets/utils";
     import DropDown from "../components/DropDown";
-    import {fields_type} from "../assets/utils";
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
     import NuxtError from "@/components/ErrorPage";
     import Pagination from "@/components/Pagination";
-    import {paper_by_title} from "@/API/elastic_api";
 
     export default {
       name: "search",
@@ -90,15 +94,13 @@
           search_results: null,
           author_hidden: true,
           msg_hidden: false,
-          topic: {
-            name: 'Khoa Học Máy Tính',
-            description: 'Khoa học máy tính là cách tiếp cận khoa học và thực tiễn để tính toán và các ứng dụng của nó và nghiên cứu có hệ thống về tính khả thi, cấu trúc, biểu hiện và cơ giới hóa các thủ tục (hoặc các thuật toán) cơ bản làm cơ sở cho việc thu thập, đại diện, xử lý, lưu trữ, truyền thông và truy cập thông tin.'
-          },
-          //Nam added this for dropdown
-          checkedCategories: [],
 
-          //20/08/2020: Nam changed this for pagination
-          current_page: this.$route.params.page
+          //Nam added this for dropdown
+          authorsChecked: [],
+          fosChecked: [],
+          //24/08/2020: Nam changed this for pagination
+          current_page: 1,
+          per_page: 1
         }
       },
       filters: {
@@ -108,9 +110,30 @@
       },
       async asyncData({query, store}) {
         let query_params = query
+        console.log("asyncData: ",query)
+        if("top_author_size" in query) {
+          query_params["return_top_author"] = true
+        }
+        if("fos0" in query) {
+          let fos_keys = filtered_keys(Object.assign({},query), /fos/)
+          query_params["fields_of_study"] = []
+          for(let i=0; i<fos_keys.length; i++){
+            let key = fos_keys[i]
+            query_params["fields_of_study"].push(query[key])
+          }
+        }
+        if("author0" in query) {
+          let author_keys = filtered_keys(Object.assign({},query), /author\d/)
+          query_params["authors"] = []
+          for(let i=0; i<author_keys.length; i++){
+            let key = author_keys[i]
+            query_params["authors"].push(query[key])
+          }
+        }
+        console.log("asyncData: ",query_params)
         query_params["return_fos_aggs"]= true
         await store.dispatch('search_result/paper_by_title', query_params)
-
+        console.log(store.state.search_result)
         if(store.state.search_result.search_results.length > 0) {
           return {
             query_params: query,
@@ -137,121 +160,48 @@
       },
       methods: {
         //20/08/2020: Nam added this for pagination (view Pagination.vue for details)
-        async updatePage(start, size, current_page){
-          //These commented codes are testing
-          // let data = await paper_by_title({query: this.$route.query.query,start: (this.current_page-1)*10,size: 10,})
-          // let last_previoud_paper_id = data.hits.hits[-1]._source.corpusID
-          // let query_params = {query: this.$route.query.query,start: 0,size: 10,deep_pagination: true,last_paper_id: last_previoud_paper_id,return_top_author: true,top_author_size: 10,return_fos_aggs: true,page: current_page}
-
-          //Nam added this to jump tp random page
-          //Cannot jump to more than 10k results
-          // let query_params = {
-          //                       query: this.$route.query.query,
-          //                       start: (this.current_page-1)*this.per_page,
-          //                       size: this.per_page,
-          //                       return_top_author: true,
-          //                       top_author_size: 10,
-          //                       return_fos_aggs: true,
-          //                       page: current_page
-          //                     }
-          // await this.$store.dispatch('search_result/paper_by_title', query_params)
-          //
-          //
-          // this.current_page= parseInt(query_params['page']);
-          // this.search_results= this.$store.state.search_result.search_results;
-          // this.keyword= query_params['query'];
-          // this.total_count= this.$store.state.search_result.total;
-          // this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
-          // this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-          let router_query = {query: this.$route.query.query,
-                              start: start,
-                              size: size,
-                              return_top_author: true,
-                              top_author_size: 10,
-                              page: current_page}
-
+        updatePage(pageNum){
+          let router_query = Object.assign({},this.$route.query)
+          router_query["start"]=(pageNum - 1) * this.per_page
+          router_query["size"]=this.per_page
+          router_query["page"]=pageNum;
+          //Delete these to have consitent router
+          delete router_query["fields_of_study"]
+          delete router_query["return_top_author"]
+          delete router_query["return_fos_aggs"]
+          console.log("updatePage: ", router_query)
           this.$router.push({name: 'search', query: router_query})
         },
-        //18/08/2020: Nam added this for dropdown search
+        //24/08/2020: Nam fixed this for dropdown search
         async updateFOSChecked(checkedCategories) {
-          this.checkedCategories = checkedCategories
-          let query_params = {query: this.$route.query.query,
-                              fields_of_study: checkedCategories,
-                              fos_is_should: false, //if True then search by OR rule, else then by AND rule
-                              return_fos_aggs: true,
-                              return_top_author: true,
-                              top_author_size: 10,
+          this.fosChecked = checkedCategories
+          let router_query = {query: this.$route.query.query,
                               start: 0,
-                              size: 10,
-                              page: this.current_page}
-
-
-          await this.$store.dispatch('search_result/paper_by_fos_and_title', query_params)
-          if(this.$store.state.search_result.search_results.length > 0){
-            this.current_page= parseInt(query_params['page']);
-            this.search_results= this.$store.state.search_result.search_results;
-            this.keyword= query_params['query'];
-            this.total_count= this.$store.state.search_result.total;
-            this.author_info= this.$store.state.search_result.aggregation.author_count.name.buckets;
-            this.field_sort= this.$store.state.search_result.aggregation.fields_of_study.buckets;
-
-            // let router_query = {query: this.keyword,
-            //                     fos: query_params["fields_of_study"].join(','),
-            //                     start: (this.current_page-1)*this.per_page,
-            //                     size: this.per_page,
-            //                     return_top_author: true,
-            //                     top_author_size: 10,
-            //                     page: this.current_page}
-            // await this.$router.push({path: 'search', query: router_query})
-           }
-          else{
-            this.current_page= parseInt(query_params['page']);
-            this.search_results= this.$store.state.search_result.search_results;
-            this.keyword= query_params['query'];
-            this.total_count= 0;
-            this.author_info= [];
-            this.field_sort= [];
+                              size: this.$route.query.size,
+                              top_author_size: 10,
+                              page: 1
           }
+          //Create fields of study params for example ?fos0=Medicine&fos1=Engineering
+          for(let i=0; i<this.fosChecked.length; i++){
+            router_query[`fos${i}`]=this.fosChecked[i]
+          }
+          this.$router.push({name: 'search', query: router_query})
+          console.log("updateFOSChecked: ",router_query)
         },
         async updateAuthorsChecked(checkedCategories) {
-          this.checkedCategories = checkedCategories
-          let query_params = {
-            query: this.$route.query.query,
-            authors: checkedCategories,
-            author_is_should: false, //if True then search by OR rule, else then by AND rule
-            return_fos_aggs: true,
-            return_top_author: true,
-            top_author_size: 10,
-            start: 0,
-            size: 10,
-            page: this.current_page
+          this.authorsChecked = checkedCategories
+          let router_query = {query: this.$route.query.query,
+                              start: this.$route.query.start,
+                              size: this.$route.query.size,
+                              top_author_size: 10,
+                              page: this.current_page
           }
-
-          await this.$store.dispatch('search_result/paper_by_authors_and_title', query_params)
-          if (this.$store.state.search_result.search_results.length > 0) {
-            this.current_page = parseInt(query_params['page']);
-            this.search_results = this.$store.state.search_result.search_results;
-            this.keyword = query_params['query'];
-            this.total_count = this.$store.state.search_result.total;
-            this.author_info = this.$store.state.search_result.aggregation.author_count.name.buckets;
-            this.field_sort = this.$store.state.search_result.aggregation.fields_of_study.buckets;
-
-            // let router_query = {query: this.keyword,
-            //                     fos: query_params["fields_of_study"].join(','),
-            //                     start: (this.current_page-1)*this.per_page,
-            //                     size: this.per_page,
-            //                     return_top_author: true,
-            //                     top_author_size: 10,
-            //                     page: this.current_page}
-            // await this.$router.push({path: 'search', query: router_query})
-          } else {
-            this.current_page = parseInt(query_params['page']);
-            this.search_results = this.$store.state.search_result.search_results;
-            this.keyword = query_params['query'];
-            this.total_count = 0;
-            this.author_info = [];
-            this.field_sort = [];
+          //Create authors params for example ?author0=Medicine&author1=Engineering
+          for(let i=0; i<this.authorsChecked.length; i++){
+            router_query[`author${i}`]=this.authorsChecked[i]
           }
+          this.$router.push({name: 'search', query: router_query})
+          console.log("updateAuthorsChecked: ",router_query)
         }
       }
     }
@@ -273,7 +223,5 @@
   button:hover {
     cursor: pointer;
   }
-  .pagi-button:hover {
-    text-decoration: none;
-  }
+
 </style>

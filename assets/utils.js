@@ -63,8 +63,18 @@ function chart_prep(citations) {
   return citation_count
 }
 
+function filtered_keys(obj, filter) {
+  var key, keys = [];
+  for (key in obj) {
+    if (obj.hasOwnProperty(key) && filter.test(key)) {
+      keys.push(key);
+    }
+  }
+  return keys;
+}
 export {
   formatNumber,
+  filtered_keys,
   fields_type,
   publication_type,
   formatTitle,
