@@ -1,3 +1,4 @@
+import webpack from 'webpack'
 
 export default {
   /*
@@ -84,5 +85,11 @@ export default {
         }
       }
     },
+    plugins: [
+      new webpack.ProvidePlugin({
+        // global modules
+        _: 'lodash'
+      })
+    ]
   }
 }

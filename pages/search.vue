@@ -46,7 +46,9 @@
     </div>
     <!-------------------------------------------------------------------------->
 
-
+    <button @click="">Testing</button>
+    <span>{{this.fos_checked}} and {{this.authors_checked}}</span>
+    <span>{{this.fos_query}}</span>
     <!-------------------------   PAGINATION HERE   ---------------------------->
     <!--HOW TO USE-->
     <!--page-count: number of pages-->
@@ -102,8 +104,9 @@
           msg_hidden: false,
 
           //24/08/2020: Nam added this for dropdown
-          authorsChecked: [],
-          fosChecked: [],
+          authors_checked: [],
+          fos_checked: [],
+          fos_query: [],
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
@@ -140,8 +143,11 @@
             query_params["authors"].push(query[key])
           }
         }
+
         //Added for fos agg
         query_params["return_fos_aggs"]= true
+
+        console.log("asyncData: ", query_params)
 
         await store.dispatch('search_result/paper_by_title', query_params)
 
@@ -185,7 +191,7 @@
         },
         //24/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
-          this.fosChecked = checkedCategories
+          this.fos_checked = checkedCategories
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -193,14 +199,21 @@
                               page: 1
           }
           //Create fields of study params for example ?fos0=Medicine&fos1=Engineering
-          for(let i=0; i<this.fosChecked.length; i++){
-            router_query[`fos${i}`]=this.fosChecked[i]
+          for(let i=0; i<this.fos_checked.length; i++){
+            router_query[`fos${i}`]=this.fos_checked[i]
+            this.fos_query.push({[`fos${i}`]:router_query[`fos${i}`]})
           }
-          this.$router.push({name: 'search', query: router_query})
+          if("author0" in this.$route.query){
+            let author_keys = filteredKeys(Object.assign({},this.$route.query), /author\d/)
+            for(let i=0; i<author_keys.length; i++){
+              router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
+            }
+          }
 
+          this.$router.push({name: 'search', query: router_query})
         },
         updateAuthorsChecked(checkedCategories) {
-          this.authorsChecked = checkedCategories
+          this.authors_checked = checkedCategories
           let router_query = {query: this.$route.query.query,
                               start: this.$route.query.start,
                               size: this.$route.query.size,
@@ -208,11 +221,16 @@
                               page: this.current_page
           }
           //Create authors params for example ?author0=Medicine&author1=Engineering
-          for(let i=0; i<this.authorsChecked.length; i++){
-            router_query[`author${i}`]=this.authorsChecked[i]
+          for(let i=0; i<this.authors_checked.length; i++){
+            router_query[`author${i}`]=this.authors_checked[i]
+          }
+          if("fos0" in this.$route.query){
+            let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)
+            for(let i=0; i<fos_keys.length; i++){
+              router_query[[fos_keys[i]]]=this.$route.query[fos_keys[i]]
+            }
           }
           this.$router.push({name: 'search', query: router_query})
-
         }
       }
     }
