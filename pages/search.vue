@@ -47,14 +47,16 @@
     <!-------------------------------------------------------------------------->
 
 
-    <!------------------------      PAGINATION HERE   --------------------------->
+    <!-------------------------   PAGINATION HERE   ---------------------------->
     <!--HOW TO USE-->
     <!--page-count: number of pages-->
     <!--click-handler: what happen when click on a page button-->
     <!--page-range: number of page display at middle (ex:1 ... 4 5 6 ... 24)-->
     <!--margin-pages: number of page at 2 end (ex above margin-pages=1)-->
-    <!--HOW TO USE-->
-    <!--HOW TO USE-->
+    <!--v-model="current_page" to track selected page (must have)-->
+
+    <!--Took inspiration from this project
+    https://github.com/lokyoung/vuejs-paginate/blob/master/src/components/Paginate.vue-->
     <Pagination :page-count="this.total_count"
                 v-model="current_page"
                 :click-handler="updatePage"
@@ -72,7 +74,7 @@
 
 <script>
     import {formatNumber} from "../assets/utils";
-    import {filtered_keys} from "../assets/utils";
+    import {filteredKeys} from "../assets/utils";
     import DropDown from "../components/DropDown";
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
@@ -91,7 +93,6 @@
       },
       data() {
         return {
-          total_count: 0,
           field_sort: null,
           publication_sort: publication_type,
           query_params: null,
@@ -100,10 +101,11 @@
           author_hidden: true,
           msg_hidden: false,
 
-          //Nam added this for dropdown
+          //24/08/2020: Nam added this for dropdown
           authorsChecked: [],
           fosChecked: [],
           //24/08/2020: Nam changed this for pagination
+          total_count: 0,
           current_page: 1,
           per_page: 1
         }
@@ -122,7 +124,7 @@
         }
         //Gather all fos<digit> to form Array of checked fields of study
         if("fos0" in query) {
-          let fos_keys = filtered_keys(Object.assign({},query), /fos/)
+          let fos_keys = filteredKeys(Object.assign({},query), /fos/)
           query_params["fields_of_study"] = []
           for(let i=0; i<fos_keys.length; i++){
             let key = fos_keys[i]
@@ -131,7 +133,7 @@
         }
         //Gather all author<digit> to form Array of checked authors
         if("author0" in query) {
-          let author_keys = filtered_keys(Object.assign({},query), /author\d/)
+          let author_keys = filteredKeys(Object.assign({},query), /author\d/)
           query_params["authors"] = []
           for(let i=0; i<author_keys.length; i++){
             let key = author_keys[i]
