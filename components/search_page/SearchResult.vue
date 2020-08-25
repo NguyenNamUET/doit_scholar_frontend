@@ -18,13 +18,13 @@
             {{author.name}}
             <span v-if="index < search_result._source.authors.length - 1">,</span>
           </a>
-          <a
-            class="text-class-3"
+          <span
+            class="text-class-3 less-more-button"
             v-if="!author_hidden"
             v-on:click="author_hidden = true"
           >
-            ...rút gọn
-          </a>
+            &nbsprút gọn
+          </span>
 
           <a
             v-if="author_hidden"
@@ -35,13 +35,13 @@
             {{author.name}}
             <span v-if="index < search_result._source.authors.length - 1">,</span>
           </a>
-          <a
-            class="text-class-3"
+          <span
+            class="text-class-3 less-more-button"
             v-if="author_hidden && search_result._source.authors.length - 3 > 0"
             v-on:click="author_hidden = false"
           >
             + {{search_result._source.authors.length - 3}} tác giả
-          </a>
+          </span>
           |
           <a
             v-if="!topic_hidden"
@@ -52,13 +52,13 @@
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>
           </a>
-          <a
-            class="text-class-3"
+          <span
+            class="text-class-3 less-more-button"
             v-if="!topic_hidden"
             v-on:click="topic_hidden = true"
           >
-            ...rút gọn
-          </a>
+            &nbsprút gọn
+          </span>
 
           <a
             v-if="topic_hidden"
@@ -88,13 +88,13 @@
             {{field}}
             <span v-if="index < search_result._source.fieldsOfStudy.length - 1">,</span>
           </span>
-          <a
-            class="text-class-3"
+          <span
+            class="text-class-3 less-more-button"
             v-if="!field_hidden"
             v-on:click="field_hidden = true"
           >
-            ...rút gọn
-          </a>
+            &nbsprút gọn
+          </span>
 
           <span
             v-if="field_hidden"
@@ -103,13 +103,13 @@
             {{field}}
             <span v-if="index < search_result._source.fieldsOfStudy.length - 1">,</span>
           </span>
-          <a
+          <span
             v-if="field_hidden && search_result._source.fieldsOfStudy.length - 1 > 0"
-            class="text-class-3"
+            class="text-class-3 less-more-button"
             v-on:click="field_hidden = false"
           >
             + {{search_result._source.fieldsOfStudy.length - 1}} lĩnh vực
-          </a>
+          </span>
         </div>
         <p v-if="!abstract_hidden" class="is-size-6">
           {{search_result._source.abstract}}
@@ -165,5 +165,16 @@
     background-color: white;
     margin-bottom: 30px;
     box-shadow: 0 0 6px rgba(2,20,31,0.1);
+  }
+  .less-more-button:hover {
+    text-decoration: none;
+    background: #dbdbdb;
+    cursor: pointer
+  }
+  .less-more-button{
+    color: #8c9296;
+    background: #cccccc;
+    border-radius: 3px;
+    padding: 1px;
   }
 </style>

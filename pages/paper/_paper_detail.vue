@@ -39,13 +39,13 @@
               {{author.name}}
               <span v-if="index < paper_detail.authors.length - 1">,</span>
             </a>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="!author_hidden"
               v-on:click="author_hidden = true"
             >
-              rút gọn
-            </a>
+              &nbsprút gọn
+            </span>
 
             <a
               v-if="author_hidden"
@@ -56,13 +56,13 @@
               {{author.name}}
               <span v-if="index < paper_detail.authors.length - 1">,</span>
             </a>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="author_hidden && paper_detail.authors.length - 3 > 0"
               v-on:click="author_hidden = false"
             >
-              + {{paper_detail.authors.length - 3}} tác giả
-            </a>
+              &nbsp+ {{paper_detail.authors.length - 3}} tác giả
+            </span>
             |
             <span>{{paper_detail.year}} </span>
 
@@ -75,13 +75,13 @@
             {{field}}
             <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
           </span>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="!field_hidden"
               v-on:click="field_hidden = true"
             >
-              rút gọn
-            </a>
+              &nbsprút gọn
+            </span>
 
             <span
               v-if="field_hidden"
@@ -90,22 +90,28 @@
             {{field}}
             <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
           </span>
-            <a
+            <span
               v-if="field_hidden && paper_detail.fieldsOfStudy.length - 1 > 0"
-              class="text-class-3"
+              class="text-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
-              + {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
-            </a>
+              &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
+            </span>
           </div>
-          <p v-if="!abstract_hidden" class="is-size-6">
-            {{paper_detail.abstract}}
-            <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
-          </p>
-          <p v-else class="is-size-6">
-                      {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
-            <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
-          </p>
+          <div v-if="paper_detail.abstract">
+            <p v-if="!abstract_hidden" class="is-size-6">
+              {{paper_detail.abstract}}
+              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+            </p>
+            <p v-else class="is-size-6">
+                        {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+            </p>
+          </div>
+          <div v-else>
+            <p class="is-size-6">Không có thông tin về Tóm tắt</p>
+          </div>
+
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
               <button class="level-item button is-info">Xem PDF</button>
@@ -377,7 +383,7 @@
   }
   .nav-item:hover {
     text-decoration: none;
-    color: #4e54c8;
+    color: #4e54c8
   }
   .container {
     padding: 40px 20px;
@@ -395,5 +401,16 @@
   .topic_list {
     display:inline-block;
     margin: 10px;
+  }
+  .less-more-button:hover {
+    text-decoration: none;
+    background: #dbdbdb;
+    cursor: pointer
+  }
+  .less-more-button{
+    color: #8c9296;
+    background: #cccccc;
+    border-radius: 3px;
+    padding: 1px;
   }
 </style>

@@ -3,21 +3,26 @@
     <div style="background-color: #e6e6e6">
       <div class="container">
         <div class="tile is-ancestor is-vertical">
-
           <div class="tile is-parent is-8" >
             <div class="tile is-child">
               <h1 class="is-size-2">
                 <b style="color: #2e414f">{{topic_name}}</b>
-              </h1>
-              <h1 class="is-size-6">
-                <p>{{wiki_topic_summary}}</p>
               </h1>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="container">
+    <div v-if="papers" class="container">
+      <div class="tile is-parent is-vertical">
+        <div class="timeline">
+          <div  v-for="item in papers">
+            <TimelineItem v-bind:paper="item._source"></TimelineItem>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="container">
       <div class="tile is-parent is-vertical">
         <div class="timeline">
           <div  v-for="item in papers">
@@ -51,10 +56,18 @@
         }
         let data = await paper_by_topic(query_params)
         //let wiki_topic_summary = await wiki_summary({name: topic_name})
-        return {
-          topic_name: topic_name[0],
-          papers: data.hits.hits,
-          //wiki_topic_summary: wiki_topic_summary
+        if(Object.keys(data).length !== 0 ){
+          return {
+            topic_name: topic_name[0],
+            papers: data.hits.hits,
+            //wiki_topic_summary: wiki_topic_summary
+          }
+        }
+        else{
+          return {
+            topic_name: topic_name[0],
+            papers: null
+          }
         }
       }
     }

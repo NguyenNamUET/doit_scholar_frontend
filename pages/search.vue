@@ -46,9 +46,7 @@
     </div>
     <!-------------------------------------------------------------------------->
 
-    <button @click="">Testing</button>
-    <span>{{this.fos_checked}} and {{this.authors_checked}}</span>
-    <span>{{this.fos_query}}</span>
+
     <!-------------------------   PAGINATION HERE   ---------------------------->
     <!--HOW TO USE-->
     <!--page-count: number of pages-->
