@@ -48,13 +48,18 @@
 
 
     <!------------------------      PAGINATION HERE   --------------------------->
+    <!--HOW TO USE-->
+    <!--page-count: number of pages-->
+    <!--click-handler: what happen when click on a page button-->
+    <!--page-range: number of page display at middle (ex:1 ... 4 5 6 ... 24)-->
+    <!--margin-pages: number of page at 2 end (ex above margin-pages=1)-->
+    <!--HOW TO USE-->
+    <!--HOW TO USE-->
     <Pagination :page-count="this.total_count"
                 v-model="current_page"
                 :click-handler="updatePage"
                 :page-range="3"
-                :margin-pages="2"
-                :container-class="'pagination'"
-                :page-class="'page-item'">
+                :margin-pages="2">
     </Pagination>
     <!-------------------------------------------------------------------------->
   </div>
@@ -110,10 +115,12 @@
       },
       async asyncData({query, store}) {
         let query_params = query
-        console.log("asyncData: ",query)
+
+        //Added for authors agg
         if("top_author_size" in query) {
           query_params["return_top_author"] = true
         }
+        //Gather all fos<digit> to form Array of checked fields of study
         if("fos0" in query) {
           let fos_keys = filtered_keys(Object.assign({},query), /fos/)
           query_params["fields_of_study"] = []
@@ -122,6 +129,7 @@
             query_params["fields_of_study"].push(query[key])
           }
         }
+        //Gather all author<digit> to form Array of checked authors
         if("author0" in query) {
           let author_keys = filtered_keys(Object.assign({},query), /author\d/)
           query_params["authors"] = []
@@ -130,10 +138,11 @@
             query_params["authors"].push(query[key])
           }
         }
-        console.log("asyncData: ",query_params)
+        //Added for fos agg
         query_params["return_fos_aggs"]= true
+
         await store.dispatch('search_result/paper_by_title', query_params)
-        console.log(store.state.search_result)
+
         if(store.state.search_result.search_results.length > 0) {
           return {
             query_params: query,
@@ -169,11 +178,11 @@
           delete router_query["fields_of_study"]
           delete router_query["return_top_author"]
           delete router_query["return_fos_aggs"]
-          console.log("updatePage: ", router_query)
+
           this.$router.push({name: 'search', query: router_query})
         },
         //24/08/2020: Nam fixed this for dropdown search
-        async updateFOSChecked(checkedCategories) {
+        updateFOSChecked(checkedCategories) {
           this.fosChecked = checkedCategories
           let router_query = {query: this.$route.query.query,
                               start: 0,
@@ -186,9 +195,9 @@
             router_query[`fos${i}`]=this.fosChecked[i]
           }
           this.$router.push({name: 'search', query: router_query})
-          console.log("updateFOSChecked: ",router_query)
+
         },
-        async updateAuthorsChecked(checkedCategories) {
+        updateAuthorsChecked(checkedCategories) {
           this.authorsChecked = checkedCategories
           let router_query = {query: this.$route.query.query,
                               start: this.$route.query.start,
@@ -201,7 +210,7 @@
             router_query[`author${i}`]=this.authorsChecked[i]
           }
           this.$router.push({name: 'search', query: router_query})
-          console.log("updateAuthorsChecked: ",router_query)
+
         }
       }
     }
