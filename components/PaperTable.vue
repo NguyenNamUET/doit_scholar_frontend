@@ -7,7 +7,7 @@
   >
 
     <template slot-scope="props">
-      <b-table-column field="title" label="Tiêu đề" searchable>
+      <b-table-column field="title" label="Tiêu đề">
         <nuxt-link
           :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.corpusID"
         >
@@ -29,7 +29,7 @@
         {{ props.row.year }}
       </b-table-column>
 
-      <b-table-column field="venue" label="Hội nghị" searchable>
+      <b-table-column field="venue" label="Hội nghị">
         <span v-if="props.row.venue !== ''">{{props.row.venue}}</span>
         <span v-else>
           Chưa có thông tin
