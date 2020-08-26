@@ -57,7 +57,7 @@
 
     <!--Took inspiration from this project
     https://github.com/lokyoung/vuejs-paginate/blob/master/src/components/Paginate.vue-->
-    <Pagination :page-count="this.total_count"
+    <Pagination :page-count="(Math.ceil(this.total_count/this.per_page))"
                 v-model="current_page"
                 :click-handler="updatePage"
                 :page-range="3"
@@ -108,7 +108,7 @@
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
-          per_page: 1
+          per_page: 10
         }
       },
       filters: {
