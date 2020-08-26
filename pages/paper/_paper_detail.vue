@@ -402,15 +402,4 @@
     display:inline-block;
     margin: 10px;
   }
-  .less-more-button:hover {
-    text-decoration: none;
-    background: #dbdbdb;
-    cursor: pointer
-  }
-  .less-more-button{
-    color: #8c9296;
-    background: #cccccc;
-    border-radius: 3px;
-    padding: 1px;
-  }
 </style>
