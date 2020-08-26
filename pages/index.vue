@@ -14,16 +14,16 @@
             <span></span>
           </span>
             </div>
-            <div id="navbarMenuHeroA" class="navbar-menu">
-              <div class="navbar-end">
-                <a class="navbar-item" href="/">
-                  Trang chủ
-                </a>
-                <a class="navbar-item" href="/">
-                  Đăng nhập
-                </a>
-              </div>
-            </div>
+<!--            <div id="navbarMenuHeroA" class="navbar-menu">-->
+<!--              <div class="navbar-end">-->
+<!--                <a class="navbar-item" href="/">-->
+<!--                  Trang chủ-->
+<!--                </a>-->
+<!--                <a class="navbar-item" href="/">-->
+<!--                  Đăng nhập-->
+<!--                </a>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </nav>
       </div>
@@ -124,7 +124,6 @@ export default {
     let author_count = await all_author({start:0, size:0})
     let paper_count = await all_paper({start:0, size:0})
     let fos_count = await all_field({size:0})
-    console.log(author_count)
     return {
       author_count: author_count.total.value,
       paper_count: paper_count.total.value,

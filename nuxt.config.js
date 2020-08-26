@@ -1,3 +1,4 @@
+import webpack from 'webpack'
 
 export default {
   server: {
@@ -46,10 +47,11 @@ export default {
   */
   plugins: [
     '~/plugins/jsonld',
+    '~/plugins/vue-scrollto.js',
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
-    {src: '~plugins/vue-infinite-scroll.js', ssr: false}
+    {src: '~/plugins/vue-infinite-scroll.js', ssr: false}
   ],
   /*
   ** Auto import components
@@ -88,5 +90,11 @@ export default {
         }
       }
     },
+    plugins: [
+      new webpack.ProvidePlugin({
+        // global modules
+        _: 'lodash'
+      })
+    ]
   }
 }

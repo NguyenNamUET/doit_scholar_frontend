@@ -63,8 +63,6 @@ const paper_by_title = async (query_params) => {
       deep_pagination:query_params.deep_pagination, last_paper_id:query_params.last_paper_id,
       return_top_author:query_params.return_top_author, top_author_size:query_params.top_author_size
     })
-    console.log("paper_by_title query_params: ", query_params)
-    console.log("paper_by_title result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -81,7 +79,6 @@ const paper_by_abstract = async(query_params) => {
       return_top_author: query_params.return_top_author,
       top_author_size: query_params.top_author_size
     })
-    console.log(result)
     return result.data
   } catch(e) {
     console.log(e)
@@ -105,7 +102,6 @@ const paper_by_topic = async(query_params) => {
       topics: query_params.topics,
       source: query_params.source
     })
-    console.log("paper_by_topic api: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -125,7 +121,6 @@ const paper_by_fos_and_title = async(query_params) => {
       start: query_params.start,
       size: query_params.size
     })
-    console.log("paper_by_fos_and_title api: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -156,6 +151,50 @@ const author_by_name = async(query_params) => {
   }
 }
 
+const paper_citation = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/citations', {
+      params: {
+        start: query_params.start,
+        size: 5
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const paper_references = async(query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/references', {
+      params: {
+        start: query_params.start,
+        size: 5
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+
+/////////////////WIKI/////////////////////////////////
+const wiki_summary = async(query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.wiki_summary, {
+      name: query_params.author_name
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -169,6 +208,11 @@ export {
   all_field,
 
   author_by_id,
-  author_by_name
+  author_by_name,
+
+  wiki_summary,
+
+  paper_citation,
+  paper_references
 }
 

@@ -5,7 +5,7 @@
         <div class="is-child">
           <p class="is-size-6">
             DOI:
-            <a v-if="paper_detail.doi !== undefined" :href="'https://doi.org/' + paper_detail.doi">
+            <a v-if="paper_detail.doi !== undefined && paper_detail.doi !== null" :href="'https://doi.org/' + paper_detail.doi">
               {{paper_detail.doi}}
             </a>
             <span v-else>
@@ -39,13 +39,13 @@
               {{author.name}}
               <span v-if="index < paper_detail.authors.length - 1">,</span>
             </a>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="!author_hidden"
               v-on:click="author_hidden = true"
             >
-              rút gọn
-            </a>
+              &nbsprút gọn
+            </span>
 
             <a
               v-if="author_hidden"
@@ -56,13 +56,13 @@
               {{author.name}}
               <span v-if="index < paper_detail.authors.length - 1">,</span>
             </a>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="author_hidden && paper_detail.authors.length - 3 > 0"
               v-on:click="author_hidden = false"
             >
-              + {{paper_detail.authors.length - 3}} tác giả
-            </a>
+              &nbsp+ {{paper_detail.authors.length - 3}} tác giả
+            </span>
             |
             <span>{{paper_detail.year}} </span>
 
@@ -75,13 +75,13 @@
             {{field}}
             <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
           </span>
-            <a
-              class="text-class-3"
+            <span
+              class="text-class-3 less-more-button"
               v-if="!field_hidden"
               v-on:click="field_hidden = true"
             >
-              rút gọn
-            </a>
+              &nbsprút gọn
+            </span>
 
             <span
               v-if="field_hidden"
@@ -90,28 +90,35 @@
             {{field}}
             <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
           </span>
-            <a
+            <span
               v-if="field_hidden && paper_detail.fieldsOfStudy.length - 1 > 0"
-              class="text-class-3"
+              class="text-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
-              + {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
-            </a>
+              &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
+            </span>
           </div>
-          <p v-if="!abstract_hidden" class="is-size-6">
-            {{paper_detail.abstract}}
-            <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
-          </p>
-          <p v-else class="is-size-6">
-                      {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
-            <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
-          </p>
+          <div v-if="paper_detail.abstract">
+            <p v-if="!abstract_hidden" class="is-size-6">
+              {{paper_detail.abstract}}
+              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+            </p>
+            <p v-else class="is-size-6">
+                        {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+            </p>
+          </div>
+          <div v-else>
+            <p class="is-size-6">Không có thông tin về Tóm tắt</p>
+          </div>
+
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
               <button class="level-item button is-info">Xem PDF</button>
               <a
                 :href="'http://doi.org/' + paper_detail.doi"
                 class="level-item button are-small has-text-link"
+                v-if="paper_detail.doi !== undefined && paper_detail.doi !== null"
               >
                 Doi.org
               </a>
@@ -121,8 +128,8 @@
       </div>
 
       <div class="tile is-parent is-4">
-        <div class="is-child ">
-          <article class="message is-info">
+        <div class="is-child">
+          <article class="message is-info" v-if="this.chart_data.length > 0">
             <div class="message-header">
               <p>Số trích dẫn theo năm</p>
             </div>
@@ -130,16 +137,14 @@
               <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>
             </div>
           </article>
-          <article class="message is-info">
+
+          <article class="message is-info" v-if="paper_detail.citationVelocity !== undefined">
             <div class="message-header">
               <p>Tình trạng về trích dẫn</p>
             </div>
             <div class="message-body">
-              <p v-if="paper_detail.citationVelocity !== undefined" style="color: black;">
+              <p  style="color: black;">
                 Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
-              </p>
-              <p v-else style="color: black;">
-                Chưa có thông tin
               </p>
             </div>
           </article>
@@ -152,55 +157,53 @@
         <li>
           <a
             class="nav-item"
-            href="#abstract"
+            v-scroll-to="{el: '#abstract_box', offset: -100}"
             :class="{'in-view': scroll_position < abstract_height}"
           >
             Tóm tắt
           </a>
         </li>
-        <li>
+        <li v-if="paper_detail.topics.length > 0">
           <a
             class="nav-item"
-            href="#topic"
+            v-scroll-to="{el: '#topic_box', offset: -100}"
             :class="{'in-view': scroll_position > abstract_height
-            && scroll_position < (abstract_height + topic_height + 200)}"
+            && scroll_position < (abstract_height + topic_height)}"
           >
             Chủ đề
           </a>
         </li>
-        <li>
+        <li v-if="paper_detail.citations.length > 0">
           <a
             class="nav-item"
-            href="#citations"
-            :class="{'in-view': scroll_position > (abstract_height + topic_height + 200)
-            && scroll_position < (abstract_height + topic_height + citation_height + 200)}"
+            v-scroll-to="{el: '#citation_box', offset: -100}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height)
+            && scroll_position < (abstract_height + topic_height + citation_height)}"
           >
-            {{this.paper_detail.citations.length}} trích dẫn
+            Trích dẫn
           </a>
         </li>
-        <li>
+        <li v-if="paper_detail.references.length > 0">
           <a
             class="nav-item"
-            href="#references"
-            :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height + 200)}"
+            v-scroll-to="{el: '#reference_box', offset: -100}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
           >
-            {{this.paper_detail.references.length}} tham chiếu
+            Tham chiếu
           </a>
         </li>
       </ul>
     </div>
 
-    <div id="topic" class="navigate"></div>
-
     <div class="tile is-ancestor" id="topic_box">
-      <div class="tile is-parent is-vertical">
+      <div class="tile is-parent is-vertical" v-if="paper_detail.topics.length > 0">
         <div class="tile is-child content_box">
           <p class="title content_title">Chủ đề được đề cập trong văn bản</p>
           <div>
             <ul>
               <li
                 class="topic_list"
-                v-for="item in this.paper_detail.topics"
+                v-for="item in paper_detail.topics"
               >
                 <a
                   class="has-text-link"
@@ -215,28 +218,60 @@
       </div>
     </div>
 
-    <div id="citations" class="navigate"></div>
-
     <div class="tile is-ancestor is-vertical" id="citation_box">
-      <div class="tile is-parent">
+      <div class="tile is-parent" v-if="paper_detail.citations.length > 0">
         <div class="tile is-child pr-5 content_box">
           <p class="title">Trích dẫn</p>
           <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
-          <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.citations.length}} trích dẫn</p>
-          <PaperTable v-bind:paper_data="paper_detail.citations" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <p class="is-size-6">
+            Bạn đang xem
+            <span v-if="(current_citation_page-1)*per_page + per_page < paper_detail.citations.length">
+              {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
+              trong {{paper_detail.citations.length}} trích dẫn
+            </span>
+            <span v-else>
+              {{ (current_citation_page-1)*per_page + 1}}-{{paper_detail.citations.length}}
+              trong {{paper_detail.citations.length}} trích dẫn
+            </span>
+          </p>
+          <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <Pagination
+            style="margin-left: 20%; margin-top: 10px;"
+            v-model="current_citation_page"
+            :page-count="paper_detail.citations.length / per_page"
+            :click-handler="updateCitation"
+            :page-range="3"
+            :margin-pages="2">
+          </Pagination>
         </div>
       </div>
     </div>
 
-    <div id="references" class="navigate"></div>
-
-    <div class="tile is-ancestor is-vertical"id="reference_box">
-      <div class="tile is-parent">
+    <div class="tile is-ancestor is-vertical" id="reference_box">
+      <div class="tile is-parent" v-if="paper_detail.references.length > 0">
         <div class="tile is-child content_box">
           <p class="title">Tham chiếu</p>
           <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
-          <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.references.length}} tham chiếu</p>
-          <PaperTable v-bind:paper_data="paper_detail.references" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <p class="is-size-6">
+            Bạn đang xem
+            <span v-if="(current_ref_page-1)*per_page + per_page < paper_detail.references.length">
+              {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
+              trong {{paper_detail.references.length}} tham chiếu
+            </span>
+            <span v-else>
+              {{ (current_ref_page-1)*per_page + 1}}-{{paper_detail.references.length}}
+              trong {{paper_detail.references.length}} tham chiếu
+            </span>
+          </p>
+          <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <Pagination
+            style="margin-left: 20%; margin-top: 10px;"
+            v-model="current_ref_page"
+            :page-count="paper_detail.references.length / per_page"
+            :click-handler="updateReference"
+            :page-range="3"
+            :margin-pages="2">
+          </Pagination>
         </div>
       </div>
     </div>
@@ -252,13 +287,14 @@
     import CitationBar from "../../components/search_page/CitationBar";
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
-    import {paper_detail} from "@/API/elastic_api";
+    import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import PaperTable from "@/components/PaperTable";
     import NuxtError from "@/components/ErrorPage";
+    import Pagination from "@/components/Pagination";
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError},
+      components: {PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
           return true
@@ -273,6 +309,11 @@
       },
       data() {
         return {
+          citation_data: null,
+          ref_data: null,
+          per_page: 5,
+          current_citation_page: 1,
+          current_ref_page: 1,
           abstract_height: null,
           topic_height: null,
           citation_height: null,
@@ -289,11 +330,27 @@
           field_hidden: true,
           navigate: '',
           abstract_hidden: true,
-          currentPage:0,
-          pageCount: 0
         }
       },
       methods: {
+        async updateCitation(page_num) {
+          let result = await paper_citation({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
+          this.current_citation_page = page_num
+          this.citation_data = result
+        },
+        async updateReference(page_num) {
+          let result = await paper_references({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
+          this.current_ref_page = page_num
+          this.ref_data = result
+        },
         formatTitle(title) {
           return formatTitle(title)
         },
@@ -317,7 +374,6 @@
       mounted() {
         window.addEventListener('scroll', this.updateScrollPosition);
         let heights = this.getComponentHeight()
-        console.log("heights: ", heights)
         this.abstract_height = heights[0]
         this.topic_height = heights[1]
         this.citation_height = heights[2]
@@ -335,13 +391,19 @@
           is_citation_empty = false
           if (data.references.length > 0)
             is_ref_empty = false
+          //Sort topics alphabetically
+          data.topics.sort(function(a,b){
+            return a.topic.localeCompare(b.topic);
+          })
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
             chart_labels: Object.keys(data_dict),
             chart_data: Object.values(data_dict),
             paper_id: paper_id[0],
-            paper_detail: data
+            paper_detail: data,
+            citation_data: data.citations.slice(0,5),
+            ref_data: data.references.slice(0,5)
           }
         } else {
           return {
@@ -357,8 +419,22 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   @import "assets/general_styling.scss";
+  #topic_box {
+  ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(132px, 1fr));
+    column-gap: 10px;
+    row-gap: 15px;
+  }
+
+  li {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  }
   .content_title {
     border-bottom: 1px solid #d9dadb;
     padding-bottom: 5px;
@@ -370,7 +446,7 @@
   }
   .nav-item:hover {
     text-decoration: none;
-    color: #4e54c8;
+    color: #4e54c8
   }
   .container {
     padding: 40px 20px;
@@ -388,8 +464,5 @@
   .topic_list {
     display:inline-block;
     margin: 10px;
-  }
-  .navigate {
-    height:16vh;
   }
 </style>

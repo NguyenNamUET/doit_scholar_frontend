@@ -3,7 +3,6 @@
     <div style="background-color: #e6e6e6">
       <div class="container">
         <div class="tile is-ancestor is-vertical">
-
           <div class="tile is-parent is-8" >
             <div class="tile is-child">
               <h1 class="is-size-2">
@@ -14,7 +13,16 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div v-if="papers" class="container">
+      <div class="tile is-parent is-vertical">
+        <div class="timeline">
+          <div  v-for="item in papers">
+            <TimelineItem v-bind:paper="item._source"></TimelineItem>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="container">
       <div class="tile is-parent is-vertical">
         <div class="timeline">
           <div  v-for="item in papers">
@@ -29,6 +37,7 @@
 <script>
     import TimelineItem from "../../components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
+    //import {wiki_summary} from "@/API/elastic_api";
     export default {
       name: "_topic_detail",
       components: {TimelineItem},
@@ -46,9 +55,19 @@
           source: ["title","abstract","year","authors","corpusID"]
         }
         let data = await paper_by_topic(query_params)
-        return {
-          topic_name: topic_name[0],
-          papers: data.hits.hits,
+        //let wiki_topic_summary = await wiki_summary({name: topic_name})
+        if(Object.keys(data).length !== 0 ){
+          return {
+            topic_name: topic_name[0],
+            papers: data.hits.hits,
+            //wiki_topic_summary: wiki_topic_summary
+          }
+        }
+        else{
+          return {
+            topic_name: topic_name[0],
+            papers: null
+          }
         }
       }
     }
