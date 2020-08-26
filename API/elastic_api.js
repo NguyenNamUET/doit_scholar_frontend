@@ -4,7 +4,6 @@ import axios from "axios";
 const paper_detail = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
-    console.log("paper_detail result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -158,6 +157,36 @@ const author_by_name = async(query_params) => {
   }
 }
 
+const paper_citation = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/citations', {
+      params: {
+        start: query_params.start,
+        size: 5
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const paper_references = async(query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/references', {
+      params: {
+        start: query_params.start,
+        size: 5
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 
 /////////////////WIKI/////////////////////////////////
 const wiki_summary = async(query_params) => {
@@ -188,6 +217,9 @@ export {
   author_by_id,
   author_by_name,
 
-  wiki_summary
+  wiki_summary,
+
+  paper_citation,
+  paper_references
 }
 

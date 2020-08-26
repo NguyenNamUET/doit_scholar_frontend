@@ -27,7 +27,7 @@
             </a>
           </div>
 
-          <div class="navbar-menu" :class="{ 'is-active': showNav }">
+          <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
                 <SearchBar style="min-width: 50vw"></SearchBar>
@@ -43,6 +43,27 @@
   </div>
 </template>
 
+<script>
+import SearchBar from "../components/SearchBar";
+export default {
+  components: {SearchBar},
+  chart_data() {
+    return {
+    }
+  },
+  data() {
+    return {
+      showNav: false
+    }
+  },
+  methods: {
+    toggleBurger() {
+      document.querySelector('.navbar-menu').classList.toggle('is-active');
+    }
+  }
+}
+</script>
+
 <style>
   @import 'assets/general_styling.scss';
   .logo {
@@ -53,24 +74,12 @@
   #nav_container {
     padding-left: 20px;
   }
-</style>
-<script>
-  import SearchBar from "../components/SearchBar";
-  export default {
-    components: {SearchBar},
-    chart_data() {
-      return {
-      }
-    },
-    data() {
-      return {
-        showNav: false
-      }
-    },
-    methods: {
-      toggleBurger() {
-        document.querySelector('.navbar-menu').classList.toggle('is-active');
-      }
+  @media only screen and (max-width: 1022px){
+    .search-area {
+      margin-top: 50px;
+      width: 96%;
     }
   }
-</script>
+</style>
+
+

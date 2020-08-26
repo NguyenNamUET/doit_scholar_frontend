@@ -223,8 +223,26 @@
         <div class="tile is-child pr-5 content_box">
           <p class="title">Trích dẫn</p>
           <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
-          <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.citations.length}} trích dẫn</p>
-          <PaperTable v-bind:paper_data="paper_detail.citations" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <p class="is-size-6">
+            Bạn đang xem
+            <span v-if="(current_citation_page-1)*per_page + per_page < paper_detail.citations.length">
+              {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
+              trong {{paper_detail.citations.length}} trích dẫn
+            </span>
+            <span v-else>
+              {{ (current_citation_page-1)*per_page + 1}}-{{paper_detail.citations.length}}
+              trong {{paper_detail.citations.length}} trích dẫn
+            </span>
+          </p>
+          <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <Pagination
+            style="margin-left: 20%; margin-top: 10px;"
+            v-model="current_citation_page"
+            :page-count="paper_detail.citations.length / per_page"
+            :click-handler="updateCitation"
+            :page-range="3"
+            :margin-pages="2">
+          </Pagination>
         </div>
       </div>
     </div>
@@ -234,8 +252,26 @@
         <div class="tile is-child content_box">
           <p class="title">Tham chiếu</p>
           <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
-          <p class="is-size-6">Bạn đang xem 1-10 trong {{this.paper_detail.references.length}} tham chiếu</p>
-          <PaperTable v-bind:paper_data="paper_detail.references" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <p class="is-size-6">
+            Bạn đang xem
+            <span v-if="(current_ref_page-1)*per_page + per_page < paper_detail.references.length">
+              {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
+              trong {{paper_detail.references.length}} tham chiếu
+            </span>
+            <span v-else>
+              {{ (current_ref_page-1)*per_page + 1}}-{{paper_detail.references.length}}
+              trong {{paper_detail.references.length}} tham chiếu
+            </span>
+          </p>
+          <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <Pagination
+            style="margin-left: 20%; margin-top: 10px;"
+            v-model="current_ref_page"
+            :page-count="paper_detail.references.length / per_page"
+            :click-handler="updateReference"
+            :page-range="3"
+            :margin-pages="2">
+          </Pagination>
         </div>
       </div>
     </div>
@@ -251,13 +287,14 @@
     import CitationBar from "../../components/search_page/CitationBar";
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
-    import {paper_detail} from "@/API/elastic_api";
+    import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import PaperTable from "@/components/PaperTable";
     import NuxtError from "@/components/ErrorPage";
+    import Pagination from "@/components/Pagination";
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError},
+      components: {PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
           return true
@@ -272,6 +309,11 @@
       },
       data() {
         return {
+          citation_data: null,
+          ref_data: null,
+          per_page: 5,
+          current_citation_page: 1,
+          current_ref_page: 1,
           abstract_height: null,
           topic_height: null,
           citation_height: null,
@@ -288,11 +330,27 @@
           field_hidden: true,
           navigate: '',
           abstract_hidden: true,
-          currentPage:0,
-          pageCount: 0
         }
       },
       methods: {
+        async updateCitation(page_num) {
+          let result = await paper_citation({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
+          this.current_citation_page = page_num
+          this.citation_data = result
+        },
+        async updateReference(page_num) {
+          let result = await paper_references({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
+          this.current_ref_page = page_num
+          this.ref_data = result
+        },
         formatTitle(title) {
           return formatTitle(title)
         },
@@ -333,14 +391,19 @@
           is_citation_empty = false
           if (data.references.length > 0)
             is_ref_empty = false
-          console.log(data.references)
+          //Sort topics alphabetically
+          data.topics.sort(function(a,b){
+            return a.topic.localeCompare(b.topic);
+          })
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
             chart_labels: Object.keys(data_dict),
             chart_data: Object.values(data_dict),
             paper_id: paper_id[0],
-            paper_detail: data
+            paper_detail: data,
+            citation_data: data.citations.slice(0,5),
+            ref_data: data.references.slice(0,5)
           }
         } else {
           return {
