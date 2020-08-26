@@ -19,11 +19,11 @@
             <span v-if="index < search_result._source.authors.length - 1">,</span>
           </a>
           <span
-            class="text-class-3 less-more-button"
+            class="less-more-button"
             v-if="!author_hidden"
             v-on:click="author_hidden = true"
           >
-            &nbsprút gọn
+            &nbspRút gọn
           </span>
 
           <a
@@ -36,7 +36,7 @@
             <span v-if="index < search_result._source.authors.length - 1">,</span>
           </a>
           <span
-            class="text-class-3 less-more-button"
+            class="less-more-button"
             v-if="author_hidden && search_result._source.authors.length - 3 > 0"
             v-on:click="author_hidden = false"
           >
@@ -53,11 +53,11 @@
             <span v-if="index < search_result._source.topics.length - 1">,</span>
           </a>
           <span
-            class="text-class-3 less-more-button"
+            class="less-more-button"
             v-if="!topic_hidden"
             v-on:click="topic_hidden = true"
           >
-            &nbsprút gọn
+            &nbspRút gọn
           </span>
 
           <a
@@ -69,13 +69,13 @@
             {{topic.topic}}
             <span v-if="index < search_result._source.topics.length - 1">,</span>
           </a>
-          <a
+          <span
             v-if="topic_hidden && search_result._source.topics.length - 1 > 0"
-            class="text-class-3"
+            class="less-more-button"
             v-on:click="topic_hidden = false"
           >
             + {{search_result._source.topics.length - 1}} chủ đề
-          </a>
+          </span>
 
           <span v-if="search_result._source.topics.length !== 0">
           |
@@ -89,11 +89,11 @@
             <span v-if="index < search_result._source.fieldsOfStudy.length - 1">,</span>
           </span>
           <span
-            class="text-class-3 less-more-button"
+            class="less-more-button"
             v-if="!field_hidden"
             v-on:click="field_hidden = true"
           >
-            &nbsprút gọn
+            &nbspRút gọn
           </span>
 
           <span
@@ -166,15 +166,5 @@
     margin-bottom: 30px;
     box-shadow: 0 0 6px rgba(2,20,31,0.1);
   }
-  .less-more-button:hover {
-    text-decoration: none;
-    background: #dbdbdb;
-    cursor: pointer
-  }
-  .less-more-button{
-    color: #8c9296;
-    background: #cccccc;
-    border-radius: 3px;
-    padding: 1px;
-  }
+
 </style>

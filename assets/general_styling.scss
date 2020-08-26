@@ -39,3 +39,16 @@ a:hover {
     color: #8c9296;
   }
 
+.less-more-button:hover {
+  text-decoration: none;
+  background: #dbdbdb;
+  cursor: pointer
+}
+.less-more-button{
+  font-size: 0.6rem;
+  color: #8c9296;
+  background: #cccccc;
+  border-radius: 5px;
+  padding: 1.5px;
+  line-height: 1
+}
