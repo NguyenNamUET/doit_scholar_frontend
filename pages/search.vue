@@ -108,7 +108,7 @@
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
-          per_page: 1
+          per_page: 10
         }
       },
       filters: {

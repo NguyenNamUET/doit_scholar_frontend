@@ -40,6 +40,32 @@
     <div id="body_container">
       <Nuxt />
     </div>
+    <div id="footer">
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <p>
+              <i class="fas fa-map-marker-alt"></i>
+              <b>Địa chỉ: </b>
+              Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội
+            </p>
+            <p>
+              <i class="fas fa-envelope"></i>
+              <b>Email: </b>
+              <a href="mailto:doit@vnu.edu.vn">doit@vnu.edu.vn</a>
+            </p>
+            <p>
+              <i class="fab fa-facebook-f"></i>
+              <b>Facebook: </b>
+              <a href="https://facebook.com/doitvn">DoIT</a>
+            </p>
+            <p>
+              Latest update: 23h30 26/8/2020
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -64,7 +90,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   @import 'assets/general_styling.scss';
   .logo {
     display: block;
@@ -73,6 +99,18 @@ export default {
   }
   #nav_container {
     padding-left: 20px;
+  }
+  #footer {
+    a {
+      color: white
+    }
+    p {
+      margin-top: 10px;
+    }
+    background: #4e54c8;
+    height: 200px;
+    color: white;
+    padding: 40px;
   }
   @media only screen and (max-width: 1022px){
     .search-area {

@@ -14,16 +14,16 @@
             <span></span>
           </span>
             </div>
-            <div id="navbarMenuHeroA" class="navbar-menu">
-              <div class="navbar-end">
-                <a class="navbar-item" href="/">
-                  Trang chủ
-                </a>
-                <a class="navbar-item" href="/">
-                  Đăng nhập
-                </a>
-              </div>
-            </div>
+<!--            <div id="navbarMenuHeroA" class="navbar-menu">-->
+<!--              <div class="navbar-end">-->
+<!--                <a class="navbar-item" href="/">-->
+<!--                  Trang chủ-->
+<!--                </a>-->
+<!--                <a class="navbar-item" href="/">-->
+<!--                  Đăng nhập-->
+<!--                </a>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </nav>
       </div>
