@@ -456,9 +456,7 @@
   }
   .sticky-nav {
     background-color: rgb(242, 247, 242);
-    //overflow: hidden;
-    overflow: auto;
-    white-space: nowrap;
+    overflow: hidden;
     position: sticky;
     top: 60px;
     z-index: 1000;
