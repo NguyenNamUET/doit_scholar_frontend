@@ -1,6 +1,6 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
-    <div  class="tile is-ancestor" id="abstract_box">
+    <div class="tile is-ancestor" id="abstract_box" style="flex-wrap: wrap">
       <div class="tile is-parent is-7">
         <div class="is-child">
           <p class="is-size-6">
@@ -9,10 +9,10 @@
               {{paper_detail.doi}}
             </a>
             <span v-else>
-              Chưa có thông tin
+              <i>Chưa có thông tin</i>
             </span>
             |
-            ID văn bản: {{this.paper_detail.corpusID}}
+            ID văn bản: {{this.paper_detail.corpusId}}
           </p>
           <h1 class="title">
             {{this.paper_detail.title}}
@@ -127,7 +127,7 @@
         </div>
       </div>
 
-      <div class="tile is-parent is-4">
+      <div class="tile is-parent is-5">
         <div class="is-child">
           <article class="message is-info" v-if="this.chart_data.length > 0">
             <div class="message-header">
@@ -143,7 +143,7 @@
               <p>Tình trạng về trích dẫn</p>
             </div>
             <div class="message-body">
-              <p  style="color: black;">
+              <p style="color: black;">
                 Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
               </p>
             </div>
@@ -219,26 +219,26 @@
     </div>
 
     <div class="tile is-ancestor is-vertical" id="citation_box">
-      <div class="tile is-parent" v-if="paper_detail.citations.length > 0">
+      <div class="tile is-parent" v-if="citation_length > 0">
         <div class="tile is-child pr-5 content_box">
           <p class="title">Trích dẫn</p>
           <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
           <p class="is-size-6">
             Bạn đang xem
-            <span v-if="(current_citation_page-1)*per_page + per_page < paper_detail.citations.length">
+            <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
               {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
-              trong {{paper_detail.citations.length}} trích dẫn
+              trong {{citation_length}} trích dẫn
             </span>
             <span v-else>
-              {{ (current_citation_page-1)*per_page + 1}}-{{paper_detail.citations.length}}
-              trong {{paper_detail.citations.length}} trích dẫn
+              {{ (current_citation_page-1)*per_page + 1}}-{{citation_length}}
+              trong {{citation_length}} trích dẫn
             </span>
           </p>
           <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_citation_page"
-            :page-count="paper_detail.citations.length / per_page"
+            :page-count="Math.ceil(citation_length / per_page)"
             :click-handler="updateCitation"
             :page-range="3"
             :margin-pages="2">
@@ -248,26 +248,26 @@
     </div>
 
     <div class="tile is-ancestor is-vertical" id="reference_box">
-      <div class="tile is-parent" v-if="paper_detail.references.length > 0">
+      <div class="tile is-parent" v-if="ref_length > 0">
         <div class="tile is-child content_box">
           <p class="title">Tham chiếu</p>
           <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
           <p class="is-size-6">
             Bạn đang xem
-            <span v-if="(current_ref_page-1)*per_page + per_page < paper_detail.references.length">
+            <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
               {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
               trong {{paper_detail.references.length}} tham chiếu
             </span>
             <span v-else>
-              {{ (current_ref_page-1)*per_page + 1}}-{{paper_detail.references.length}}
-              trong {{paper_detail.references.length}} tham chiếu
+              {{ (current_ref_page-1)*per_page + 1}}-{{ref_length}}
+              trong {{ref_length}} tham chiếu
             </span>
           </p>
           <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_ref_page"
-            :page-count="paper_detail.references.length / per_page"
+            :page-count="Math.ceil(ref_length / per_page)"
             :click-handler="updateReference"
             :page-range="3"
             :margin-pages="2">
@@ -296,11 +296,13 @@
       name: "_paper_detail",
       components: {PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
-        if(/.p-[0-9]+$/g.test(route.params.paper_detail)) {
+        if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
         }
-        else
+        else{
           redirect('/')
+        }
+
       },
       head() {
         return {
@@ -339,6 +341,7 @@
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
+          console.log("updateCitation: ", result)
           this.current_citation_page = page_num
           this.citation_data = result
         },
@@ -380,7 +383,8 @@
         this.reference_height = heights[3]
       },
       async asyncData({route, $axios}) {
-        let paper_id = /[0-9]+$/g.exec(route.params.paper_detail)
+        let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
+
         let data = await paper_detail(paper_id)
         let data_dict = {}
         let is_citation_empty = true
@@ -402,8 +406,10 @@
             chart_data: Object.values(data_dict),
             paper_id: paper_id[0],
             paper_detail: data,
-            citation_data: data.citations.slice(0,5),
-            ref_data: data.references.slice(0,5)
+            citation_data: data.citations,
+            ref_data: data.references,
+            citation_length: data.citations_length,
+            ref_length: data.references_length
           }
         } else {
           return {
@@ -456,7 +462,9 @@
   }
   .sticky-nav {
     background-color: rgb(242, 247, 242);
-    overflow: hidden;
+    //overflow: hidden;
+    overflow: auto;
+    white-space: nowrap;
     position: sticky;
     top: 60px;
     z-index: 1000;
