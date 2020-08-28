@@ -152,7 +152,10 @@
       </div>
     </div>
 
-    <div class="tabs is-centered is-fullwidth sticky-nav">
+    <div
+      class="tabs is-centered is-fullwidth sticky-nav"
+      v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
+    >
       <ul>
         <li>
           <a
@@ -238,7 +241,11 @@
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_citation_page"
+<<<<<<< Updated upstream
             :page-count="Math.ceil(citation_length / per_page)"
+=======
+            :page-count="Math.ceil(paper_detail.citations.length / per_page)"
+>>>>>>> Stashed changes
             :click-handler="updateCitation"
             :page-range="3"
             :margin-pages="2">
@@ -267,7 +274,11 @@
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_ref_page"
+<<<<<<< Updated upstream
             :page-count="Math.ceil(ref_length / per_page)"
+=======
+            :page-count="Math.ceil(paper_detail.references.length / per_page)"
+>>>>>>> Stashed changes
             :click-handler="updateReference"
             :page-range="3"
             :margin-pages="2">
