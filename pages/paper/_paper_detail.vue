@@ -241,11 +241,7 @@
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_citation_page"
-<<<<<<< Updated upstream
             :page-count="Math.ceil(citation_length / per_page)"
-=======
-            :page-count="Math.ceil(paper_detail.citations.length / per_page)"
->>>>>>> Stashed changes
             :click-handler="updateCitation"
             :page-range="3"
             :margin-pages="2">
@@ -322,6 +318,8 @@
       },
       data() {
         return {
+          citation_length: null,
+          ref_length: null,
           citation_data: null,
           ref_data: null,
           per_page: 5,
