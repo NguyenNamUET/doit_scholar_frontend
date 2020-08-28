@@ -32,7 +32,7 @@
       <b-table-column field="venue" label="Hội nghị">
         <span v-if="props.row.venue !== ''">{{props.row.venue}}</span>
         <span v-else>
-          Chưa có thông tin
+          <i>Chưa có thông tin</i>
         </span>
       </b-table-column>
 
