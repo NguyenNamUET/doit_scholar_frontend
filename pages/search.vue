@@ -323,5 +323,7 @@
   button:hover {
     cursor: pointer;
   }
-
+  a:hover {
+    text-decoration: none;
+  }
 </style>

@@ -20,18 +20,6 @@
           </h1>
           <!------------------------------------------ Source  ------------------------------------------->
           <div class="is-size-6 mb-4">
-<!--            <a-->
-<!--              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"-->
-<!--              v-for="author in this.paper_detail.authors"-->
-<!--            >-->
-<!--              {{author.name}},-->
-<!--            </a>-->
-<!--            |-->
-
-<!--            |-->
-<!--            <span v-for="topic in this.paper_detail.fieldsOfStudy">{{topic}} </span>-->
-<!--            |-->
-<!--            <span>{{this.paper_detail.venue}}</span>-->
             <!------------------------------------------ Authors  ------------------------------------------->
             <a class="text-class-3"
                v-if="!author_hidden"

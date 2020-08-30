@@ -37,4 +37,10 @@
 
 <style scoped>
   @import "assets/general_styling.scss";
+  a:hover {
+    text-decoration: none;
+  }
+  a {
+    color: #3385ff
+  }
 </style>
