@@ -1,9 +1,9 @@
 <template>
-  <div class="dropdown" :class="'dropdown-'+dd_data.type">
+  <div class="dropdown" :class="{'is-active': isActive}">
     <div class="dropdown-trigger">
       <button class="button"
               aria-haspopup="true" aria-controls="dropdown-menu3"
-              @click="activeDropdown()"
+              @click="isActive = !isActive"
               >
         <span>{{dd_data.msg}}</span>
         <span class="icon is-small">
@@ -13,22 +13,28 @@
     </div>
 
     <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-      <div class="dropdown-content" v-for="item in dd_data.fields">
-        <label v-if="dd_data.type === 0" class="checkbox dropdown-item">
-          <input type="checkbox"
+      <div class="dropdown-content" :class="{control: !dd_data.isMulti }"
+           v-for="item in dd_data.fields">
+        <!--This dropdown uses checkbos (multiple checked) -->
+        <label v-if="dd_data.isMulti" class="checkbox dropdown-item">
+          <input @focus="isActive=false" type="checkbox"
                  :value="item.key"
                  v-model="checkedCategories"
                  @change="check($event)">
             {{item.key}} ({{item.doc_count}})
         </label>
-        <label v-else class="checkbox dropdown-item">
-          <input type="checkbox"
-                 :value="item.name.buckets[0].key"
+        <!--This dropdown uses radio button (single checked)-->
+        <label v-else class="radio dropdown-item">
+          <input type="radio"
+                 :value="item.key"
+                 name="venue"
                  v-model="checkedCategories"
                  @change="check($event)">
-            {{item.name.buckets[0].key}} ({{item.doc_count}})
+          {{item.key}} ({{item.doc_count}})
         </label>
       </div>
+
+
     </div>
   </div>
 </template>
@@ -39,24 +45,22 @@
       props: ['dd_data'],
       data(){
         return{
-          checkedCategories: []
+          checkedCategories: [],
+          isActive: false
         }
       },
       methods: {
-        activeDropdown(){
-          //To allow one dropdown active at a time
-          let isnotActive = '.dropdown-'+this.dd_data.type
-          let isActive= '.dropdown-'+(1-this.dd_data.type)
-          document.querySelector(isnotActive).classList.toggle('is-active')
-          document.querySelector(isActive).classList.remove('is-active')
-        },
         check(e) {
           console.log(this.checkedCategories)
-          if (this.dd_data.type === 0){
+          if (this.dd_data.msg === 'Lĩnh vực'){
             this.$emit("update-fos-checked", this.checkedCategories)
           }
-          else{
+          else if (this.dd_data.msg === 'Tác giả'){
             this.$emit("update-authors-checked", this.checkedCategories)
+          }
+          else{
+            this.$emit("update-venues-checked", this.checkedCategories)
+            console.log(this.checkedCategories)
           }
         }
       }

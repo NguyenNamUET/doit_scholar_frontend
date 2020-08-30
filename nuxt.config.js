@@ -58,7 +58,12 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxtjs/moment'
   ],
+  moment: {
+    locales: ['vi'],
+    defaultTimezone: 'Asia/Ha_Noi'
+  },
   /*
   ** Nuxt.js modules
   */

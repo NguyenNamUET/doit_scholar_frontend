@@ -3,6 +3,7 @@
     <div class="tile is-ancestor" id="abstract_box" style="flex-wrap: wrap">
       <div class="tile is-parent is-7">
         <div class="is-child">
+          <!------------------------------------------ Source  ------------------------------------------->
           <p class="is-size-6">
             DOI:
             <a v-if="paper_detail.doi !== undefined && paper_detail.doi !== null" :href="'https://doi.org/' + paper_detail.doi">
@@ -17,6 +18,7 @@
           <h1 class="title">
             {{this.paper_detail.title}}
           </h1>
+          <!------------------------------------------ Source  ------------------------------------------->
           <div class="is-size-6 mb-4">
 <!--            <a-->
 <!--              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"-->
@@ -30,88 +32,89 @@
 <!--            <span v-for="topic in this.paper_detail.fieldsOfStudy">{{topic}} </span>-->
 <!--            |-->
 <!--            <span>{{this.paper_detail.venue}}</span>-->
-            <a
-              v-if="!author_hidden"
-              class="text-class-3"
-              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-              v-for="(author, index) in paper_detail.authors"
+            <!------------------------------------------ Authors  ------------------------------------------->
+            <a class="text-class-3"
+               v-if="!author_hidden"
+               v-for="(author, index) in paper_detail.authors"
+               :key="author.authorId"
+               :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             >
               {{author.name}}
               <span v-if="index < paper_detail.authors.length - 1">,</span>
             </a>
-            <span
-              class="text-class-3 less-more-button"
-              v-if="!author_hidden"
-              v-on:click="author_hidden = true"
+            <span class="text-class-3 less-more-button"
+                  v-if="!author_hidden"
+                  @click="author_hidden = true"
             >
-              &nbsprút gọn
+              &nbspRút gọn
             </span>
 
-            <a
-              v-if="author_hidden"
-              class="text-class-3"
-              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-              v-for="(author, index) in paper_detail.authors.slice(0,3)"
+            <a class="text-class-3"
+               v-if="author_hidden"
+               v-for="(author, index) in paper_detail.authors.slice(0,3)"
+               :key="author.authorId"
+               :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             >
               {{author.name}}
-              <span v-if="index < paper_detail.authors.length - 1">,</span>
+              <span v-if="index < 2">,</span>
             </a>
-            <span
-              class="text-class-3 less-more-button"
-              v-if="author_hidden && paper_detail.authors.length - 3 > 0"
-              v-on:click="author_hidden = false"
+            <span class="text-class-3 less-more-button"
+                  v-if="author_hidden && paper_detail.authors.length - 3 > 0"
+                  @click="author_hidden = false"
             >
               &nbsp+ {{paper_detail.authors.length - 3}} tác giả
             </span>
+            <!------------------------------------------ Authors  ------------------------------------------->
             |
             <span>{{paper_detail.year}} </span>
 
             <span v-if="paper_detail.year !== undefined">|</span>
 
-            <span
-              v-if="!field_hidden"
-              v-for="(field, index) in paper_detail.fieldsOfStudy"
-            >
-            {{field}}
-            <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
-          </span>
-            <span
-              class="text-class-3 less-more-button"
-              v-if="!field_hidden"
-              v-on:click="field_hidden = true"
-            >
-              &nbsprút gọn
-            </span>
+            <!------------------------------------ Fields of study ---------------------------------------->
+            <span v-if="paper_detail.fieldsOfStudy">
+              <span class="text-class-3"
+                    v-if="!field_hidden">
+                {{this.full_fos}}
+              </span>
+              <span class="text-class-3 less-more-button"
+                    v-if="!field_hidden"
+                    @click="field_hidden = true"
+              >
+                &nbspRút gọn
+              </span>
 
-            <span
-              v-if="field_hidden"
-              v-for="(field, index) in paper_detail.fieldsOfStudy.slice(0,1)"
-            >
-            {{field}}
-            <span v-if="index < paper_detail.fieldsOfStudy.length - 1">,</span>
-          </span>
-            <span
-              v-if="field_hidden && paper_detail.fieldsOfStudy.length - 1 > 0"
-              class="text-class-3 less-more-button"
-              v-on:click="field_hidden = false"
-            >
-              &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
+              <span class="text-class-3"
+                    v-if="field_hidden"
+              >
+                {{paper_detail.fieldsOfStudy[0]}}
+              </span>
+              <span class="text-class-3 less-more-button"
+                    v-if="field_hidden && paper_detail.fieldsOfStudy.length - 1 > 0"
+                    @click="field_hidden = false"
+              >
+                &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
+              </span>
             </span>
+            <!------------------------------------ Fields of study ---------------------------------------->
+
           </div>
+          <!------------------------------------------ Abstract  ------------------------------------------->
           <div v-if="paper_detail.abstract">
             <p v-if="!abstract_hidden" class="is-size-6">
               {{paper_detail.abstract}}
-              <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+              <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
             </p>
             <p v-else class="is-size-6">
                         {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
-              <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
+              <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
             </p>
           </div>
           <div v-else>
-            <p class="is-size-6">Không có thông tin về Tóm tắt</p>
+            <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
           </div>
+          <!------------------------------------------ Abstract  ------------------------------------------->
 
+          <!--------------------------------------- View pdf -------------------------------------------->
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
               <button class="level-item button is-info">Xem PDF</button>
@@ -124,9 +127,11 @@
               </a>
             </div>
           </nav>
+          <!--------------------------------------- View pdf -------------------------------------------->
         </div>
       </div>
 
+      <!--------------------------------------- Citations Chart ------------------------------------------------->
       <div class="tile is-parent is-5">
         <div class="is-child">
           <article class="message is-info" v-if="this.chart_data.length > 0">
@@ -150,8 +155,10 @@
           </article>
         </div>
       </div>
+      <!--------------------------------------- Citations Chart ------------------------------------------------->
     </div>
 
+    <!-------------------------------------------- Navigation Bar ------------------------------------------------->
     <div class="tabs is-centered is-fullwidth sticky-nav">
       <ul>
         <li>
@@ -194,7 +201,9 @@
         </li>
       </ul>
     </div>
+    <!-------------------------------------------- Navigation Bar ------------------------------------------------->
 
+    <!---------------------------------------------- Topics ------------------------------------------------------->
     <div class="tile is-ancestor" id="topic_box">
       <div class="tile is-parent is-vertical" v-if="paper_detail.topics.length > 0">
         <div class="tile is-child content_box">
@@ -217,7 +226,9 @@
         </div>
       </div>
     </div>
+    <!---------------------------------------------- Topics ------------------------------------------------------->
 
+    <!------------------------------------------ Citations Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical" id="citation_box">
       <div class="tile is-parent" v-if="citation_length > 0">
         <div class="tile is-child pr-5 content_box">
@@ -246,7 +257,9 @@
         </div>
       </div>
     </div>
+    <!------------------------------------------ Citations Table -------------------------------------------------->
 
+    <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical" id="reference_box">
       <div class="tile is-parent" v-if="ref_length > 0">
         <div class="tile is-child content_box">
@@ -275,11 +288,14 @@
         </div>
       </div>
     </div>
+    <!----------------------------------------- References Table -------------------------------------------------->
   </div>
 
+  <!--Error page-->
   <div v-else>
     <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy văn bản'}"></NuxtError>
   </div>
+  <!--Error page-->
 </template>
 
 <script>
@@ -288,9 +304,9 @@
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
     import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
-    import PaperTable from "@/components/PaperTable";
-    import NuxtError from "@/components/ErrorPage";
-    import Pagination from "@/components/Pagination";
+    import PaperTable from "@/components/function_components/PaperTable";
+    import NuxtError from "@/components/static_components/ErrorPage";
+    import Pagination from "@/components/function_components/Pagination";
 
     export default {
       name: "_paper_detail",
@@ -307,6 +323,11 @@
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar'
+        }
+      },
+      computed:{
+        full_fos: function (){
+          return _.join(this.paper_detail.fieldsOfStudy, ', ')
         }
       },
       data() {
@@ -472,5 +493,8 @@
   .topic_list {
     display:inline-block;
     margin: 10px;
+  }
+  a:hover {
+    text-decoration: none;
   }
 </style>
