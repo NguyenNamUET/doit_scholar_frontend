@@ -22,7 +22,7 @@
                  :name="item.key"
                  v-model="item.checked"
                  @change="check($event)">
-            {{item.key}} ({{item.doc_count}})
+            {{item.key | isAnonymous}} ({{item.doc_count}})
         </label>
         <!--This dropdown uses radio button (single checked)-->
         <label v-else class="radio dropdown-item">
@@ -31,10 +31,9 @@
                  name="venue"
                  v-model="item.checked"
                  @change="check($event)">
-          {{item.key}} ({{item.doc_count}})
+          {{item.key | isAnonymous}} ({{item.doc_count}})
         </label>
       </div>
-
 
     </div>
   </div>
@@ -47,6 +46,14 @@
       computed: {
         checkedCategories() {
           return this.dd_data.fields.filter(item => item.checked).map(item => item.key)
+        }
+      },
+      filters:{
+        isAnonymous: function (field_name){
+          if(field_name === ""){
+            return "Anonymous"
+          }
+          return field_name
         }
       },
       data(){
@@ -72,7 +79,7 @@
             console.log("Hội nghị: ", this.checkedCategories)
             console.log("Hội nghị dd_data: ", this.dd_data)
           }
-          //emit then make dd_data with checkedCategories
+
         }
       }
     }
