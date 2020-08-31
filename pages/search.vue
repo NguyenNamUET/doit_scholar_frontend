@@ -76,7 +76,7 @@
 
 <script>
     import {formatNumber} from "../assets/utils";
-    import {filteredKeys} from "../assets/utils";
+    import {filteredKeys, filteredKeys_v2} from "../assets/utils";
     import DropDown from "../components/function_components/DropDown";
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
@@ -123,8 +123,8 @@
       computed: {
         fos_list: function (){
           let result = []
-          let fos_checked = this.$store.state.dropdown_search.fos_checked
-          console.log("fos_checked: ",fos_checked)
+          let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
+          console.log("fos_checked: ", fos_checked)
           this.fos_info.forEach(item => {
             if (fos_checked.length>0 && fos_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -138,8 +138,8 @@
         },
         authors_list: function (){
           let result = []
-          let authors_checked = this.$store.state.dropdown_search.authors_checked
-          console.log("authors_checked: ",authors_checked)
+          let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
+          console.log("authors_checked: ", authors_checked)
           this.author_info.forEach(item => {
             if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
@@ -153,10 +153,10 @@
         },
         venue_list: function (){
           let result = []
-          let venue_checked = this.$store.state.dropdown_search.venue_checked
+          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue/)
           console.log("venue_checked: ",venue_checked)
           this.venue_info.forEach(item => {
-            if (!!venue_checked && item.key === venue_checked){
+            if (!!venue_checked && venue_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
             }
             else{
@@ -176,7 +176,7 @@
         }
         //Gather all fos<digit> to form Array of checked fields of study
         if("fos0" in query) {
-          let fos_keys = filteredKeys(Object.assign({},query), /fos/)
+          let fos_keys = filteredKeys(Object.assign({},query), /fos\d/)
           query_params["fields_of_study"] = []
           for(let i=0; i<fos_keys.length; i++){
             let key = fos_keys[i]
@@ -246,8 +246,7 @@
         },
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
-          this.$store.dispatch("dropdown_search/submit_fos_states", checkedCategories)
-          let fos_checked = this.$store.state.dropdown_search.fos_checked
+          let fos_checked = checkedCategories
           console.log("updateFOSChecked: ", fos_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
@@ -273,8 +272,7 @@
           this.$router.push({name: 'search', query: router_query})
         },
         updateAuthorsChecked(checkedCategories) {
-          this.$store.dispatch("dropdown_search/submit_authors_states", checkedCategories)
-          let authors_checked = this.$store.state.dropdown_search.fos_checked
+          let authors_checked = checkedCategories
           console.log("updateAuthorsChecked: ", authors_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
@@ -300,8 +298,7 @@
           this.$router.push({name: 'search', query: router_query})
         },
         updateVenuesChecked(checkedCategories){
-          this.$store.dispatch("dropdown_search/submit_venue_checked", checkedCategories)
-          let venue_checked = this.$store.state.dropdown_search.venue_checked
+          let venue_checked = checkedCategories[0]
           console.log("updateVenuesChecked: ", venue_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,

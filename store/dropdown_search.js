@@ -1,13 +1,12 @@
-import {paper_by_title} from "@/API/elastic_api";
-
 export const state = () => ({
+  query: null,
   fos_checked: [],
   authors_checked: [],
   venue_checked: null
 });
 
 export const mutations = {
-  submit_fos_checked(state, fieldsChecked) {
+  submit_fos_checked(state, query, fieldsChecked) {
     state.fos_checked = fieldsChecked
   },
   submit_authors_checked(state, fieldsChecked) {

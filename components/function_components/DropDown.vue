@@ -18,7 +18,7 @@
         <!--This dropdown uses checkbos (multiple checked) -->
         <label v-if="dd_data.isMulti" class="checkbox dropdown-item">
           <input type="checkbox"
-                 :value="item.key"
+                 :value="item.key|isAnonymous"
                  :name="item.key"
                  v-model="item.checked"
                  @change="check($event)">
@@ -27,7 +27,7 @@
         <!--This dropdown uses radio button (single checked)-->
         <label v-else class="radio dropdown-item">
           <input type="radio"
-                 :value="item.key"
+                 :value="item.key|isAnonymous"
                  name="venue"
                  v-model="item.checked"
                  @change="check($event)">
