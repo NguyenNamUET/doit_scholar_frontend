@@ -176,7 +176,7 @@
             Chủ đề
           </a>
         </li>
-        <li v-if="paper_detail.citations.length > 0">
+        <li v-if="citation_length > 0">
           <a
             class="nav-item"
             v-scroll-to="{el: '#citation_box', offset: -100}"
@@ -186,7 +186,7 @@
             Trích dẫn
           </a>
         </li>
-        <li v-if="paper_detail.references.length > 0">
+        <li v-if="ref_length > 0">
           <a
             class="nav-item"
             v-scroll-to="{el: '#reference_box', offset: -100}"

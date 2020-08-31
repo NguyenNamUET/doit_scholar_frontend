@@ -1,4 +1,4 @@
-const SEARCH_API =  'http://localhost:8000'
+const SEARCH_API =  'http://112.137.142.8:8080'
 // 'http://112.137.142.8:8080'
 
 const SEARCH_DOCUMENTS = {
