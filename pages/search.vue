@@ -124,14 +124,14 @@
         fos_list: function (){
           let result = []
           this.fos_info.forEach(function (item){
-            result.push({key:item.key, doc_count:item.doc_count})
+            result.push({key:item.key, doc_count:item.doc_count, checked:false})
           })
           return result
         },
         authors_list: function (){
           let result = []
           this.author_info.forEach(function (item){
-            result.push({key:item.name.buckets[0].key, doc_count:item.doc_count})
+            result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
           })
           return result
         },
@@ -139,10 +139,10 @@
           let result = []
           this.venue_info.forEach(function (item){
             if (item.key === ""){
-              result.push({key:"Anonymous", doc_count:item.doc_count})
+              result.push({key:"Anonymous", doc_count:item.doc_count, checked:false})
             }
             else{
-              result.push({key:item.key, doc_count:item.doc_count})
+              result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
           return result

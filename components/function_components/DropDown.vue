@@ -14,12 +14,13 @@
 
     <div class="dropdown-menu" id="dropdown-menu3" role="menu">
       <div class="dropdown-content" :class="{control: !dd_data.isMulti }"
-           v-for="item in dd_data.fields">
+           v-for="(item,index) in dd_data.fields" :key="index">
         <!--This dropdown uses checkbos (multiple checked) -->
         <label v-if="dd_data.isMulti" class="checkbox dropdown-item">
-          <input @focus="isActive=false" type="checkbox"
+          <input type="checkbox"
                  :value="item.key"
-                 v-model="checkedCategories"
+                 :name="item.key"
+                 v-model="item.checked"
                  @change="check($event)">
             {{item.key}} ({{item.doc_count}})
         </label>
@@ -28,7 +29,7 @@
           <input type="radio"
                  :value="item.key"
                  name="venue"
-                 v-model="checkedCategories"
+                 v-model="item.checked"
                  @change="check($event)">
           {{item.key}} ({{item.doc_count}})
         </label>
@@ -43,9 +44,13 @@
     export default {
       name: "DropDown",
       props: ['dd_data'],
+      computed: {
+        checkedCategories() {
+          return this.dd_data.fields.filter(item => item.checked).map(item => item.key)
+        }
+      },
       data(){
         return{
-          checkedCategories: [],
           isActive: false
         }
       },
@@ -54,14 +59,20 @@
           console.log(this.checkedCategories)
           if (this.dd_data.msg === 'Lĩnh vực'){
             this.$emit("update-fos-checked", this.checkedCategories)
+            console.log("Lĩnh vực checkedCategories: ", this.checkedCategories)
+            console.log("Lĩnh vực dd_data: ", this.dd_data)
           }
           else if (this.dd_data.msg === 'Tác giả'){
             this.$emit("update-authors-checked", this.checkedCategories)
+            console.log("Tác giả: ", this.checkedCategories)
+            console.log("Tác giả dd_data: ", this.dd_data)
           }
           else{
             this.$emit("update-venues-checked", this.checkedCategories)
-            console.log(this.checkedCategories)
+            console.log("Hội nghị: ", this.checkedCategories)
+            console.log("Hội nghị dd_data: ", this.dd_data)
           }
+          //emit then make dd_data with checkedCategories
         }
       }
     }
