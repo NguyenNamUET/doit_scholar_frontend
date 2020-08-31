@@ -10,8 +10,9 @@
           </h1>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div id="sort_section">
-            <DropDown :dd_data="{msg:'Lĩnh vực',fields: this.field_sort, type:0}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg:'Tác giả',fields: this.author_info, type:1}" @update-authors-checked="updateAuthorsChecked"/>
+            <DropDown :dd_data="{msg:'Lĩnh vực', isMulti:true, fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg:'Tác giả', isMulti:true, fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
+            <DropDown :dd_data="{msg:'Hội nghị', isMulti:false, fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -40,7 +41,8 @@
         </div>
 
         <div class="tile is-child">
-          <SearchResult v-for="result in this.search_results" v-bind:search_result="result"></SearchResult>
+          <SearchResult v-for="result in this.search_results"
+                        v-bind:search_result="result"></SearchResult>
         </div>
       </div>
     </div>
@@ -75,12 +77,12 @@
 <script>
     import {formatNumber} from "../assets/utils";
     import {filteredKeys} from "../assets/utils";
-    import DropDown from "../components/DropDown";
+    import DropDown from "../components/function_components/DropDown";
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
     import SearchResult from "../components/search_page/SearchResult";
-    import NuxtError from "@/components/ErrorPage";
-    import Pagination from "@/components/Pagination";
+    import NuxtError from "@/components/static_components/ErrorPage";
+    import Pagination from "@/components/function_components/Pagination";
 
     export default {
       name: "search",
@@ -93,18 +95,20 @@
       },
       data() {
         return {
-          field_sort: null,
+          search_results: null,
           publication_sort: publication_type,
           query_params: null,
           author_info: null,
-          search_results: null,
+          venue_info: null,
+          fos_info: null,
+
           author_hidden: true,
           msg_hidden: false,
 
           //24/08/2020: Nam added this for dropdown
           authors_checked: [],
           fos_checked: [],
-          fos_query: [],
+          venues_checked: [],
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
@@ -114,6 +118,34 @@
       filters: {
         formatNumber(number) {
           return formatNumber(number)
+        }
+      },
+      computed: {
+        fos_list: function (){
+          let result = []
+          this.fos_info.forEach(function (item){
+            result.push({key:item.key, doc_count:item.doc_count})
+          })
+          return result
+        },
+        authors_list: function (){
+          let result = []
+          this.author_info.forEach(function (item){
+            result.push({key:item.name.buckets[0].key, doc_count:item.doc_count})
+          })
+          return result
+        },
+        venue_list: function (){
+          let result = []
+          this.venue_info.forEach(function (item){
+            if (item.key === ""){
+              result.push({key:"Anonymous", doc_count:item.doc_count})
+            }
+            else{
+              result.push({key:item.key, doc_count:item.doc_count})
+            }
+          })
+          return result
         }
       },
       async asyncData({query, store}) {
@@ -141,35 +173,41 @@
             query_params["authors"].push(query[key])
           }
         }
-
+        //Gather venue param
+        if("venue" in query){
+          query_params["venue"]=query["venue"]
+        }
         //Added for fos agg
         query_params["return_fos_aggs"]= true
-
+        //Added for venue agg
+        query_params["return_venue_aggs"]= true
         console.log("asyncData: ", query_params)
 
         await store.dispatch('search_result/paper_by_title', query_params)
 
         if(store.state.search_result.search_results.length > 0) {
           return {
-            query_params: query,
-            current_page: parseInt(query['page']),
-            search_results: store.state.search_result.search_results,
-            keyword: query['searchContent'],
-            total_count: store.state.search_result.total,
-            author_info: store.state.search_result.aggregation.author_count.name.buckets,
-            field_sort: store.state.search_result.aggregation.fields_of_study.buckets,
-            last_paper_id: store.state.search_result.last_paper_id
+             query_params: query,
+             current_page: parseInt(query['page']),
+             search_results: store.state.search_result.search_results,
+             keyword: query['searchContent'],
+             total_count: store.state.search_result.total,
+             author_info: store.state.search_result.aggregation.author_count.name.buckets,
+             fos_info: store.state.search_result.aggregation.fos_count.buckets,
+             venue_info: store.state.search_result.aggregation.venue_count.buckets,
+             last_paper_id: store.state.search_result.last_paper_id
           }
         }
         else{
            return {
-            query_params: query,
-            current_page: parseInt(query['page']),
-            search_results: store.state.search_result.search_results,
-            keyword: query['searchContent'],
-            total_count: 0,
-            author_info: [],
-            field_sort: [],
+             query_params: query,
+             current_page: parseInt(query['page']),
+             search_results: store.state.search_result.search_results,
+             keyword: query['searchContent'],
+             total_count: 0,
+             author_info: [],
+             venue_info: [],
+             fos_info: [],
           }
         }
       },
@@ -187,7 +225,7 @@
 
           this.$router.push({name: 'search', query: router_query})
         },
-        //24/08/2020: Nam fixed this for dropdown search
+        //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
           this.fos_checked = checkedCategories
           let router_query = {query: this.$route.query.query,
@@ -199,21 +237,24 @@
           //Create fields of study params for example ?fos0=Medicine&fos1=Engineering
           for(let i=0; i<this.fos_checked.length; i++){
             router_query[`fos${i}`]=this.fos_checked[i]
-            this.fos_query.push({[`fos${i}`]:router_query[`fos${i}`]})
           }
+          //Add author params to query
           if("author0" in this.$route.query){
             let author_keys = filteredKeys(Object.assign({},this.$route.query), /author\d/)
             for(let i=0; i<author_keys.length; i++){
               router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
             }
           }
-
+          //Add venue param to query
+          if("venue" in this.$route.query){
+            router_query["venue"]=this.$route.query["venue"]
+          }
           this.$router.push({name: 'search', query: router_query})
         },
         updateAuthorsChecked(checkedCategories) {
           this.authors_checked = checkedCategories
           let router_query = {query: this.$route.query.query,
-                              start: this.$route.query.start,
+                              start: 0,
                               size: this.$route.query.size,
                               top_author_size: 10,
                               page: this.current_page
@@ -222,10 +263,42 @@
           for(let i=0; i<this.authors_checked.length; i++){
             router_query[`author${i}`]=this.authors_checked[i]
           }
+          //Add fos params to query
           if("fos0" in this.$route.query){
             let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)
             for(let i=0; i<fos_keys.length; i++){
               router_query[[fos_keys[i]]]=this.$route.query[fos_keys[i]]
+            }
+          }
+          //Add venue param to query
+          if("venue" in this.$route.query){
+            router_query["venue"]=this.$route.query["venue"]
+          }
+          this.$router.push({name: 'search', query: router_query})
+        },
+        updateVenuesChecked(checkedCategories){
+          this.venues_checked = checkedCategories
+          let router_query = {query: this.$route.query.query,
+                              start: 0,
+                              size: this.$route.query.size,
+                              top_author_size: 10,
+                              page: 1
+          }
+          console.log(this.venues_checked)
+          //Create venue params for example ?venue=VinAI
+          router_query['venue'] = this.venues_checked
+          //Add fos params to query
+          if("fos0" in this.$route.query){
+            let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)
+            for(let i=0; i<fos_keys.length; i++){
+              router_query[[fos_keys[i]]]=this.$route.query[fos_keys[i]]
+            }
+          }
+          //Add author params to query
+          if("author0" in this.$route.query){
+            let author_keys = filteredKeys(Object.assign({},this.$route.query), /author\d/)
+            for(let i=0; i<author_keys.length; i++){
+              router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
             }
           }
           this.$router.push({name: 'search', query: router_query})
@@ -250,5 +323,7 @@
   button:hover {
     cursor: pointer;
   }
-
+  a:hover {
+    text-decoration: none;
+  }
 </style>

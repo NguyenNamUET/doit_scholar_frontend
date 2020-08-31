@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import TimelineItem from "../../components/TimelineItem";
+    import TimelineItem from "../../components/function_components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
     //import {wiki_summary} from "@/API/elastic_api";
     export default {
@@ -58,14 +58,14 @@
         //let wiki_topic_summary = await wiki_summary({name: topic_name})
         if(Object.keys(data).length !== 0 ){
           return {
-            topic_name: topic_name[0],
+            topic_name: topic_name[0].replace(/-/g, ' '),
             papers: data.hits.hits,
             //wiki_topic_summary: wiki_topic_summary
           }
         }
         else{
           return {
-            topic_name: topic_name[0],
+            topic_name: topic_name[0].replace(/-/g, ' '),
             papers: null
           }
         }

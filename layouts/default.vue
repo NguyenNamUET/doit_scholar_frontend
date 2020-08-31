@@ -60,7 +60,7 @@
               <a href="https://facebook.com/doitvn">DoIT</a>
             </p>
             <p>
-              Latest update: 23h30 26/8/2020
+              Latest update: {{this.nowTime}}
             </p>
           </div>
         </div>
@@ -70,7 +70,8 @@
 </template>
 
 <script>
-import SearchBar from "../components/SearchBar";
+import moment from 'moment';
+import SearchBar from "../components/function_components/SearchBar";
 export default {
   components: {SearchBar},
   chart_data() {
@@ -79,7 +80,8 @@ export default {
   },
   data() {
     return {
-      showNav: false
+      showNav: false,
+      nowTime: moment().format('LLL')
     }
   },
   methods: {

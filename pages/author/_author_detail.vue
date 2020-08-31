@@ -112,7 +112,7 @@
     import {formatTitle} from "assets/utils";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import {author_by_id} from "@/API/elastic_api";
-    import PaperTable from "@/components/PaperTable";
+    import PaperTable from "@/components/function_components/PaperTable";
 
     export default {
       name: "_author_detail",
