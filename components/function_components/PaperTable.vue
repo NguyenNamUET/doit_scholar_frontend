@@ -9,7 +9,7 @@
     <template slot-scope="props">
       <b-table-column field="title" label="Tiêu đề">
         <nuxt-link
-          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.corpusID"
+          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"
         >
           {{props.row.title}}
         </nuxt-link>

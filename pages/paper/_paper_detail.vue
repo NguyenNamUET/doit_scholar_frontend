@@ -113,6 +113,13 @@
               >
                 Doi.org
               </a>
+              <pdf
+                src="https://cdn.mozilla.net/pdfjs/tracemonkey.pdf"
+                @num-pages="pageCount = $event"
+                @page-loaded="currentPage = $event"
+              >
+
+              </pdf>
             </div>
           </nav>
           <!--------------------------------------- View pdf -------------------------------------------->
@@ -298,10 +305,11 @@
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
+    import pdf from 'vue-pdf'
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError, Pagination},
+      components: {PaperTable, CitationBar, NuxtError, Pagination, pdf: PDFViewer},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -413,6 +421,7 @@
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
+          console.log(data.citations, data.references)
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
