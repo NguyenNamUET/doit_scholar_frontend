@@ -182,6 +182,7 @@
             let key = fos_keys[i]
             query_params["fields_of_study"].push(query[key])
           }
+          query_params["fos_is_should"]=true
         }
         //Gather all author<digit> to form Array of checked authors
         if("author0" in query) {
@@ -239,6 +240,7 @@
           router_query["page"]=pageNum;
           //Delete these to have consitent router
           delete router_query["fields_of_study"]
+          delete router_query["fos_is_should"]
           delete router_query["return_top_author"]
           delete router_query["return_fos_aggs"]
 
