@@ -309,7 +309,7 @@
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError, Pagination, pdf: PDFViewer},
+      components: {PaperTable, CitationBar, NuxtError, Pagination, pdf},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
