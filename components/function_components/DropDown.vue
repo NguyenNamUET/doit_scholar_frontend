@@ -15,38 +15,13 @@
       <div class="dropdown-content"
            v-for="item in dd_data.fields" :key="item.key">
         <!--This dropdown uses checkbos (multiple checked) -->
-        <label v-if="dd_data.isMulti" class="checkbox dropdown-item">
+        <label class="checkbox dropdown-item">
           <input type="checkbox"
                  :value="item.key|isAnonymous"
                  :name="item.key"
                  v-model="item.checked"
                  @change="check()">
             {{item.key|isAnonymous}} ({{item.doc_count}})
-        </label>
-        <!--This dropdown uses radio button (single checked)-->
-        <!--This commented section used bulma-checkradio extension (work great)-->
-<!--        <div v-else class="field dropdown-item">-->
-<!--          <input v-if="item.key" class="is-checkradio is-small" checked="checked"-->
-<!--                 type="radio" name="venue"-->
-<!--                 :id="item.key|isAnonymous"-->
-<!--                 :value="item.key|isAnonymous"-->
-<!--                 v-model="item.checked"-->
-<!--                 @change="check()">-->
-<!--          <input v-else class="is-checkradio is-small"-->
-<!--                 type="radio" name="venue"-->
-<!--                 :id="item.key|isAnonymous"-->
-<!--                 :value="item.key|isAnonymous"-->
-<!--                 v-model="item.checked"-->
-<!--                 @change="check()">-->
-<!--          <label :for="item.key|isAnonymous">{{item.key|isAnonymous}} ({{item.doc_count}})</label>-->
-<!--        </div>-->
-        <label v-else class="radio dropdown-item">
-          <input type="radio" v-bind:class="{checked:item.key}"
-                 :value="item.key|isAnonymous"
-                 name="venue"
-                 v-model="item.checked"
-                 @change="check($event)">
-          {{item.key | isAnonymous}} ({{item.doc_count}})
         </label>
       </div>
 

@@ -10,9 +10,9 @@
           </h1>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div id="sort_section">
-            <DropDown :dd_data="{msg:'Lĩnh vực', isMulti:true, fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg:'Tác giả', isMulti:true, fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg:'Hội nghị', isMulti:false, fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+            <DropDown :dd_data="{msg:'Lĩnh vực', fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg:'Tác giả', fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
+            <DropDown :dd_data="{msg:'Hội nghị', fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
