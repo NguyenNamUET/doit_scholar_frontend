@@ -44,7 +44,7 @@
                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             >
               {{author.name}}
-              <span v-if="index < 2">,</span>
+              <span v-if="index < paper_detail.authors.slice(0,3).length-1">,</span>
             </a>
             <span class="text-class-3 less-more-button"
                   v-if="author_hidden && paper_detail.authors.length - 3 > 0"
@@ -93,7 +93,7 @@
               <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
             </p>
             <p v-else class="is-size-6">
-                        {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+              {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
               <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
             </p>
           </div>
@@ -297,11 +297,11 @@
 </template>
 
 <script>
+    import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
-    import CitationBar from "../../components/search_page/CitationBar";
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
-    import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+    import CitationBar from "../../components/search_page/CitationBar";
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";

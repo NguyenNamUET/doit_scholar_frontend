@@ -76,7 +76,7 @@
 
 <script>
     import {formatNumber} from "../assets/utils";
-    import {filteredKeys} from "../assets/utils";
+    import {filteredKeys, filteredKeys_v2} from "../assets/utils";
     import DropDown from "../components/function_components/DropDown";
     import {publication_type} from "../assets/utils";
     import AuthorInfo from "../components/search_page/AuthorInfo";
@@ -106,9 +106,9 @@
           msg_hidden: false,
 
           //24/08/2020: Nam added this for dropdown
-          authors_checked: [],
-          fos_checked: [],
-          venues_checked: [],
+          authors_checked: this.$store.state.dropdown_search.authors_checked,
+          fos_checked: this.$store.state.dropdown_search.fos_checked,
+          venues_checked: this.$store.state.dropdown_search.venues_checked,
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
@@ -123,28 +123,47 @@
       computed: {
         fos_list: function (){
           let result = []
-          this.fos_info.forEach(function (item){
-            result.push({key:item.key, doc_count:item.doc_count})
+          let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
+          console.log("fos_checked: ", fos_checked)
+          this.fos_info.forEach(item => {
+            if (fos_checked.length>0 && fos_checked.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:true})
+            }
+            else{
+              result.push({key:item.key, doc_count:item.doc_count, checked:false})
+            }
           })
+          console.log("fos_list: ", result)
           return result
         },
         authors_list: function (){
           let result = []
-          this.author_info.forEach(function (item){
-            result.push({key:item.name.buckets[0].key, doc_count:item.doc_count})
+          let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
+          console.log("authors_checked: ", authors_checked)
+          this.author_info.forEach(item => {
+            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
+              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
+            }
+            else{
+              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
+            }
           })
+          console.log("authors_list: ", result)
           return result
         },
         venue_list: function (){
           let result = []
-          this.venue_info.forEach(function (item){
-            if (item.key === ""){
-              result.push({key:"Anonymous", doc_count:item.doc_count})
+          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue/)
+          console.log("venue_checked: ",venue_checked)
+          this.venue_info.forEach(item => {
+            if (!!venue_checked && venue_checked.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:true})
             }
             else{
-              result.push({key:item.key, doc_count:item.doc_count})
+              result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
+          console.log("venue_list: ", result)
           return result
         }
       },
@@ -157,7 +176,7 @@
         }
         //Gather all fos<digit> to form Array of checked fields of study
         if("fos0" in query) {
-          let fos_keys = filteredKeys(Object.assign({},query), /fos/)
+          let fos_keys = filteredKeys(Object.assign({},query), /fos\d/)
           query_params["fields_of_study"] = []
           for(let i=0; i<fos_keys.length; i++){
             let key = fos_keys[i]
@@ -227,7 +246,8 @@
         },
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
-          this.fos_checked = checkedCategories
+          let fos_checked = checkedCategories
+          console.log("updateFOSChecked: ", fos_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -235,8 +255,8 @@
                               page: 1
           }
           //Create fields of study params for example ?fos0=Medicine&fos1=Engineering
-          for(let i=0; i<this.fos_checked.length; i++){
-            router_query[`fos${i}`]=this.fos_checked[i]
+          for(let i=0; i<fos_checked.length; i++){
+            router_query[`fos${i}`]=fos_checked[i]
           }
           //Add author params to query
           if("author0" in this.$route.query){
@@ -252,7 +272,8 @@
           this.$router.push({name: 'search', query: router_query})
         },
         updateAuthorsChecked(checkedCategories) {
-          this.authors_checked = checkedCategories
+          let authors_checked = checkedCategories
+          console.log("updateAuthorsChecked: ", authors_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -260,8 +281,8 @@
                               page: this.current_page
           }
           //Create authors params for example ?author0=Medicine&author1=Engineering
-          for(let i=0; i<this.authors_checked.length; i++){
-            router_query[`author${i}`]=this.authors_checked[i]
+          for(let i=0; i<authors_checked.length; i++){
+            router_query[`author${i}`]=authors_checked[i]
           }
           //Add fos params to query
           if("fos0" in this.$route.query){
@@ -277,16 +298,16 @@
           this.$router.push({name: 'search', query: router_query})
         },
         updateVenuesChecked(checkedCategories){
-          this.venues_checked = checkedCategories
+          let venue_checked = checkedCategories[0]
+          console.log("updateVenuesChecked: ", venue_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
                               top_author_size: 10,
                               page: 1
           }
-          console.log(this.venues_checked)
           //Create venue params for example ?venue=VinAI
-          router_query['venue'] = this.venues_checked
+          router_query['venue'] = venue_checked
           //Add fos params to query
           if("fos0" in this.$route.query){
             let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)

@@ -72,9 +72,20 @@ function filteredKeys(obj, filter) {
   }
   return keys;
 }
+
+function filteredKeys_v2(obj, filter) {
+  var key, values = [];
+  for (key in obj) {
+    if (obj.hasOwnProperty(key) && filter.test(key)) {
+      values.push(obj[key]);
+    }
+  }
+  return values;
+}
+
 export {
   formatNumber,
-  filteredKeys,
+  filteredKeys, filteredKeys_v2,
   fields_type,
   publication_type,
   formatTitle,
