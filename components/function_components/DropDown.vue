@@ -1,10 +1,9 @@
 <template>
-  <div class="dropdown" :class="{'is-active': isActive}">
+  <div class="dropdown" :class="dd_data.msg|toClass">
     <div class="dropdown-trigger">
       <button class="button"
               aria-haspopup="true" aria-controls="dropdown-menu3"
-              @click="isActive = !isActive"
-              >
+              @click="activeDropdown(dd_data.msg)">
         <span>{{dd_data.msg}}</span>
         <span class="icon is-small">
           <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -13,20 +12,36 @@
     </div>
 
     <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-      <div class="dropdown-content" :class="{control: !dd_data.isMulti }"
-           v-for="(item,index) in dd_data.fields" :key="index">
+      <div class="dropdown-content"
+           v-for="item in dd_data.fields" :key="item.key">
         <!--This dropdown uses checkbos (multiple checked) -->
         <label v-if="dd_data.isMulti" class="checkbox dropdown-item">
           <input type="checkbox"
                  :value="item.key|isAnonymous"
                  :name="item.key"
                  v-model="item.checked"
-                 @change="check($event)">
-            {{item.key | isAnonymous}} ({{item.doc_count}})
+                 @change="check()">
+            {{item.key|isAnonymous}} ({{item.doc_count}})
         </label>
         <!--This dropdown uses radio button (single checked)-->
+        <!--This commented section used bulma-checkradio extension (work great)-->
+<!--        <div v-else class="field dropdown-item">-->
+<!--          <input v-if="item.key" class="is-checkradio is-small" checked="checked"-->
+<!--                 type="radio" name="venue"-->
+<!--                 :id="item.key|isAnonymous"-->
+<!--                 :value="item.key|isAnonymous"-->
+<!--                 v-model="item.checked"-->
+<!--                 @change="check()">-->
+<!--          <input v-else class="is-checkradio is-small"-->
+<!--                 type="radio" name="venue"-->
+<!--                 :id="item.key|isAnonymous"-->
+<!--                 :value="item.key|isAnonymous"-->
+<!--                 v-model="item.checked"-->
+<!--                 @change="check()">-->
+<!--          <label :for="item.key|isAnonymous">{{item.key|isAnonymous}} ({{item.doc_count}})</label>-->
+<!--        </div>-->
         <label v-else class="radio dropdown-item">
-          <input type="radio"
+          <input type="radio" v-bind:class="{checked:item.key}"
                  :value="item.key|isAnonymous"
                  name="venue"
                  v-model="item.checked"
@@ -54,6 +69,10 @@
             return "Anonymous"
           }
           return field_name
+        },
+        toClass: function (msg){
+          let words = _.words(msg)
+          return _.head(words)[0]+_.last(words)[0]
         }
       },
       data(){
@@ -62,7 +81,7 @@
         }
       },
       methods: {
-        check(e) {
+        check() {
           console.log(this.checkedCategories)
           if (this.dd_data.msg === 'Lĩnh vực'){
             this.$emit("update-fos-checked", this.checkedCategories)
@@ -79,8 +98,25 @@
             console.log("Hội nghị: ", this.checkedCategories)
             console.log("Hội nghị dd_data: ", this.dd_data)
           }
-
-        }
+        },
+        activeDropdown(current_dropdown){
+          //To allow one dropdown active at a time
+          if(current_dropdown==="Lĩnh vực"){
+            document.querySelector(".Lv").classList.toggle('is-active')
+            document.querySelector(".Tg").classList.remove('is-active')
+            document.querySelector(".Hn").classList.remove('is-active')
+          }
+          else if(current_dropdown==="Tác giả"){
+            document.querySelector(".Tg").classList.toggle('is-active')
+            document.querySelector(".Lv").classList.remove('is-active')
+            document.querySelector(".Hn").classList.remove('is-active')
+          }
+          else if(current_dropdown==="Hội nghị"){
+            document.querySelector(".Hn").classList.toggle('is-active')
+            document.querySelector(".Lv").classList.remove('is-active')
+            document.querySelector(".Tg").classList.remove('is-active')
+          }
+        },
       }
     }
 
