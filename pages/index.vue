@@ -14,16 +14,6 @@
             <span></span>
           </span>
             </div>
-<!--            <div id="navbarMenuHeroA" class="navbar-menu">-->
-<!--              <div class="navbar-end">-->
-<!--                <a class="navbar-item" href="/">-->
-<!--                  Trang chủ-->
-<!--                </a>-->
-<!--                <a class="navbar-item" href="/">-->
-<!--                  Đăng nhập-->
-<!--                </a>-->
-<!--              </div>-->
-<!--            </div>-->
           </div>
         </nav>
       </div>
@@ -79,8 +69,6 @@
     </section>
     <div class="background-effect">
       <ul class="circles">
-        <li></li>
-        <li></li>
         <li></li>
         <li></li>
         <li></li>
@@ -255,8 +243,6 @@ export default {
     animation-delay: 0s;
     animation-duration: 11s;
   }
-
-
 
   @keyframes animate {
 
