@@ -105,10 +105,6 @@
           author_hidden: true,
           msg_hidden: false,
 
-          //24/08/2020: Nam added this for dropdown
-          authors_checked: this.$store.state.dropdown_search.authors_checked,
-          fos_checked: this.$store.state.dropdown_search.fos_checked,
-          venues_checked: this.$store.state.dropdown_search.venues_checked,
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
@@ -125,6 +121,7 @@
           let result = []
           let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
           console.log("fos_checked: ", fos_checked)
+          console.log("fos_info", this.fos_info)
           this.fos_info.forEach(item => {
             if (fos_checked.length>0 && fos_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -153,7 +150,7 @@
         },
         venue_list: function (){
           let result = []
-          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue/)
+          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d/)
           console.log("venue_checked: ",venue_checked)
           this.venue_info.forEach(item => {
             if (!!venue_checked && venue_checked.includes(item.key)){
@@ -207,7 +204,7 @@
         query_params["return_fos_aggs"]= true
         //Added for venue agg
         query_params["return_venue_aggs"]= true
-        // console.log("asyncData: ", query_params)
+
         await store.dispatch('search_result/paper_by_title', query_params)
         if(store.state.search_result.search_results.length > 0) {
           return {
@@ -256,7 +253,7 @@
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
           let fos_checked = checkedCategories
-          // console.log("updateFOSChecked: ", fos_checked)
+          console.log("updateFOSChecked: ", fos_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,

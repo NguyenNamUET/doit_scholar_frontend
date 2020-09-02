@@ -21,8 +21,7 @@
                  :name="item.key"
                  v-model="item.checked"
                  @change="check()">
-          {{item.key|isAnonymous}}
-          <span v-if="item.doc_count > 0">({{item.doc_count}})</span>
+          {{item.key|isAnonymous}} ({{item.doc_count}})
         </label>
       </div>
 
@@ -61,23 +60,13 @@
       methods: {
         check() {
           if (this.dd_data.msg === 'Lĩnh vực'){
-            let converted_checked = []
-            this.checkedCategories.forEach(item => {
-              converted_checked.push(fields_dict[item])
-            })
-            this.$emit("update-fos-checked", converted_checked)
-            // console.log("Lĩnh vực checkedCategories: ", converted_checked)
-            // console.log("Lĩnh vực dd_data: ", this.dd_data)
+            this.$emit("update-fos-checked", this.checkedCategories)
           }
           else if (this.dd_data.msg === 'Tác giả'){
             this.$emit("update-authors-checked", this.checkedCategories)
-            // console.log("Tác giả: ", this.checkedCategories)
-            // console.log("Tác giả dd_data: ", this.dd_data)
           }
           else{
             this.$emit("update-venues-checked", this.checkedCategories)
-            // console.log("Hội nghị: ", this.checkedCategories)
-            // console.log("Hội nghị dd_data: ", this.dd_data)
           }
         },
         activeDropdown(current_dropdown){
