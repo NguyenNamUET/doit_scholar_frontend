@@ -75,7 +75,7 @@
 </template>
 
 <script>
-    import {formatNumber} from "../assets/utils";
+    import {fields_type, formatNumber} from "../assets/utils";
     import {filteredKeys, filteredKeys_v2} from "../assets/utils";
     import DropDown from "../components/function_components/DropDown";
     import {publication_type} from "../assets/utils";
@@ -124,22 +124,23 @@
         fos_list: function (){
           let result = []
           let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
-          console.log("fos_checked: ", fos_checked)
-          this.fos_info.forEach(item => {
+          // console.log("fos_checked: ", fos_checked)
+          fields_type.forEach(item => {
             if (fos_checked.length>0 && fos_checked.includes(item.key)){
-              result.push({key:item.key, doc_count:item.doc_count, checked:true})
+              result.push({key:item, doc_count:0, checked:true})
             }
             else{
-              result.push({key:item.key, doc_count:item.doc_count, checked:false})
+              result.push({key:item, doc_count:0, checked:false})
             }
           })
-          console.log("fos_list: ", result)
+          // console.log("fos_list: ", result)
+
           return result
         },
         authors_list: function (){
           let result = []
           let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
-          console.log("authors_checked: ", authors_checked)
+          // console.log("authors_checked: ", authors_checked)
           this.author_info.forEach(item => {
             if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
@@ -148,13 +149,13 @@
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("authors_list: ", result)
+          // console.log("authors_list: ", result)
           return result
         },
         venue_list: function (){
           let result = []
           let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue/)
-          console.log("venue_checked: ",venue_checked)
+          // console.log("venue_checked: ",venue_checked)
           this.venue_info.forEach(item => {
             if (!!venue_checked && venue_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -163,7 +164,7 @@
               result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("venue_list: ", result)
+          // console.log("venue_list: ", result)
           return result
         }
       },
@@ -201,7 +202,7 @@
         query_params["return_fos_aggs"]= true
         //Added for venue agg
         query_params["return_venue_aggs"]= true
-        console.log("asyncData: ", query_params)
+        // console.log("asyncData: ", query_params)
 
         await store.dispatch('search_result/paper_by_title', query_params)
 
@@ -249,7 +250,7 @@
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
           let fos_checked = checkedCategories
-          console.log("updateFOSChecked: ", fos_checked)
+          // console.log("updateFOSChecked: ", fos_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -275,7 +276,7 @@
         },
         updateAuthorsChecked(checkedCategories) {
           let authors_checked = checkedCategories
-          console.log("updateAuthorsChecked: ", authors_checked)
+          // console.log("updateAuthorsChecked: ", authors_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -301,7 +302,7 @@
         },
         updateVenuesChecked(checkedCategories){
           let venue_checked = checkedCategories[0]
-          console.log("updateVenuesChecked: ", venue_checked)
+          // console.log("updateVenuesChecked: ", venue_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
