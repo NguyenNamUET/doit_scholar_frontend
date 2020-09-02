@@ -1,8 +1,29 @@
 function formatNumber(number) {
   return number.toLocaleString('en-UK', {maximumFractionDigits: 0})
 }
+const fields_dict = {
+  'Nghệ Thuật': 'Art',
+  'Sinh Học': 'Biology',
+  'Kinh Doanh': 'Business',
+  'Khoa Học Máy Tính': 'Computer Science',
+  'Hóa Học': 'Chemistry',
+  'Kinh Tế': 'Economics',
+  'Kỹ Nghệ': 'Engineering',
+  'Khoa Học Môi Trường': 'Environmental Science',
+  'Địa Lý': 'Geography',
+  'Địa Chất Học': 'Geology',
+  'Lịch Sử': 'History',
+  'Khoa Học Vật Liệu': 'Materials Science',
+  'Toán Học': 'Mathematics',
+  'Y Tế': 'Medicine',
+  'Triết Học': 'Philosophy',
+  'Vật Lý': 'Physics',
+  'Khoa Học Chính Trị': 'Political Science',
+  'Tâm Lý Học': 'Psychology',
+  'Xã Hội Học': 'Sociology',
+}
+
 const fields_type = [
-  'Tất Cả Lĩnh Vực',
   'Nghệ Thuật',
   'Sinh Học',
   'Kinh Doanh',
@@ -90,5 +111,6 @@ export {
   publication_type,
   formatTitle,
   chartColors,
-  chart_prep
+  chart_prep,
+  fields_dict
 }

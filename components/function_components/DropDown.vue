@@ -21,7 +21,8 @@
                  :name="item.key"
                  v-model="item.checked"
                  @change="check()">
-            {{item.key|isAnonymous}} ({{item.doc_count}})
+          {{item.key|isAnonymous}}
+          <span v-if="item.doc_count > 0">({{item.doc_count}})</span>
         </label>
       </div>
 
@@ -30,6 +31,8 @@
 </template>
 
 <script>
+    import {fields_dict} from "assets/utils";
+
     export default {
       name: "DropDown",
       props: ['dd_data'],
@@ -57,21 +60,24 @@
       },
       methods: {
         check() {
-          console.log(this.checkedCategories)
           if (this.dd_data.msg === 'Lĩnh vực'){
-            this.$emit("update-fos-checked", this.checkedCategories)
-            console.log("Lĩnh vực checkedCategories: ", this.checkedCategories)
-            console.log("Lĩnh vực dd_data: ", this.dd_data)
+            let converted_checked = []
+            this.checkedCategories.forEach(item => {
+              converted_checked.push(fields_dict[item])
+            })
+            this.$emit("update-fos-checked", converted_checked)
+            // console.log("Lĩnh vực checkedCategories: ", converted_checked)
+            // console.log("Lĩnh vực dd_data: ", this.dd_data)
           }
           else if (this.dd_data.msg === 'Tác giả'){
             this.$emit("update-authors-checked", this.checkedCategories)
-            console.log("Tác giả: ", this.checkedCategories)
-            console.log("Tác giả dd_data: ", this.dd_data)
+            // console.log("Tác giả: ", this.checkedCategories)
+            // console.log("Tác giả dd_data: ", this.dd_data)
           }
           else{
             this.$emit("update-venues-checked", this.checkedCategories)
-            console.log("Hội nghị: ", this.checkedCategories)
-            console.log("Hội nghị dd_data: ", this.dd_data)
+            // console.log("Hội nghị: ", this.checkedCategories)
+            // console.log("Hội nghị dd_data: ", this.dd_data)
           }
         },
         activeDropdown(current_dropdown){

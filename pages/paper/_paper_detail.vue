@@ -109,7 +109,13 @@
           <!--------------------------------------- View pdf -------------------------------------------->
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
-              <button class="level-item button is-info">Xem PDF</button>
+              <a
+                class="level-item button is-info"
+                :href="'/pdf/' + formatTitle(paper_detail.title) + '.p-' + paper_id"
+                target="_blank"
+              >
+                Xem PDF
+              </a>
               <a
                 :href="'http://doi.org/' + paper_detail.doi"
                 class="level-item button are-small has-text-link"
@@ -148,10 +154,14 @@
         </div>
       </div>
       <!--------------------------------------- Citations Chart ------------------------------------------------->
+
     </div>
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
-    <div class="tabs is-centered is-fullwidth sticky-nav">
+    <div
+      class="tabs is-centered is-fullwidth sticky-nav"
+      v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
+    >
       <ul>
         <li>
           <a
@@ -172,7 +182,7 @@
             Chủ đề
           </a>
         </li>
-        <li v-if="paper_detail.citations.length > 0">
+        <li v-if="citation_length > 0">
           <a
             class="nav-item"
             v-scroll-to="{el: '#citation_box', offset: -100}"
@@ -182,7 +192,7 @@
             Trích dẫn
           </a>
         </li>
-        <li v-if="paper_detail.references.length > 0">
+        <li v-if="ref_length > 0">
           <a
             class="nav-item"
             v-scroll-to="{el: '#reference_box', offset: -100}"
@@ -317,18 +327,21 @@
           title: this.paper_detail.title + ' | DoIT Scholar'
         }
       },
-      computed:{
+      computed: {
         full_fos: function (){
           return _.join(this.paper_detail.fieldsOfStudy, ', ')
         }
       },
       data() {
         return {
+          citation_length: null,
+          ref_length: null,
           citation_data: null,
           ref_data: null,
           per_page: 5,
           current_citation_page: 1,
           current_ref_page: 1,
+
           abstract_height: null,
           topic_height: null,
           citation_height: null,
@@ -336,11 +349,15 @@
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
+
           chartColors: chartColors,
+          chart_data: null,
+          chart_labels: null,
+
           paper_id: null,
           paper_detail: null,
-          chart_labels: null,
-          chart_data: null,
+
+
           author_hidden: true,
           field_hidden: true,
           navigate: '',
@@ -412,6 +429,7 @@
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
+          console.log(data.citations, data.references)
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
