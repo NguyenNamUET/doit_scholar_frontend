@@ -123,48 +123,83 @@
       computed: {
         fos_list: function (){
           let result = []
+          let static_fos_aggs = this.$store.state.search_result.aggregation.fos_count.buckets
+          let current_fos_aggs = (this.$store.state.search_result.current_aggregation!==null) ?
+                                  _.map(this.$store.state.search_result.current_aggregation.fos_count.buckets, (item)=>{return item.key})
+                                  : _.map(static_fos_aggs, (item)=>{return item.key})
+
           let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
-          // console.log("fos_checked: ", fos_checked)
-          fields_type.forEach(item => {
-            if (fos_checked.length>0 && fos_checked.includes(item.key)){
-              result.push({key:item, doc_count:0, checked:true})
+
+          static_fos_aggs.forEach(item => {
+            if (fos_checked.includes(item.key) && current_fos_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:0, checked:true, disabled:false})
             }
-            else{
-              result.push({key:item, doc_count:0, checked:false})
+            else if (fos_checked.includes(item) && !current_fos_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:0, checked:true, disabled:true})
+            }
+            else if (!fos_checked.includes(item.key) && current_fos_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:0, checked:false, disabled:false})
+            }
+            else if (!fos_checked.includes(item.key) && !current_fos_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:0, checked:false, disabled:true})
             }
           })
-          // console.log("fos_list: ", result)
 
           return result
         },
         authors_list: function (){
           let result = []
+          let static_authors_aggs = this.$store.state.search_result.aggregation.author_count.name.buckets
+          let current_authors_aggs = (this.$store.state.search_result.current_aggregation!==null) ?
+                                      _.map(this.$store.state.search_result.current_aggregation.author_count.name.buckets, (item)=>{return item.name.buckets[0].key})
+                                      :_.map(static_authors_aggs, (item)=>{return item.name.buckets[0].key})
+
           let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
-          // console.log("authors_checked: ", authors_checked)
-          this.author_info.forEach(item => {
-            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
-              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
+
+          static_authors_aggs.forEach(item => {
+            let name = item.name.buckets[0].key
+            if (authors_checked.includes(name) && current_authors_aggs.includes(name)){
+              result.push({key:name, doc_count:item.doc_count, checked:true, disabled:false})
             }
-            else{
-              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
+            else if (authors_checked.includes(name) && !current_authors_aggs.includes(name)){
+              result.push({key:name, doc_count:item.doc_count, checked:true, disabled:true})
+            }
+            else if (!authors_checked.includes(name) && current_authors_aggs.includes(name)){
+              result.push({key:name, doc_count:item.doc_count, checked:false, disabled:false})
+            }
+            else if (!authors_checked.includes(name) && !current_authors_aggs.includes(name)){
+              result.push({key:name, doc_count:item.doc_count, checked:false, disabled:true})
             }
           })
-          // console.log("authors_list: ", result)
+
           return result
         },
         venue_list: function (){
           let result = []
-          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue/)
-          // console.log("venue_checked: ",venue_checked)
-          this.venue_info.forEach(item => {
-            if (!!venue_checked && venue_checked.includes(item.key)){
-              result.push({key:item.key, doc_count:item.doc_count, checked:true})
+          let static_venues_aggs = this.$store.state.search_result.aggregation.venue_count.buckets
+          let current_venues_aggs = (this.$store.state.search_result.current_aggregation!==null) ?
+                                    _.map(this.$store.state.search_result.current_aggregation.venue_count.buckets, (item)=>{return item.key})
+                                    : _.map(static_venues_aggs, (item)=>{return item.key})
+
+
+          let venues_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d/)
+
+
+          static_venues_aggs.forEach(item => {
+            if (venues_checked.includes(item.key) && current_venues_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:true, disabled:false})
             }
-            else{
-              result.push({key:item.key, doc_count:item.doc_count, checked:false})
+            else if (venues_checked.includes(item.key) && !current_venues_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:true, disabled:true})
+            }
+            else if (!venues_checked.includes(item.key) && current_venues_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:false, disabled:false})
+            }
+            else if (!venues_checked.includes(item.key) && !current_venues_aggs.includes(item.key)){
+              result.push({key:item.key, doc_count:item.doc_count, checked:false, disabled:true})
             }
           })
-          // console.log("venue_list: ", result)
+
           return result
         }
       },
@@ -193,10 +228,17 @@
             let key = author_keys[i]
             query_params["authors"].push(query[key])
           }
+          query_params["author_is_should"]=true
         }
         //Gather venue param
-        if("venue" in query){
-          query_params["venue"]=query["venue"]
+        if("venue0" in query) {
+          let venues_keys = filteredKeys(Object.assign({},query), /venue\d/)
+          query_params["venues"] = []
+          for(let i=0; i<venues_keys.length; i++){
+            let key = venues_keys[i]
+            query_params["venues"].push(query[key])
+          }
+          query_params["venues_is_should"]=true
         }
         //Added for fos agg
         query_params["return_fos_aggs"]= true
@@ -213,10 +255,13 @@
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: store.state.search_result.total,
+             //maybe I will delete these three since computed for these are not necessary/////
              author_info: store.state.search_result.aggregation.author_count.name.buckets,
              fos_info: store.state.search_result.aggregation.fos_count.buckets,
              venue_info: store.state.search_result.aggregation.venue_count.buckets,
-             last_paper_id: store.state.search_result.last_paper_id
+             ////////////////////////////////////////////////////////////////////////////////
+             last_paper_id: store.state.search_result.last_paper_id,
+
           }
         }
         else{
@@ -242,6 +287,7 @@
           //Delete these to have consitent router
           delete router_query["fields_of_study"]
           delete router_query["fos_is_should"]
+          delete router_query["author_is_should"]
           delete router_query["return_top_author"]
           delete router_query["return_fos_aggs"]
 
@@ -269,8 +315,11 @@
             }
           }
           //Add venue param to query
-          if("venue" in this.$route.query){
-            router_query["venue"]=this.$route.query["venue"]
+          if("venue0" in this.$route.query){
+            let venues_keys = filteredKeys(Object.assign({},this.$route.query), /venue\d/)
+            for(let i=0; i<venues_keys.length; i++){
+              router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
+            }
           }
           this.$router.push({name: 'search', query: router_query})
         },
@@ -295,14 +344,17 @@
             }
           }
           //Add venue param to query
-          if("venue" in this.$route.query){
-            router_query["venue"]=this.$route.query["venue"]
+          if("venue0" in this.$route.query){
+            let venues_keys = filteredKeys(Object.assign({},this.$route.query), /venue\d/)
+            for(let i=0; i<venues_keys.length; i++){
+              router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
+            }
           }
           this.$router.push({name: 'search', query: router_query})
         },
         updateVenuesChecked(checkedCategories){
-          let venue_checked = checkedCategories[0]
-          // console.log("updateVenuesChecked: ", venue_checked)
+          let venues_checked = checkedCategories
+          console.log("updateVenuesChecked: ", venues_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -310,7 +362,9 @@
                               page: 1
           }
           //Create venue params for example ?venue=VinAI
-          router_query['venue'] = venue_checked
+          for(let i=0; i<venues_checked.length; i++){
+            router_query[`venue${i}`]=venues_checked[i]
+          }
           //Add fos params to query
           if("fos0" in this.$route.query){
             let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)

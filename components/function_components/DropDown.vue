@@ -15,8 +15,8 @@
       <div class="dropdown-content"
            v-for="item in dd_data.fields" :key="item.key">
         <!--This dropdown uses checkbos (multiple checked) -->
-        <label class="checkbox dropdown-item">
-          <input type="checkbox"
+        <label class="checkbox dropdown-item" :disabled = "item.disabled">
+          <input type="checkbox" :disabled = "item.disabled"
                  :value="item.key|isAnonymous"
                  :name="item.key"
                  v-model="item.checked"
@@ -61,11 +61,12 @@
       methods: {
         check() {
           if (this.dd_data.msg === 'Lĩnh vực'){
-            let converted_checked = []
-            this.checkedCategories.forEach(item => {
-              converted_checked.push(fields_dict[item])
-            })
-            this.$emit("update-fos-checked", converted_checked)
+            this.$emit("update-fos-checked", this.checkedCategories)
+            // let converted_checked = []
+            // this.checkedCategories.forEach(item => {
+            //   converted_checked.push(fields_dict[item])
+            // })
+            //this.$emit("update-fos-checked", converted_checked)
             // console.log("Lĩnh vực checkedCategories: ", converted_checked)
             // console.log("Lĩnh vực dd_data: ", this.dd_data)
           }
@@ -104,5 +105,7 @@
 </script>
 
 <style scoped>
-
+  div > label[disabled]{
+    opacity: 0.5;
+  }
 </style>
