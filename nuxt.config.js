@@ -47,7 +47,8 @@ export default {
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
-    {src: '~/plugins/vue-infinite-scroll.js', ssr: false}
+    {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
+    { src: '~/plugins/vue-pdf.js', mode: 'client' }
   ],
   /*
   ** Auto import components
