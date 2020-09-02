@@ -105,7 +105,13 @@
           <!--------------------------------------- View pdf -------------------------------------------->
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
-              <button class="level-item button is-info">Xem PDF</button>
+              <a
+                class="level-item button is-info"
+                :href="'/pdf/' + formatTitle(paper_detail.title) + '.p-' + paper_id"
+                target="_blank"
+              >
+                Xem PDF
+              </a>
               <a
                 :href="'http://doi.org/' + paper_detail.doi"
                 class="level-item button are-small has-text-link"
@@ -113,13 +119,6 @@
               >
                 Doi.org
               </a>
-              <pdf
-                src="https://cdn.mozilla.net/pdfjs/tracemonkey.pdf"
-                @num-pages="pageCount = $event"
-                @page-loaded="currentPage = $event"
-              >
-
-              </pdf>
             </div>
           </nav>
           <!--------------------------------------- View pdf -------------------------------------------->
@@ -151,6 +150,7 @@
         </div>
       </div>
       <!--------------------------------------- Citations Chart ------------------------------------------------->
+
     </div>
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
@@ -305,11 +305,10 @@
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
-    import pdf from 'vue-pdf'
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError, Pagination, pdf},
+      components: {PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -324,7 +323,7 @@
           title: this.paper_detail.title + ' | DoIT Scholar'
         }
       },
-      computed:{
+      computed: {
         full_fos: function (){
           return _.join(this.paper_detail.fieldsOfStudy, ', ')
         }
@@ -338,6 +337,7 @@
           per_page: 5,
           current_citation_page: 1,
           current_ref_page: 1,
+
           abstract_height: null,
           topic_height: null,
           citation_height: null,
@@ -345,11 +345,15 @@
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
+
           chartColors: chartColors,
+          chart_data: null,
+          chart_labels: null,
+
           paper_id: null,
           paper_detail: null,
-          chart_labels: null,
-          chart_data: null,
+
+
           author_hidden: true,
           field_hidden: true,
           navigate: '',
