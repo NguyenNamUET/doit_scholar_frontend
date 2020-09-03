@@ -29,7 +29,8 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-number-animation": "^1.0.5",
     "vue-pdf": "^4.1.0",
-    "vue-scrollto": "^2.18.2"
+    "vue-scrollto": "^2.18.2",
+    "vuex-persistedstate": "^3.1.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.13.3",

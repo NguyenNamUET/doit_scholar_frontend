@@ -218,7 +218,7 @@
             let key = fos_keys[i]
             query_params["fields_of_study"].push(query[key])
           }
-          query_params["fos_is_should"]=true
+          query_params["fos_is_should"]=false
         }
         //Gather all author<digit> to form Array of checked authors
         if("author0" in query) {
@@ -228,7 +228,7 @@
             let key = author_keys[i]
             query_params["authors"].push(query[key])
           }
-          query_params["author_is_should"]=true
+          query_params["author_is_should"]=false
         }
         //Gather venue param
         if("venue0" in query) {
@@ -238,7 +238,7 @@
             let key = venues_keys[i]
             query_params["venues"].push(query[key])
           }
-          query_params["venues_is_should"]=true
+          query_params["venues_is_should"]=false
         }
         //Added for fos agg
         query_params["return_fos_aggs"]= true
@@ -246,7 +246,11 @@
         query_params["return_venue_aggs"]= true
         // console.log("asyncData: ", query_params)
 
-        await store.dispatch('search_result/paper_by_title', query_params)
+        if(process.browser){
+        var local_query = localStorage.getItem("hacked")
+        console.log("localStorage", typeof local_query)}
+
+        await store.dispatch('search_result/paper_by_title', {query_params, local_query})
 
         if(store.state.search_result.search_results.length > 0) {
           return {

@@ -48,7 +48,8 @@ export default {
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
     {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
-    { src: '~/plugins/vue-pdf.js', mode: 'client' }
+    { src: '~/plugins/vue-pdf.js', mode: 'client' },
+    { src: '~/plugins/localStorage.js', ssr: false }
   ],
   /*
   ** Auto import components
