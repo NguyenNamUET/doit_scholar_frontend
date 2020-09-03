@@ -60,7 +60,7 @@
               <a href="https://facebook.com/doitvn">DoIT</a>
             </p>
             <p>
-              Latest update: {{this.nowTime}}
+              Latest update: 3/9/2020 3:21PM
             </p>
           </div>
         </div>
