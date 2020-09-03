@@ -367,7 +367,7 @@
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          console.log("updateCitation: ", result)
+          // console.log("updateCitation: ", result)
           this.current_citation_page = page_num
           this.citation_data = result
         },
