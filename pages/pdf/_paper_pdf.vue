@@ -7,6 +7,7 @@
         :key="1"
         v-bind:id="'in-view-' + 1"
         @num-pages="page_count = $event"
+        ref="inview"
       >
       </vue-pdf>
       <div v-if="page_count > 1">
@@ -28,7 +29,7 @@
         <div class="column">
           <a
             class="button is-fullwidth nav_button"
-            v-scroll-to="{el: '#in-view-' + in_view, offset: -60}"
+            v-scroll-to="{el: '#in-view-' + in_view, offset: -60, cancelable: false}"
             v-on:click="in_view > 1 ? in_view-- : in_view"
           >
             <i class="fas fa-arrow-left"></i> Trang trước
@@ -53,7 +54,7 @@
         <div class="column">
           <a
             class="button is-fullwidth nav_button"
-            v-scroll-to="{el: '#in-view-' + in_view, offset: -60}"
+            v-scroll-to="{el: '#in-view-' + in_view, offset: -60, cancelable: false}"
             v-on:click="in_view < page_count ? in_view++ : in_view"
           >
             Trang sau <i class="fas fa-arrow-right"></i>
@@ -87,20 +88,21 @@ export default {
       this.$refs.jumpPage.click()
     },
     getComponentHeight() {
-      return document.getElementById('in-view-1').offsetHeight
+      console.log(document.getElementById('in-view-1').offsetTop)
+      return document.getElementById('in-view-1').offsetTop
     },
     updateScrollPosition() {
       this.scroll_position = window.scrollY
     },
     updatePageOnScroll() {
       let page = Math.floor(this.scroll_position / this.pdf_height) + 1
-      this.in_view = page
+      if (1 <= page && page <= this.page_count) this.in_view = page
     }
   },
   mounted() {
     window.addEventListener('scroll', this.updateScrollPosition);
     window.addEventListener('scroll', this.updatePageOnScroll);
-    this.pdf_height = 1439
+    this.pdf_height = 1400
   }
 }
 </script>
