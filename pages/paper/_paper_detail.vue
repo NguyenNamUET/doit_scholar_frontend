@@ -84,7 +84,11 @@
               </span>
             </span>
             <!------------------------------------ Fields of study ---------------------------------------->
-
+            |
+            <span v-if="paper_detail.venue.length !== 0"
+                  class="text-class-3">
+              <i>{{paper_detail.venue}}</i>
+            </span>
           </div>
           <!------------------------------------------ Abstract  ------------------------------------------->
           <div v-if="paper_detail.abstract">
