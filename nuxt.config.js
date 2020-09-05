@@ -49,6 +49,7 @@ export default {
     {src: '~/plugins/vuetimeline.js' },
     {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
     {src: '~/plugins/vue-pdf.js', mode: 'client'},
+    {src: '~/plugins/Antv-G6.js', mode: 'client'}
   ],
   /*
   ** Auto import components
