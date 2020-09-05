@@ -24,7 +24,11 @@
           <div class="title has-text-white is-size-1">
             Tra Cứu Dữ Liệu Học Thuật
           </div>
+
+          <!----------------------SearchBar--------------------->
           <SearchBar/>
+          <!----------------------SearchBar--------------------->
+
         </div>
       </div>
 
@@ -105,7 +109,8 @@ export default {
   },
   data() {
     return {
-      parent_height: 0
+      parent_height: 0,
+      error: false
     }
   },
   async asyncData({query, store}) {
@@ -118,6 +123,9 @@ export default {
       fos_count: fos_count.fos_unique_count.value
     }
   },
+  beforeUpdate() {
+    this.parent_height = this.get_height() + 'px'
+  },
   methods: {
     formatNumber(number) {
       return formatNumber(number)
@@ -125,10 +133,8 @@ export default {
     get_height() {
       return document.getElementById('content').offsetHeight
     }
-  },
-  beforeUpdate() {
-    this.parent_height = this.get_height() + 'px'
   }
+
 }
 </script>
 

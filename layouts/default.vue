@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-------------------------------------------------Header------------------------------------------>
     <div>
       <nav id="layout_header" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="container" id="nav_container">
@@ -11,7 +12,6 @@
                 alt="DoIT Scholar: Tra cứu văn bản học thuật"
               >
             </a>
-
             <a
               role="button"
               class="navbar-burger"
@@ -30,16 +30,26 @@
           <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
+
+                <!----------------------SearchBar--------------------->
                 <SearchBar style="min-width: 50vw"></SearchBar>
+                <!----------------------SearchBar--------------------->
+
               </div>
             </div>
           </div>
         </div>
       </nav>
     </div>
+    <!-------------------------------------------------Header------------------------------------------>
+
+    <!-------------------------------------------------Content------------------------------------------>
     <div id="body_container">
       <Nuxt />
     </div>
+    <!-------------------------------------------------Content------------------------------------------>
+
+    <!-------------------------------------------------Footer------------------------------------------>
     <div id="footer">
       <div class="container">
         <div class="columns">
@@ -66,6 +76,7 @@
         </div>
       </div>
     </div>
+    <!-------------------------------------------------Footer------------------------------------------>
   </div>
 </template>
 
@@ -81,12 +92,8 @@ export default {
   data() {
     return {
       showNav: false,
-      nowTime: moment().format('LLL')
-    }
-  },
-  methods: {
-    toggleBurger() {
-      document.querySelector('.navbar-menu').classList.toggle('is-active');
+      nowTime: moment().format('LLL'),
+      error: false
     }
   }
 }

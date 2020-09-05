@@ -17,7 +17,6 @@
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/bulma": "^1.2.7",
     "bulma": "^0.9.0",
-    "bulma-checkradio": "^1.1.1",
     "bulma-timeline": "^3.0.4",
     "chart.js": "^2.9.3",
     "lodash": "^4.17.20",
@@ -29,8 +28,7 @@
     "vue-infinite-loading": "^2.4.5",
     "vue-number-animation": "^1.0.5",
     "vue-pdf": "^4.1.0",
-    "vue-scrollto": "^2.18.2",
-    "vuex-persistedstate": "^3.1.0"
+    "vue-scrollto": "^2.18.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.13.3",

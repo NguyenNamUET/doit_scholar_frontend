@@ -10,22 +10,39 @@ export const state = () => ({
 });
 
 export const mutations = {
-  submit_search_result(state, {search_results, local_query, payload_query}) {
-    console.log('local_query', local_query)
-    console.log('payload_query', payload_query)
+  set_static_aggregation(state, search_results){
+    if(Object.keys(search_results).length !== 0){
+      state.aggregation = search_results.aggregations
+    }
+    else{
+      state.aggregation = null;
+    }
+    console.log("set_static_aggregation", state.aggregation)
+  },
+  submit_search_result(state, {search_results, query_params}) {
+    console.log('state.query', state.query)
+    console.log('query_params.query', query_params.query)
 
     if(Object.keys(search_results).length !== 0){
       state.search_results = search_results.hits.hits;
       state.total = search_results.hits.total.value;
-      state.query = payload_query
-      if (payload_query === local_query){
-        console.log("old query")
-        state.current_aggregation = search_results.aggregations;
+
+      if (state.query===null && (filteredKeys(query_params,/fos\d/).length===0
+                              && filteredKeys(query_params,/author\d/).length===0
+                              && filteredKeys(query_params,/venue\d/).length===0)){
+        //just reach from homepage
+        console.log("from homepage")
+        state.current_aggregation = null
       }
-      else{
+      else if (state.query===null && (filteredKeys(query_params,/fos\d/).length!==0
+                              || filteredKeys(query_params,/author\d/).length!==0
+                              || filteredKeys(query_params,/venue\d/).length!==0)){
+        //just refresh
+        console.log("refresh")
+        state.current_aggregation = search_results.aggregations
+      }
+      else if (state.query !== query_params.query){
         console.log('new query')
-        console.log('state query(new)', state.query)
-        state.aggregation = search_results.aggregations;
         state.current_aggregation = null
       }
     }
@@ -36,17 +53,6 @@ export const mutations = {
     }
 
   },
-  filter_doc(state, search_results) {
-    if(Object.keys(search_results).length !== 0){
-      state.search_results = search_results.hits.hits;
-      state.total = search_results.hits.total.value;
-    }
-    else{
-      state.search_results = [];
-      state.total = null;
-      state.aggregation = null;
-    }
-  },
   clear_search_result(state) {
     state.search_results = [];
     state.aggregation = null;
@@ -55,9 +61,12 @@ export const mutations = {
 };
 
 export const actions = {
-  async paper_by_title(context, {query_params, local_query}) {
+  async set_static_aggregation(context, query_params){
     let search_results = await paper_by_title(query_params);
-    let payload_query = query_params.query
-    context.commit('submit_search_result', {search_results, local_query, payload_query});
+    context.commit('set_static_aggregation', search_results);
+  },
+  async paper_by_title(context, query_params) {
+    let search_results = await paper_by_title(query_params);
+    context.commit('submit_search_result', {search_results, query_params});
   }
 };

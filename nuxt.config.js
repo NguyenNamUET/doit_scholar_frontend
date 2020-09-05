@@ -44,12 +44,11 @@ export default {
   plugins: [
     '~/plugins/jsonld',
     '~/plugins/vue-scrollto.js',
-    {src: '~/plugins/vue_number_animation.js', ssr: false},
+    {src: '~/plugins/vue_number_animation.js', mode: 'client'},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
-    {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
-    { src: '~/plugins/vue-pdf.js', mode: 'client' },
-    { src: '~/plugins/localStorage.js', ssr: false }
+    {src: '~/plugins/vue-infinite-scroll.js', mode: 'client'},
+    {src: '~/plugins/vue-pdf.js', mode: 'client'}
   ],
   /*
   ** Auto import components
