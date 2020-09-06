@@ -9,17 +9,19 @@
 <!--      type="text"-->
 <!--      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
 <!--    >-->
-    <b-autocomplete
+    <div v-on:keyup.enter="submitQuery">
+      <b-autocomplete
       v-model="search_query"
-      v-on:keyup.enter="submitQuery"
       :data="data"
       @typing="getAutocomplete"
       :loading="is_loading"
       placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
       @select="option => this.selected = option"
-    >
-      <template slot="empty">No results for {{search_query}}</template>
-    </b-autocomplete>
+      >
+        <template slot="empty">No results for {{search_query}}</template>
+      </b-autocomplete>
+    </div>
+
   </div>
   <div class="control">
     <p class="button is-primary" v-on:click="submitQuery">
