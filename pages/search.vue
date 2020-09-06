@@ -96,25 +96,16 @@
       data() {
         return {
           search_results: null,
-          publication_sort: publication_type,
           query_params: null,
           author_info: null,
           venue_info: null,
-          fos_info: null,
 
           author_hidden: true,
           msg_hidden: false,
 
-          //24/08/2020: Nam added this for dropdown
-          authors_checked: this.$store.state.dropdown_search.authors_checked,
-          fos_checked: this.$store.state.dropdown_search.fos_checked,
-          venues_checked: this.$store.state.dropdown_search.venues_checked,
-          //24/08/2020: Nam changed this for pagination
           total_count: 0,
           current_page: 1,
-          per_page: 10,
-
-          local_query: null
+          per_page: 10
         }
       },
       filters: {
@@ -122,23 +113,25 @@
           return formatNumber(number)
         }
       },
-      //static_<>_aggs dùng để lưu trữ giá trị mặc định trong dropdown
-      //là khi route sẽ không có các tham số fos<int>, author<int>, venue<int>
-      //hay gọi cách khác static_<>_aggs là kết quả search đầu tiên chưa có filers
-
-      //current_fos_aggs dùng để theo dõi kết quả mỗi lần filters
-
-      //Ta sẽ kiểm tra trong static_fos_aggs chứa những giá trị nào có trong current_<>_aggs
-      //thì ta sẽ diable các giá trị đó trong dropdown
-      //VD: static_fos_aggs = [A, B, C, D, E, F, G]
-      //sau khi filter ta có current_fos_aggs = [A, C, D, G] tức là các papers filtered ra chỉ có field A,C,D,G
-      //thì ta không thể filter theo các fields B,E,F (!!!Các dropdown hiện sử dụng MUST trong và giữa dropdowns)
-
-      // key: tên giá trị,
-      // doc_count: số lượng văn bản có,
-      // checked: lưu trữ checkbox đã được check,
-      // disabled: đánh dấu checkbox không tồn tại (B,E,F như trên)
       computed: {
+        /** //NN posted
+        * static_fos_aggs<>_aggs dùng để lưu trữ giá trị mặc định trong dropdown
+        * là khi route sẽ không có các tham số fos<int>, author<int>, venue<int>
+        * hay gọi cách khác static_<>_aggs là kết quả search đầu tiên chưa có filers
+
+        * current_fos_aggs dùng để theo dõi kết quả mỗi lần filters
+
+        * Ta sẽ kiểm tra trong static_fos_aggs chứa những giá trị nào có trong current_<>_aggs
+        * thì ta sẽ diable các giá trị đó trong dropdown
+         VD: static_fos_aggs = [A, B, C, D, E, F, G]
+        * sau khi filter ta có current_fos_aggs = [A, C, D, G] tức là các papers filtered ra chỉ có field A,C,D,G
+        * thì ta không thể filter theo các fields B,E,F (!!!Các dropdown hiện sử dụng MUST trong và giữa dropdowns)
+
+        key: tên giá trị,
+        doc_count: số lượng văn bản có,
+        checked: lưu trữ checkbox đã được check,
+        disabled: đánh dấu checkbox không tồn tại (B,E,F như trên)
+        */
         fos_list: function (){
           let result = []
           if(this.$store.state.search_result.fos_aggregation){
@@ -169,15 +162,16 @@
             return null
           }
         },
-        //These two used dynamically dropdown (auto update after each checked)
-        //Đầu tiên, authors_checked là array các authors đã được checked trong dropdown
-        //author_info là aggregations của author, tuy nhiên authors_checked và author_info đều mang danh sách các
-        //authors như nhau do đều cùng bắt nguồn từ route
-        //Sử dụng thêm author_info chỉ với mục đích lấy thêm được doc_count do không thể lấy được số đếm đó từ route.query
+        /** NN posted
+        * These two used dynamically dropdown (auto update after each checked)
+        * Đầu tiên, authors_checked là array các authors đã được checked trong dropdown
+        * author_info là aggregations của author, tuy nhiên authors_checked và author_info đều mang danh sách các
+        * authors như nhau do đều cùng bắt nguồn từ route
+        * Sử dụng thêm author_info chỉ với mục đích lấy thêm được doc_count do không thể lấy được số đếm đó từ route.query
+        */
         authors_list: function (){
           let result = []
           let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
-
           this.author_info.forEach(item => {
             if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
@@ -186,14 +180,12 @@
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("authors_list: ", result)
           return result
         },
         venue_list: function (){
           let result = []
           let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d/)
-          console.log("venue_checked: ",venue_checked)
-          console.log("venue_info: ",this.venue_info)
+
           this.venue_info.forEach(item => {
             if (!!venue_checked && venue_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -202,7 +194,6 @@
               result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("venue_list: ", result)
           return result
         }
       },
@@ -249,7 +240,7 @@
         //Added for venue agg
         query_params["return_venue_aggs"]= true
 
-        //Default query to save static_<>_aggs in store
+        /**Default query to save static_fos_aggs in store**/
         let static_query_params = { query: query['query'],
           start: query['start'], size: query['size'],
           top_author_size: query['top_author_size'], page: query['page'],
@@ -264,14 +255,14 @@
              query_params: query,
              current_page: parseInt(query['page']),
              search_results: store.state.search_result.search_results,
-             keyword: query['searchContent'],
              total_count: store.state.search_result.total,
              //maybe I will delete this three since computed for this are not necessary/////
              //fos_info: store.state.search_result.aggregation.fos_count.buckets,
              ////////////////////////////////////////////////////////////////////////////////
              author_info: store.state.search_result.authors_aggregation,
              venue_info: store.state.search_result.venues_aggregation,
-
+             //Unused
+             keyword: query['searchContent'],
              last_paper_id: store.state.search_result.last_paper_id,
           }
         }
@@ -284,7 +275,6 @@
              total_count: 0,
              author_info: [],
              venue_info: [],
-             fos_info: [],
           }
         }
       },

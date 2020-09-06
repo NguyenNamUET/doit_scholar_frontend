@@ -20,36 +20,32 @@ export const mutations = {
     else{
       state.fos_aggregation = null;
     }
-    console.log("set_static_aggregation", state.fos_aggregation)
   },
   submit_search_result(state, {search_results, query_params}) {
-    console.log('state.query', state.query)
-    console.log('query_params.query', query_params.query)
 
     if(Object.keys(search_results).length !== 0){
       state.search_results = search_results.hits.hits;
       state.total = search_results.hits.total.value;
+
       state.authors_aggregation = search_results.aggregations.author_count.name.buckets;
       state.venues_aggregation = search_results.aggregations.venue_count.buckets;
-      console.log("state.authors_aggregation", state.authors_aggregation)
-      console.log("state.venues_aggregation", state.venues_aggregation)
 
       if (state.query===null && (filteredKeys(query_params,/fos\d/).length===0
                               && filteredKeys(query_params,/author\d/).length===0
                               && filteredKeys(query_params,/venue\d/).length===0)){
         //just reach from homepage
-        console.log("from homepage")
+
         state.current_fos_aggregation = null
       }
       else if (state.query===null && (filteredKeys(query_params,/fos\d/).length!==0
                               || filteredKeys(query_params,/author\d/).length!==0
                               || filteredKeys(query_params,/venue\d/).length!==0)){
         //just refresh
-        console.log("refresh")
+
         state.current_fos_aggregation = search_results.aggregations
       }
       else if (state.query !== query_params.query){
-        console.log('new query')
+
         state.current_fos_aggregation = null
       }
     }
