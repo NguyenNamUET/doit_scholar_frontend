@@ -199,6 +199,20 @@ const wiki_summary = async(query_params) => {
   }
 }
 
+const autocomplete = async(query_params) => {
+  try {
+    const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
+      search_content: query_params.query,
+      size: query_params.size
+    })
+    console.log(result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -217,6 +231,8 @@ export {
   wiki_summary,
 
   paper_citation,
-  paper_references
+  paper_references,
+
+  autocomplete
 }
 

@@ -24,7 +24,7 @@
           <div class="title has-text-white is-size-1">
             Tra Cứu Dữ Liệu Học Thuật
           </div>
-          <SearchBar/>
+          <SearchBar :home="true"/>
         </div>
       </div>
 
