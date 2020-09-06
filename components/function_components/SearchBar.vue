@@ -10,6 +10,7 @@
 <!--      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
 <!--    >-->
     <b-autocomplete
+      v-model="search_query"
       v-on:keyup.enter="submitQuery"
       :data="data"
       @typing="getAutocomplete"
@@ -67,6 +68,7 @@ export default {
           this.is_loading = false
         }),
         submitQuery() {
+          console.log(this.search_query)
           this.query_params = {
             query: this.search_query,
             start: 0,
@@ -74,10 +76,19 @@ export default {
             top_author_size: 10,
             page: 1
             }
-          this.$router.push({name:'search',
-            query: this.query_params
-          })
-        },
+          if(this.search_query!==""){
+            this.$router.push({name:'search', query: this.query_params})
+          }
+          else{
+            console.log("error")
+            this.$buefy.toast.open({
+              duration: 3000,
+              message: `Thanh tìm kiếm <b>không thể để trống</b>`,
+              position: 'is-bottom',
+              type: 'is-danger'
+            })
+          }
+        }
       }
     }
 </script>
