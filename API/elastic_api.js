@@ -202,13 +202,13 @@ const wiki_summary = async(query_params) => {
 const autocomplete = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
-      search_content: query_params.query,
+      search_content: query_params.search_content,
       size: query_params.size
     })
     console.log(result.data)
     return result.data
   } catch(e) {
-    console.log(e)
+      console.log(e)
     return null
   }
 }

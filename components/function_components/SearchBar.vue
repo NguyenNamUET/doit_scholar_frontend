@@ -1,20 +1,18 @@
 <template>
   <div class="field has-addons">
   <div class="control is-expanded">
-    <input
-      v-if="this.home"
-      v-on:keyup.enter="submitQuery"
-      v-model="search_query"
-      class="input"
-      type="text"
-      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
-    >
+<!--    <input-->
+<!--      v-if="this.home"-->
+<!--      v-on:keyup.enter="submitQuery"-->
+<!--      v-model="search_query"-->
+<!--      class="input"-->
+<!--      type="text"-->
+<!--      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
+<!--    >-->
     <b-autocomplete
-      v-else
       v-on:keyup.enter="submitQuery"
-      v-model="search_query"
-      :data="filteredDataArray"
-      @input="getAutocomplete"
+      :data="data"
+      @typing="getAutocomplete"
       :loading="is_loading"
       placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
       @select="option => this.selected = option"
@@ -38,6 +36,7 @@ export default {
       props: ['home'],
       data() {
         return {
+          data: [],
           search_query: '',
           query_params: {},
           autocomplete_data: [],
@@ -45,32 +44,33 @@ export default {
           is_loading: false,
         }
       },
-      computed: {
-        async filteredDataArray() {
-          return this.autocomplete_data.filter((option) => {
-            return option
-              .toString()
-              .toLowerCase()
-              .indexOf(this.search_query.toLowerCase()) >= 0
-          })
-        }
-      },
+      // computed: {
+      //   async filteredDataArray() {
+      //     return this.autocomplete_data.filter((option) => {
+      //       return option
+      //         .toString()
+      //         .toLowerCase()
+      //         .indexOf(this.search_query.toLowerCase()) >= 0
+      //     })
+      //   }
+      // },
       methods: {
-        async getAutocomplete() {
-          console.log('getting')
-          if (!this.search_query.length)
-            this.autocomplete_data = []
-
+        getAutocomplete: _.debounce(function(name) {
+          console.log("search_query", name)
+          console.log("this.is_loading ", this.is_loading)
+          // if (!this.search_query.length)
+          //   this.autocomplete_data = []
           this.is_loading = true
-          let result = await autocomplete({
-            search_content: this.search_query,
+
+          let result = autocomplete({
+            search_content: name,
             size: 5
-          }).finally((response) => {
-            this.is_loading = false
-            console.log('here', response)
           })
-          console.log(result)
-        },
+          console.log("finish")
+          this.data = _.map(result, (item)=>{return item._source.title})
+          this.is_loading = false
+          console.log("this.data: ", this.data)
+        }),
         submitQuery() {
           this.query_params = {
             query: this.search_query,
