@@ -55,21 +55,16 @@ export default {
       //   }
       // },
       methods: {
-        getAutocomplete: _.debounce(function(name) {
-          console.log("search_query", name)
-          console.log("this.is_loading ", this.is_loading)
+        getAutocomplete: _.debounce(async function(name) {
           // if (!this.search_query.length)
           //   this.autocomplete_data = []
           this.is_loading = true
-
-          let result = autocomplete({
+          let result = await autocomplete({
             search_content: name,
             size: 5
           })
-          console.log("finish")
           this.data = _.map(result, (item)=>{return item._source.title})
           this.is_loading = false
-          console.log("this.data: ", this.data)
         }),
         submitQuery() {
           this.query_params = {
