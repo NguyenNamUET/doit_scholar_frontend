@@ -126,7 +126,7 @@
 
 <script>
     import {formatTitle} from "assets/utils";
-    import {author_by_id, paper_by_author, paper_citation} from "@/API/elastic_api";
+    import {author_by_id, author_papers, paper_citation} from "@/API/elastic_api";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
@@ -155,7 +155,7 @@
           return formatTitle(title)
         },
         async updatePaper(page_num) {
-          let result = await paper_by_author({
+          let result = await author_papers({
             author_id: this.author_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
