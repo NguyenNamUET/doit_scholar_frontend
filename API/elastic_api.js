@@ -163,7 +163,7 @@ const author_papers = async (query_params) => {
         size: query_params.size
       }
     })
-    console.log('api', result.data)
+    // console.log('api', result.data)
     return result.data
   } catch(e) {
     console.log(e)

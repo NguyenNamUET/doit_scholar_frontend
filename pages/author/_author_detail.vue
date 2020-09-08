@@ -62,6 +62,7 @@
                     :hoverable="true"
                     :mobile-cards="true"
                     :default-sort-direction="'desc'"
+                    :loading="is_loading"
                   >
 
                     <template slot-scope="props">
@@ -148,6 +149,7 @@
           per_page: 5,
           paper_length: null,
           paper_data: null,
+          is_loading: false,
         }
       },
       methods: {
@@ -155,21 +157,22 @@
           return formatTitle(title)
         },
         async updatePaper(page_num) {
+          this.is_loading = true
           let result = await author_papers({
             author_id: this.author_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          console.log('here', (page_num - 1) * this.per_page, result)
           this.current_paper_page = page_num
           this.paper_data = result
+          this.is_loading = false
         }
       },
       async asyncData({route, $axios}) {
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
         let data = await author_by_id(author_id)
-        console.log(data.papers)
+        // console.log(data.papers)
         if (Object.keys(data).length !== 0){
           return {
             author_id: author_id,

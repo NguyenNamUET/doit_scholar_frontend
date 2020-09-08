@@ -4,6 +4,7 @@
     :hoverable="true"
     :mobile-cards="true"
     :default-sort-direction="'desc'"
+    :loading="is_loading"
   >
     <template slot-scope="props">
       <b-table-column field="title" label="Tiêu đề">
@@ -58,7 +59,7 @@
 import {formatTitle} from 'assets/utils';
 export default {
   name: "PaperTable",
-  props: ['paper_data', 'is_empty'],
+  props: ['paper_data', 'is_empty', 'is_loading'],
   methods: {
     formatTitle(title) {
       return formatTitle(title)
