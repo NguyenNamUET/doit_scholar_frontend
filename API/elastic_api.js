@@ -11,6 +11,20 @@ const paper_detail = async (paper_id) => {
   }
 }
 
+const paper_by_author = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.author_id + '/papers', {
+      start: query_params.start,
+      size: query_params.size
+    })
+    console.log('api', result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 const all_author = async (query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.all_author, {
@@ -233,6 +247,7 @@ export {
   paper_citation,
   paper_references,
 
-  autocomplete
+  autocomplete,
+  paper_by_author
 }
 

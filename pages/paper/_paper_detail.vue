@@ -493,12 +493,11 @@
   }
   .sticky-nav {
     background-color: rgb(242, 247, 242);
-    //overflow: hidden;
     overflow: auto;
     white-space: nowrap;
     position: sticky;
     top: 60px;
-    z-index: 1000;
+    z-index: 1;
   }
   .topic_list {
     display:inline-block;

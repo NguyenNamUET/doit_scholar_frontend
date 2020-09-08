@@ -1,24 +1,42 @@
 <template>
   <div class="field has-addons">
   <div class="control is-expanded">
-<!--    <input-->
-<!--      v-if="this.home"-->
-<!--      v-on:keyup.enter="submitQuery"-->
-<!--      v-model="search_query"-->
-<!--      class="input"-->
-<!--      type="text"-->
-<!--      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
-<!--    >-->
-    <b-autocomplete
-      v-model="search_query"
+    <input
+      v-if="this.home"
       v-on:keyup.enter="submitQuery"
-      :data="data"
+      v-model="search_query"
+      class="input"
+      type="text"
+      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+    >
+    <b-autocomplete
+      v-else
+      v-model="search_query"
+      @keyup.enter.native="submitQuery"
+      style="position: relative; z-index: 2;"
+      :data="autocomplete_data"
       @typing="getAutocomplete"
       :loading="is_loading"
       placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
       @select="option => this.selected = option"
     >
-      <template slot="empty">No results for {{search_query}}</template>
+      <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
+      <template slot-scope="props">
+
+        <i class="far fa-newspaper"></i>
+        <b-tooltip
+          :label="props.option._source.title"
+          position="is-right"
+        >
+        <a :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id">
+          {{props.option._source.title}}
+        </a>
+        </b-tooltip>
+        <div>
+          Số trích dẫn của văn bản: {{props.option._source.citations_count}}
+        </div>
+
+      </template>
     </b-autocomplete>
   </div>
   <div class="control">
@@ -31,18 +49,19 @@
 
 <script>
 import {autocomplete} from "@/API/elastic_api";
+import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
       props: ['home'],
       data() {
         return {
-          data: [],
           search_query: '',
           query_params: {},
           autocomplete_data: [],
           selected: null,
           is_loading: false,
+          raw_data: []
         }
       },
       // computed: {
@@ -56,15 +75,19 @@ export default {
       //   }
       // },
       methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        },
         getAutocomplete: _.debounce(async function(name) {
           // if (!this.search_query.length)
           //   this.autocomplete_data = []
           this.is_loading = true
-          let result = await autocomplete({
+          this.raw_data = await autocomplete({
             search_content: name,
             size: 5
           })
-          this.data = _.map(result, (item)=>{return item._source.title})
+          this.autocomplete_data = _.toArray(this.raw_data)
+          console.log('here',this.autocomplete_data)
           this.is_loading = false
         }),
         submitQuery() {

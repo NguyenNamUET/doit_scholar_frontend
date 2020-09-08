@@ -5,7 +5,6 @@
     :mobile-cards="true"
     :default-sort-direction="'desc'"
   >
-
     <template slot-scope="props">
       <b-table-column field="title" label="Tiêu đề">
         <nuxt-link
