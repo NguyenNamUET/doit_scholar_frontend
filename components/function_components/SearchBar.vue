@@ -2,12 +2,42 @@
   <div class="field has-addons">
   <div class="control is-expanded">
     <input
+      v-if="this.home"
       v-on:keyup.enter="submitQuery"
       v-model="search_query"
       class="input"
       type="text"
       placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
     >
+    <b-autocomplete
+      v-else
+      v-model="search_query"
+      @keyup.enter.native="submitQuery"
+      style="position: relative; z-index: 2;"
+      :data="autocomplete_data"
+      @typing="getAutocomplete"
+      :loading="is_loading"
+      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+      @select="option => this.selected = option"
+    >
+      <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
+      <template slot-scope="props">
+
+        <i class="far fa-newspaper"></i>
+        <b-tooltip
+          :label="props.option._source.title"
+          position="is-right"
+        >
+        <a :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id">
+          {{props.option._source.title}}
+        </a>
+        </b-tooltip>
+        <div>
+          Số trích dẫn của văn bản: {{props.option._source.citations_count}}
+        </div>
+
+      </template>
+    </b-autocomplete>
   </div>
   <div class="control">
     <p class="button is-primary" v-on:click="submitQuery">
@@ -18,16 +48,50 @@
 </template>
 
 <script>
-    export default {
+import {autocomplete} from "@/API/elastic_api";
+import {formatTitle} from "assets/utils";
+
+export default {
       name: "SearchBar",
-      chart_data() {
+      props: ['home'],
+      data() {
         return {
           search_query: '',
-          query_params: {}
+          query_params: {},
+          autocomplete_data: [],
+          selected: null,
+          is_loading: false,
+          raw_data: []
         }
       },
+      // computed: {
+      //   async filteredDataArray() {
+      //     return this.autocomplete_data.filter((option) => {
+      //       return option
+      //         .toString()
+      //         .toLowerCase()
+      //         .indexOf(this.search_query.toLowerCase()) >= 0
+      //     })
+      //   }
+      // },
       methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        },
+        getAutocomplete: _.debounce(async function(name) {
+          // if (!this.search_query.length)
+          //   this.autocomplete_data = []
+          this.is_loading = true
+          this.raw_data = await autocomplete({
+            search_content: name,
+            size: 5
+          })
+          this.autocomplete_data = _.toArray(this.raw_data)
+          console.log('here',this.autocomplete_data)
+          this.is_loading = false
+        }),
         submitQuery() {
+          console.log(this.search_query)
           this.query_params = {
             query: this.search_query,
             start: 0,
@@ -35,9 +99,18 @@
             top_author_size: 10,
             page: 1
             }
-          this.$router.push({name:'search',
-            query: this.query_params
-          })
+          if(this.search_query!==""){
+            this.$router.push({name:'search', query: this.query_params})
+          }
+          else{
+            console.log("error")
+            this.$buefy.toast.open({
+              duration: 3000,
+              message: `Thanh tìm kiếm <b>không thể để trống</b>`,
+              position: 'is-bottom',
+              type: 'is-danger'
+            })
+          }
         }
       }
     }

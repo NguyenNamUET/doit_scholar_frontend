@@ -155,6 +155,22 @@ const author_by_name = async(query_params) => {
   }
 }
 
+const author_papers = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + query_params.author_id + '/papers', {
+      params: {
+        start: query_params.start,
+        size: query_params.size
+      }
+    })
+    // console.log('api', result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 const paper_citation = async (query_params) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/citations', {
@@ -199,12 +215,28 @@ const wiki_summary = async(query_params) => {
   }
 }
 
+const autocomplete = async(query_params) => {
+  try {
+    const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
+      search_content: query_params.search_content,
+      size: query_params.size
+    })
+    console.log(result.data)
+    return result.data
+  } catch(e) {
+      console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
   paper_by_topic,
   paper_by_fos_and_title,
   paper_detail,
+  paper_citation,
+  paper_references,
 
   all_topics,
   all_paper,
@@ -213,10 +245,9 @@ export {
 
   author_by_id,
   author_by_name,
+  author_papers,
 
   wiki_summary,
-
-  paper_citation,
-  paper_references
+  autocomplete
 }
 

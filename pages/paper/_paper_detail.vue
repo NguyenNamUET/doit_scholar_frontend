@@ -188,6 +188,7 @@
             v-scroll-to="{el: '#citation_box', offset: -100}"
             :class="{'in-view': scroll_position > (abstract_height + topic_height)
             && scroll_position < (abstract_height + topic_height + citation_height)}"
+            ref="citation_box"
           >
             Trích dẫn
           </a>
@@ -197,6 +198,7 @@
             class="nav-item"
             v-scroll-to="{el: '#reference_box', offset: -100}"
             :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
+            ref="ref_box"
           >
             Tham chiếu
           </a>
@@ -247,7 +249,12 @@
               trong {{citation_length}} trích dẫn
             </span>
           </p>
-          <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <PaperTable
+            v-bind:is_loading="citation_loading"
+            v-bind:paper_data="citation_data"
+            v-bind:is_empty="is_citation_empty"
+          >
+          </PaperTable>
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_citation_page"
@@ -278,7 +285,12 @@
               trong {{ref_length}} tham chiếu
             </span>
           </p>
-          <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <PaperTable
+            v-bind:is_loading="ref_loading"
+            v-bind:paper_data="ref_data"
+            v-bind:is_empty="is_ref_empty"
+          >
+          </PaperTable>
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_ref_page"
@@ -349,6 +361,8 @@
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
+          citation_loading: false,
+          ref_loading: false,
 
           chartColors: chartColors,
           chart_data: null,
@@ -366,6 +380,8 @@
       },
       methods: {
         async updateCitation(page_num) {
+          this.$refs.citation_box.click()
+          this.citation_loading = true
           let result = await paper_citation({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
@@ -374,15 +390,20 @@
           // console.log("updateCitation: ", result)
           this.current_citation_page = page_num
           this.citation_data = result
+          this.citation_loading = false
         },
         async updateReference(page_num) {
+          this.$refs.ref_box.click()
+          this.ref_loading = true
           let result = await paper_references({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
+
           this.current_ref_page = page_num
           this.ref_data = result
+          this.ref_loading = false
         },
         formatTitle(title) {
           return formatTitle(title)
@@ -493,12 +514,11 @@
   }
   .sticky-nav {
     background-color: rgb(242, 247, 242);
-    //overflow: hidden;
     overflow: auto;
     white-space: nowrap;
     position: sticky;
     top: 60px;
-    z-index: 1000;
+    z-index: 1;
   }
   .topic_list {
     display:inline-block;
