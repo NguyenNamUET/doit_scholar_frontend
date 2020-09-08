@@ -92,14 +92,16 @@
           </div>
           <!------------------------------------------ Abstract  ------------------------------------------->
           <div v-if="paper_detail.abstract">
-            <p v-if="!abstract_hidden" class="is-size-6">
-              {{paper_detail.abstract}}
-              <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
-            </p>
-            <p v-else class="is-size-6">
-              {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+            <div v-if="!abstract_hidden" class="content is-size-6">
+              <p>
+                {{paper_detail.abstract}}
+                <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
+              </p>
+            </div>
+            <div v-else class="content is-size-6">
+              <p>{{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}</p>
               <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
-            </p>
+            </div>
           </div>
           <div v-else>
             <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
@@ -247,7 +249,11 @@
               trong {{citation_length}} trích dẫn
             </span>
           </p>
-          <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>
+          <div class="tile is-child">
+            <PaperTable v-for="result in citation_data"
+                          v-bind:search_result="result"></PaperTable>
+          </div>
+<!--          <PaperTable v-bind:paper_data="citation_data" v-bind:is_empty="is_citation_empty"></PaperTable>-->
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_citation_page"
@@ -278,7 +284,11 @@
               trong {{ref_length}} tham chiếu
             </span>
           </p>
-          <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>
+          <div class="tile is-child">
+            <PaperTable v-for="result in ref_data"
+                          v-bind:search_result="result"></PaperTable>
+          </div>
+<!--          <PaperTable v-bind:paper_data="ref_data" v-bind:is_empty="is_ref_empty"></PaperTable>-->
           <Pagination
             style="margin-left: 20%; margin-top: 10px;"
             v-model="current_ref_page"
@@ -306,7 +316,7 @@
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
     import CitationBar from "../../components/search_page/CitationBar";
-    import PaperTable from "@/components/function_components/PaperTable";
+    import PaperTable from "../../components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
 

@@ -1,72 +1,102 @@
 <template>
-  <b-table
-    :data="is_empty ? [] : paper_data"
-    :hoverable="true"
-    :mobile-cards="true"
-    :default-sort-direction="'desc'"
-  >
-    <template slot-scope="props">
-      <b-table-column field="title" label="Tiêu đề">
+  <div id="search_result_container" class="tile is-ancestor">
+    <div class="tile is-parent is-vertical">
+      <div class="tile is-child">
         <nuxt-link
-          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"
+          class="text-class-1"
+          :to="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
-          {{props.row.title}}
+          {{search_result.title}}
         </nuxt-link>
-      </b-table-column>
 
-      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >
-        <ul>
-          <li v-for="author in props.row.authors">
-            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">
-              {{author.name}}
-            </a>
-          </li>
-        </ul>
-      </b-table-column>
+        <!----------------------------------------------------------------------------------------------->
+        <div class="has-text-weight-light is-size-6">
+          <!----------------------------------------- Authors ------------------------------------------->
+          <a
+            v-if="!author_hidden"
+            class="text-class-3 secondary_description"
+            v-for="(author, index) in search_result.authors"
+            :key="author.authorId"
+            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+          >
+            {{author.name}}
+            <span v-if="index < search_result.authors.length - 1">,</span>
+          </a>
+          <span
+            class="less-more-button"
+            v-if="!author_hidden"
+            v-on:click="author_hidden = true"
+          >
+            &nbspRút gọn
+          </span>
 
-      <b-table-column field="year" label="Năm" numeric sortable>
-        {{ props.row.year }}
-      </b-table-column>
-
-      <b-table-column field="venue" label="Hội nghị">
-        <span v-if="props.row.venue !== ''">{{props.row.venue}}</span>
-        <span v-else>
-          <i>Chưa có thông tin</i>
-        </span>
-      </b-table-column>
-
-      <!--              <b-table-column field="intent" label="Kiểu trích dẫn">-->
-      <!--                <ul>-->
-      <!--                  <li v-for="intention in props.row.intent">-->
-      <!--                    {{intention}}-->
-      <!--                  </li>-->
-      <!--                </ul>-->
-      <!--              </b-table-column>-->
-    </template>
-
-    <template slot="empty">
-      <section class="section">
-        <div class="content has-text-grey has-text-centered">
-          <p>Không có dữ liệu :(</p>
+          <a
+            v-if="author_hidden"
+            class="text-class-3 secondary_description"
+            v-for="(author, index) in search_result.authors.slice(0,3)"
+            :key="author.authorId"
+            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+          >
+            {{author.name}}
+            <span v-if="index < search_result.authors.slice(0,3).length-1">,</span>
+          </a>
+          <span
+            class="less-more-button"
+            v-if="author_hidden && search_result.authors.length - 3 > 0"
+            v-on:click="author_hidden = false"
+          >
+            + {{search_result.authors.length - 3}} tác giả
+          </span>
+          |
+          <!----------------------------------------- Authors ------------------------------------------->
         </div>
-      </section>
-    </template>
-  </b-table>
+
+        <!-------------------------------------- Action Buttons --------------------------------------->
+        <nav class="level is-mobile">
+          <div class="level-left is-small has-text-weight-light ">
+            <a class="level-item">
+              <span class="text-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
+            </a>
+            <a class="level-item">
+              <span class="text-class-3"><i class="fas fa-retweet"></i> Xem trích dẫn</span>
+            </a>
+          </div>
+        </nav>
+        <!-------------------------------------- Action Buttons --------------------------------------->
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import {formatTitle} from 'assets/utils';
-export default {
-  name: "PaperTable",
-  props: ['paper_data', 'is_empty'],
-  methods: {
-    formatTitle(title) {
-      return formatTitle(title)
+    import CitationBar from "../search_page/CitationBar";
+    import {formatTitle} from "assets/utils";
+
+    export default {
+      name: "PaperTable",
+      components: {CitationBar},
+      props: ['search_result'],
+      data() {
+        return {
+          author_hidden: true
+        }
+      },
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
-  }
-}
 </script>
 
 <style scoped>
-
+  @import "assets/general_styling.scss";
+  #search_result_container {
+    background-color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 0 6px rgba(2,20,31,0.1);
+  }
+  a:hover {
+    text-decoration: none;
+  }
 </style>

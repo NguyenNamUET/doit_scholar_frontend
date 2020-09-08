@@ -24,18 +24,28 @@
       <template slot-scope="props">
 
         <i class="far fa-newspaper"></i>
-        <b-tooltip
-          :label="props.option._source.title"
-          position="is-right"
-        >
+<!--        <b-tooltip-->
+<!--          :label="props.option._source.title"-->
+<!--          position="is-bottom"-->
+<!--          multilined-->
+<!--          size="is-large"-->
+<!--        >-->
         <a :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id">
           {{props.option._source.title}}
         </a>
-        </b-tooltip>
-        <div>
+<!--        </b-tooltip>-->
+        <div class = "citations">
           Số trích dẫn của văn bản: {{props.option._source.citations_count}}
         </div>
 
+        <style>
+          .citations:hover{
+            text-decoration: none;
+          }
+          a:hover{
+            text-decoration: none;
+          }
+        </style>
       </template>
     </b-autocomplete>
   </div>
@@ -117,4 +127,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
