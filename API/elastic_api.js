@@ -14,6 +14,7 @@ const paper_detail = async (paper_id) => {
 const paper_by_author = async (query_params) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.author_id + '/papers', {
+      author_id: query_params.author_id,
       start: query_params.start,
       size: query_params.size
     })
