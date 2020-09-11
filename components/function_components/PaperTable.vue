@@ -1,9 +1,7 @@
 <template>
-  <div id="search_result_container" class="tile is-ancestor">
-    <div class="tile is-parent is-vertical">
-      <div class="tile is-child">
+      <div class="tile is-child is-vertical py-2">
         <nuxt-link
-          class="text-class-1"
+          class="text-class-2 has-text-weight-medium"
           :to="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
           {{search_result.title}}
@@ -50,22 +48,7 @@
           |
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
-
-        <!-------------------------------------- Action Buttons --------------------------------------->
-        <nav class="level is-mobile">
-          <div class="level-left is-small has-text-weight-light ">
-            <a class="level-item">
-              <span class="text-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
-            </a>
-            <a class="level-item">
-              <span class="text-class-3"><i class="fas fa-retweet"></i> Xem trích dẫn</span>
-            </a>
-          </div>
-        </nav>
-        <!-------------------------------------- Action Buttons --------------------------------------->
       </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -91,12 +74,9 @@
 
 <style scoped>
   @import "assets/general_styling.scss";
-  #search_result_container {
+  .tile{
     background-color: white;
-    margin-bottom: 30px;
-    box-shadow: 0 0 6px rgba(2,20,31,0.1);
+    border-bottom: 1px solid #E2E3E4;
   }
-  a:hover {
-    text-decoration: none;
-  }
+
 </style>
