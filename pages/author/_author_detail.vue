@@ -9,7 +9,7 @@
                 <p class="is-size-4">{{author_detail.name}}</p>
               </div>
               <div class="message-body">
-                <span>Số văn bản đã xuất bản</span>
+                <span>Số văn bản đã xuất bản: </span>
                 <span
                   class="has-text-right"
                   v-if="author_detail.papers.length !== undefined"
@@ -17,7 +17,7 @@
                   {{author_detail.papers.length}}
                 </span>
                 <br>
-                <span>Số trích dẫn có ảnh hưởng lớn {{author_detail.influentialCitationCount}}</span>
+                <span>Số trích dẫn có ảnh hưởng lớn: {{author_detail.influentialCitationCount}}</span>
               </div>
             </article>
           </div>

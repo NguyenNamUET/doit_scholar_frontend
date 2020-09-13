@@ -176,9 +176,11 @@ const paper_citation = async (query_params) => {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/citations', {
       params: {
         start: query_params.start,
-        size: 5
+        size: 10
       }
     })
+    console.log("paper_citation query_params: ", query_params)
+    console.log("paper_citation result: ", result)
     return result.data
   } catch(e) {
     console.log(e)
@@ -191,7 +193,7 @@ const paper_references = async(query_params) => {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/references', {
       params: {
         start: query_params.start,
-        size: 5
+        size: 10
       }
     })
     return result.data

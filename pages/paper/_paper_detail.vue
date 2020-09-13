@@ -2,7 +2,7 @@
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
     <div class="tile is-ancestor" id="abstract_box" style="flex-wrap: wrap">
       <div class="tile is-parent is-7">
-        <div class="is-child">
+        <div class="tile is-child">
           <!------------------------------------------ Source  ------------------------------------------->
           <p class="is-size-6">
             DOI:
@@ -92,14 +92,16 @@
           </div>
           <!------------------------------------------ Abstract  ------------------------------------------->
           <div v-if="paper_detail.abstract">
-            <p v-if="!abstract_hidden" class="is-size-6">
-              {{paper_detail.abstract}}
-              <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
-            </p>
-            <p v-else class="is-size-6">
-              {{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}
+            <div v-if="!abstract_hidden" class="content is-size-6">
+              <p>
+                {{paper_detail.abstract}}
+                <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
+              </p>
+            </div>
+            <div v-else class="content is-size-6">
+              <p>{{paper_detail.abstract.slice(0, paper_detail.abstract.length*0.5)}}</p>
               <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
-            </p>
+            </div>
           </div>
           <div v-else>
             <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
@@ -130,87 +132,86 @@
       </div>
 
       <!--------------------------------------- Citations Chart ------------------------------------------------->
-      <div class="tile is-parent is-5">
-        <div class="is-child">
-          <article class="message is-info" v-if="this.chart_data.length > 0">
-            <div class="message-header">
-              <p>Số trích dẫn theo năm</p>
-            </div>
-            <div class="message-body">
-              <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>
-            </div>
-          </article>
+<!--      <div class="tile is-parent is-5">-->
+<!--        <div class="is-child">-->
+<!--          <article class="message is-info" v-if="this.chart_data.length > 0">-->
+<!--            <div class="message-header">-->
+<!--              <p>Số trích dẫn theo năm</p>-->
+<!--            </div>-->
+<!--            <div class="message-body">-->
+<!--              <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>-->
+<!--            </div>-->
+<!--          </article>-->
 
-          <article class="message is-info" v-if="paper_detail.citationVelocity !== undefined">
-            <div class="message-header">
-              <p>Tình trạng về trích dẫn</p>
-            </div>
-            <div class="message-body">
-              <p style="color: black;">
-                Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
-              </p>
-            </div>
-          </article>
-        </div>
-      </div>
+<!--          <article class="message is-info" v-if="paper_detail.citationVelocity !== undefined">-->
+<!--            <div class="message-header">-->
+<!--              <p>Tình trạng về trích dẫn</p>-->
+<!--            </div>-->
+<!--            <div class="message-body">-->
+<!--              <p style="color: black;">-->
+<!--                Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay-->
+<!--              </p>-->
+<!--            </div>-->
+<!--          </article>-->
+<!--        </div>-->
+<!--      </div>-->
       <!--------------------------------------- Citations Chart ------------------------------------------------->
 
     </div>
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
-    <div
-      class="tabs is-centered is-fullwidth sticky-nav"
-      v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
-    >
-      <ul>
-        <li>
-          <a
-            class="nav-item"
-            v-scroll-to="{el: '#abstract_box', offset: -100}"
-            :class="{'in-view': scroll_position < abstract_height}"
-          >
-            Tóm tắt
-          </a>
-        </li>
-        <li v-if="paper_detail.topics.length > 0">
-          <a
-            class="nav-item"
-            v-scroll-to="{el: '#topic_box', offset: -100}"
-            :class="{'in-view': scroll_position > abstract_height
-            && scroll_position < (abstract_height + topic_height)}"
-          >
-            Chủ đề
-          </a>
-        </li>
-        <li v-if="citation_length > 0">
-          <a
-            class="nav-item"
-            v-scroll-to="{el: '#citation_box', offset: -100}"
-            :class="{'in-view': scroll_position > (abstract_height + topic_height)
-            && scroll_position < (abstract_height + topic_height + citation_height)}"
-            ref="citation_box"
-          >
-            Trích dẫn
-          </a>
-        </li>
-        <li v-if="ref_length > 0">
-          <a
-            class="nav-item"
-            v-scroll-to="{el: '#reference_box', offset: -100}"
-            :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
-            ref="ref_box"
-          >
-            Tham chiếu
-          </a>
-        </li>
-      </ul>
+        <div
+          class="tabs is-toggle sticky-nav is-centered is-fullwidth my-3 mx-3"
+          v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
+        >
+          <ul>
+            <li>
+              <a
+                class="nav-item"
+                v-scroll-to="{el: '#abstract_box', offset: -100}"
+                :class="{'in-view': scroll_position < abstract_height}"
+              >
+                TÓM TẮT
+              </a>
+            </li>
+            <li v-if="paper_detail.topics.length > 0">
+              <a
+                class="nav-item"
+                v-scroll-to="{el: '#topic_box', offset: -100}"
+                :class="{'in-view': scroll_position > abstract_height
+                && scroll_position < (abstract_height + topic_height)}"
+              >
+                CHỦ ĐỀ
+              </a>
+            </li>
+            <li v-if="citation_length > 0">
+              <a
+                class="nav-item"
+                v-scroll-to="{el: '#citation_box', offset: -100}"
+                :class="{'in-view': scroll_position > (abstract_height + topic_height)
+                && scroll_position < (abstract_height + topic_height + citation_height)}"
+              >
+                TRÍCH DẪN
+              </a>
+            </li>
+            <li v-if="ref_length > 0">
+              <a
+                class="nav-item"
+                v-scroll-to="{el: '#reference_box', offset: -100}"
+                :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
+              >
+                THAM CHIẾU
+              </a>
+            </li>
+          </ul>
+
     </div>
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
 
     <!---------------------------------------------- Topics ------------------------------------------------------->
-    <div class="tile is-ancestor" id="topic_box">
+    <div class="tile is-ancestor content_box my-3 mx-3 py-4 px-4" id="topic_box">
       <div class="tile is-parent is-vertical" v-if="paper_detail.topics.length > 0">
-        <div class="tile is-child content_box">
+        <article class="tile is-child">
           <p class="title content_title">Chủ đề được đề cập trong văn bản</p>
           <div>
             <ul>
@@ -219,7 +220,7 @@
                 v-for="item in paper_detail.topics"
               >
                 <a
-                  class="has-text-link"
+                  style="color: #000ff2"
                   :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
                 >
                   {{item.topic}}
@@ -227,79 +228,114 @@
               </li>
             </ul>
           </div>
-        </div>
+        </article>
       </div>
     </div>
     <!---------------------------------------------- Topics ------------------------------------------------------->
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
-    <div class="tile is-ancestor is-vertical" id="citation_box">
-      <div class="tile is-parent" v-if="citation_length > 0">
-        <div class="tile is-child pr-5 content_box">
-          <p class="title">Trích dẫn</p>
-          <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
-          <p class="is-size-6">
-            Bạn đang xem
-            <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
-              {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
-              trong {{citation_length}} trích dẫn
-            </span>
-            <span v-else>
-              {{ (current_citation_page-1)*per_page + 1}}-{{citation_length}}
-              trong {{citation_length}} trích dẫn
-            </span>
-          </p>
-          <PaperTable
-            v-bind:is_loading="citation_loading"
-            v-bind:paper_data="citation_data"
-            v-bind:is_empty="is_citation_empty"
-          >
+    <div class="tile is-ancestor content_box my-3 mx-3 py-4 px-4" id="citation_box" v-if="citation_length > 0">
+      <div class="tile is-vertical content_box">
+        <div class="tile is-parent content_box">
+          <article class="tile is-child">
+            <p class="title">Trích dẫn</p>
+            <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
+            <p class="is-size-6">
+              Bạn đang xem
+              <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
+                {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
+                trong {{citation_length}} trích dẫn
+              </span>
+              <span v-else>
+                {{ (current_citation_page-1)*per_page + 1}}-{{citation_length}}
+                trong {{citation_length}} trích dẫn
+              </span>
+            </p>
+          </article>
+        </div>
+        <div class="tile is-parent content_box is-vertical">
+          <PaperTable v-for="result in citation_data"
+                      v-bind:search_result="result">
           </PaperTable>
+
+        </div>
+        <div class="tile">
           <Pagination
-            style="margin-left: 20%; margin-top: 10px;"
-            v-model="current_citation_page"
-            :page-count="Math.ceil(citation_length / per_page)"
-            :click-handler="updateCitation"
-            :page-range="3"
-            :margin-pages="2">
+              v-model="current_citation_page"
+              :page-count="Math.ceil(citation_length / per_page)"
+              :click-handler="updateCitation"
+              :page-range="3"
+              :margin-pages="2"
+              :isSmall="true">
           </Pagination>
+        </div>
+      </div>
+
+      <div class="tile is-4">
+        <div class="tile is-parent">
+          <div class="is-child">
+            <article class="message is-info" v-if="this.chart_data.length > 0">
+              <div class="message-header">
+                <p>Số trích dẫn theo năm</p>
+              </div>
+              <div class="message-body">
+                <CitationBar class="chart"
+                             :dataset="this.chart_data"
+                             :labels="this.chart_labels"
+                             :width="250" :height="250"></CitationBar>
+              </div>
+            </article>
+
+            <article class="message is-info" v-if="paper_detail.citationVelocity !== undefined">
+              <div class="message-header">
+                <p>Tình trạng về trích dẫn</p>
+              </div>
+              <div class="message-body">
+                <p style="color: black;">
+                  Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay
+                </p>
+              </div>
+            </article>
+          </div>
         </div>
       </div>
     </div>
     <!------------------------------------------ Citations Table -------------------------------------------------->
 
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor is-vertical" id="reference_box">
+    <div class="tile is-ancestor is-vertical content_box my-3 mx-3 py-4 px-4" id="reference_box">
       <div class="tile is-parent" v-if="ref_length > 0">
-        <div class="tile is-child content_box">
+        <div class="tile is-child">
           <p class="title">Tham chiếu</p>
           <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
           <p class="is-size-6">
             Bạn đang xem
             <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
               {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
-              trong {{paper_detail.references.length}} tham chiếu
+              trong {{ref_length}} tham chiếu
             </span>
             <span v-else>
               {{ (current_ref_page-1)*per_page + 1}}-{{ref_length}}
               trong {{ref_length}} tham chiếu
             </span>
           </p>
-          <PaperTable
-            v-bind:is_loading="ref_loading"
-            v-bind:paper_data="ref_data"
-            v-bind:is_empty="is_ref_empty"
-          >
-          </PaperTable>
-          <Pagination
-            style="margin-left: 20%; margin-top: 10px;"
+        </div>
+      </div>
+      <div class="tile is-parent content_box is-vertical">
+        <PaperTable v-for="result in ref_data"
+                      v-bind:search_result="result">
+        </PaperTable>
+
+      </div>
+      <div class="tile">
+        <Pagination
             v-model="current_ref_page"
             :page-count="Math.ceil(ref_length / per_page)"
             :click-handler="updateReference"
             :page-range="3"
-            :margin-pages="2">
-          </Pagination>
-        </div>
+            :margin-pages="2"
+            :isSmall="true">
+        </Pagination>
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
@@ -318,7 +354,7 @@
     import {chart_prep} from "assets/utils";
     import {chartColors} from "assets/utils";
     import CitationBar from "../../components/search_page/CitationBar";
-    import PaperTable from "@/components/function_components/PaperTable";
+    import PaperTable from "../../components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
 
@@ -350,7 +386,7 @@
           ref_length: null,
           citation_data: null,
           ref_data: null,
-          per_page: 5,
+          per_page: 10,
           current_citation_page: 1,
           current_ref_page: 1,
 
@@ -361,8 +397,6 @@
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
-          citation_loading: false,
-          ref_loading: false,
 
           chartColors: chartColors,
           chart_data: null,
@@ -380,8 +414,6 @@
       },
       methods: {
         async updateCitation(page_num) {
-          this.$refs.citation_box.click()
-          this.citation_loading = true
           let result = await paper_citation({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
@@ -390,20 +422,15 @@
           // console.log("updateCitation: ", result)
           this.current_citation_page = page_num
           this.citation_data = result
-          this.citation_loading = false
         },
         async updateReference(page_num) {
-          this.$refs.ref_box.click()
-          this.ref_loading = true
           let result = await paper_references({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-
           this.current_ref_page = page_num
           this.ref_data = result
-          this.ref_loading = false
         },
         formatTitle(title) {
           return formatTitle(title)
@@ -480,51 +507,59 @@
 <style scoped lang="scss">
   @import "assets/general_styling.scss";
   #topic_box {
-  ul {
-    list-style-type: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(132px, 1fr));
-    column-gap: 10px;
-    row-gap: 15px;
-  }
-
-  li {
-    text-align: center;
-    padding-bottom: 20px;
-  }
-  }
-  .content_title {
-    border-bottom: 1px solid #d9dadb;
-    padding-bottom: 5px;
-  }
-  .content_box {
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 6px rgba(2,20,31,0.1);
-  }
-  .nav-item:hover {
-    text-decoration: none;
-    color: #4e54c8
-  }
-  .container {
-    padding: 40px 20px;
-  }
-  .in-view {
-    background-color: antiquewhite;
-  }
-  .sticky-nav {
-    background-color: rgb(242, 247, 242);
-    overflow: auto;
-    white-space: nowrap;
-    position: sticky;
-    top: 60px;
-    z-index: 1;
+    ul {
+      list-style-type: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(132px, 1fr));
+      column-gap: 10px;
+      row-gap: 15px;
+    }
+    li {
+      text-align: center;
+      padding-bottom: 20px;
+    }
   }
   .topic_list {
     display:inline-block;
     margin: 10px;
   }
+
+
+  .content_title {
+    border-bottom: 1px solid #d9dadb;
+    padding-bottom: 5px;
+  }
+  .content_box {
+    background-color: white;
+  }
+
+  .sticky-nav {
+    background-color: #f0f1f2;
+    overflow: auto;
+    //white-space: nowrap;
+    position: sticky;
+    top: 60px;
+    z-index: 1;
+  }
+  .nav-item{
+    color: #4e54c8;
+  }
+  .nav-item:hover {
+    background-color: #f9f9fa;
+    text-decoration: none
+  }
+  .in-view {
+    background-color: #f9f9fa;
+  }
+
+
+  .container {
+    padding: 40px 20px;
+  }
+
+
   a:hover {
     text-decoration: none;
   }
+
 </style>

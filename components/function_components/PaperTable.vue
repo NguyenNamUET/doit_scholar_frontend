@@ -1,73 +1,82 @@
 <template>
-  <b-table
-    :data="is_empty ? [] : paper_data"
-    :hoverable="true"
-    :mobile-cards="true"
-    :default-sort-direction="'desc'"
-    :loading="is_loading"
-  >
-    <template slot-scope="props">
-      <b-table-column field="title" label="Tiêu đề">
+      <div class="tile is-child is-vertical py-2">
         <nuxt-link
-          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"
+          class="text-class-2 has-text-weight-medium"
+          :to="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
-          {{props.row.title}}
+          {{search_result.title}}
         </nuxt-link>
-      </b-table-column>
 
-      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >
-        <ul>
-          <li v-for="author in props.row.authors">
-            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">
-              {{author.name}}
-            </a>
-          </li>
-        </ul>
-      </b-table-column>
+        <!----------------------------------------------------------------------------------------------->
+        <div class="has-text-weight-light is-size-6">
+          <!----------------------------------------- Authors ------------------------------------------->
+          <a
+            v-if="!author_hidden"
+            class="text-class-3 secondary_description"
+            v-for="(author, index) in search_result.authors"
+            :key="author.authorId"
+            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+          >
+            {{author.name}}
+            <span v-if="index < search_result.authors.length - 1">,</span>
+          </a>
+          <span
+            class="less-more-button"
+            v-if="!author_hidden"
+            v-on:click="author_hidden = true"
+          >
+            &nbspRút gọn
+          </span>
 
-      <b-table-column field="year" label="Năm" numeric sortable>
-        {{ props.row.year }}
-      </b-table-column>
-
-      <b-table-column field="venue" label="Hội nghị">
-        <span v-if="props.row.venue !== ''">{{props.row.venue}}</span>
-        <span v-else>
-          <i>Chưa có thông tin</i>
-        </span>
-      </b-table-column>
-
-      <!--              <b-table-column field="intent" label="Kiểu trích dẫn">-->
-      <!--                <ul>-->
-      <!--                  <li v-for="intention in props.row.intent">-->
-      <!--                    {{intention}}-->
-      <!--                  </li>-->
-      <!--                </ul>-->
-      <!--              </b-table-column>-->
-    </template>
-
-    <template slot="empty">
-      <section class="section">
-        <div class="content has-text-grey has-text-centered">
-          <p>Không có dữ liệu :(</p>
+          <a
+            v-if="author_hidden"
+            class="text-class-3 secondary_description"
+            v-for="(author, index) in search_result.authors.slice(0,3)"
+            :key="author.authorId"
+            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+          >
+            {{author.name}}
+            <span v-if="index < search_result.authors.slice(0,3).length-1">,</span>
+          </a>
+          <span
+            class="less-more-button"
+            v-if="author_hidden && search_result.authors.length - 3 > 0"
+            v-on:click="author_hidden = false"
+          >
+            + {{search_result.authors.length - 3}} tác giả
+          </span>
+          |
+          <!----------------------------------------- Authors ------------------------------------------->
         </div>
-      </section>
-    </template>
-  </b-table>
+      </div>
 </template>
 
 <script>
-import {formatTitle} from 'assets/utils';
-export default {
-  name: "PaperTable",
-  props: ['paper_data', 'is_empty', 'is_loading'],
-  methods: {
-    formatTitle(title) {
-      return formatTitle(title)
+    import CitationBar from "../search_page/CitationBar";
+    import {formatTitle} from "assets/utils";
+
+    export default {
+      name: "PaperTable",
+      components: {CitationBar},
+      props: ['search_result'],
+      data() {
+        return {
+          author_hidden: true
+        }
+      },
+      methods: {
+        formatTitle(title) {
+          return formatTitle(title)
+        }
+      }
     }
-  }
-}
 </script>
 
 <style scoped>
+  @import "assets/general_styling.scss";
+  .tile{
+    background-color: white;
+    border-bottom: 1px solid #E2E3E4;
+  }
 
 </style>
