@@ -34,8 +34,8 @@
     </b-autocomplete>
   </div>
   <div class="control">
-    <p class="button is-primary" v-on:click="submitQuery">
-      Tìm kiếm
+    <p class="button is-warning" v-on:click="submitQuery">
+      <i class="fas fa-search"></i>Tìm kiếm
     </p>
   </div>
 </div>

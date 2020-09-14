@@ -2,12 +2,12 @@
   <div id="search_result_container" class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child">
-        <nuxt-link
-          class="text-class-1"
-          :to="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
+        <a
+          class="text-class-1 has-text-weight-medium"
+          :href="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
         >
           {{search_result._source.title}}
-        </nuxt-link>
+        </a>
 
         <!----------------------------------------------------------------------------------------------->
         <div class="has-text-weight-light is-size-6">
@@ -184,8 +184,5 @@
     background-color: white;
     margin-bottom: 30px;
     box-shadow: 0 0 6px rgba(2,20,31,0.1);
-  }
-  a:hover {
-    text-decoration: none;
   }
 </style>
