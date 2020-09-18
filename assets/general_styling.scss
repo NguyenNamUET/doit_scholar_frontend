@@ -4,30 +4,38 @@ a:hover {
 }
 
 a {
-  color: #0017f4;
+  color: #0312ba;
 }
 
 .text-class-3 {
-  font-size: 0.8rem;
+  font-size: 14px;
 }
 
-.text-class-3:hover {
-  text-decoration: none;
+.link-class-3 {
+  font-size: 12px;
+  color: rgba(84,105,115,.9);
+}
+
+.color-class-3 {
+  color: rgba(84,105,115,.9);
+}
+
+.link-class-3:hover {
+  color: #4E4E4E;
 }
 
 .text-class-2 {
-  font-size: 1.2rem;
-  text-decoration: none;
-  color: #0017f4;
+  font-size: 16px;
 }
 
-.text-class-2:hover {
-  color: #4e54c8;
-  text-decoration: none;
+.secondary_description {
+  text-decoration: underline;
 }
 
 .text-class-1 {
-  font-size: 1.5rem;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0312ba;
 }
 
 .clickable:hover {
@@ -50,18 +58,15 @@ a {
   color: black;
 }
 
-.secondary_description {
-    color: #8c9296;
-  }
-
 .less-more-button:hover {
   text-decoration: none;
   background: #dbdbdb;
   cursor: pointer
 }
+
 .less-more-button{
-  font-size: 0.6rem;
-  color: #8c9296;
+  font-size: 12px;
+  color: #626262;
   background: #cccccc;
   border-radius: 5px;
   padding: 1.5px;

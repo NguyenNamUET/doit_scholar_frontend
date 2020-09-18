@@ -5,9 +5,9 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <h1 class="text-class-1">
-            <strong>Tìm được {{this.total_count | formatNumber}} kết quả</strong>
-          </h1>
+          <span class="text-class-1">
+            <strong>Tìm được {{total_count | formatNumber}} kết quả cho "{{query_params.query}}"</strong>
+          </span>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div id="sort_section">
             <DropDown :dd_data="{msg:'Lĩnh vực', fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
@@ -28,7 +28,9 @@
               v-bind:author_info="author"
             >
             </AuthorInfo>
-            <a class="column is-full text-class-3" v-on:click="author_hidden = false">Xem thêm tác giả</a>
+            <a class="column is-full link-class-3" v-on:click="author_hidden = false">
+              Xem thêm tác giả
+            </a>
         </div>
 
         <div class="tile is-child columns is-multiline" v-else>
@@ -37,7 +39,9 @@
             v-bind:author_info="author"
           >
           </AuthorInfo>
-          <a class="column is-full text-class-3" v-on:click="author_hidden = true">Ẩn bớt tác giả</a>
+          <a class="column is-full link-class-3" v-on:click="author_hidden = true">
+            Ẩn bớt tác giả
+          </a>
         </div>
 
         <div class="tile is-child">
@@ -120,8 +124,8 @@
         fos_list: function (){
           let result = []
           let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
-          console.log("fos_checked: ", fos_checked)
-          console.log("fos_info", this.fos_info)
+          // console.log("fos_checked: ", fos_checked)
+          // console.log("fos_info", this.fos_info)
           this.fos_info.forEach(item => {
             if (fos_checked.length>0 && fos_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -130,13 +134,13 @@
               result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("fos_list: ", result)
+          // console.log("fos_list: ", result)
           return result
         },
         authors_list: function (){
           let result = []
           let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
-          console.log("authors_checked: ", authors_checked)
+          // console.log("authors_checked: ", authors_checked)
           this.author_info.forEach(item => {
             if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
@@ -145,13 +149,13 @@
               result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("authors_list: ", result)
+          // console.log("authors_list: ", result)
           return result
         },
         venue_list: function (){
           let result = []
           let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d/)
-          console.log("venue_checked: ",venue_checked)
+          // console.log("venue_checked: ",venue_checked)
           this.venue_info.forEach(item => {
             if (!!venue_checked && venue_checked.includes(item.key)){
               result.push({key:item.key, doc_count:item.doc_count, checked:true})
@@ -160,7 +164,7 @@
               result.push({key:item.key, doc_count:item.doc_count, checked:false})
             }
           })
-          console.log("venue_list: ", result)
+          // console.log("venue_list: ", result)
           return result
         }
       },
@@ -207,6 +211,7 @@
 
         await store.dispatch('search_result/paper_by_title', query_params)
         if(store.state.search_result.search_results.length > 0) {
+          console.log(store.state.search_result.search_results)
           return {
              query_params: query,
              current_page: parseInt(query['page']),

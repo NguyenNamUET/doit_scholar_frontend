@@ -40,4 +40,7 @@
   a:hover {
     text-decoration: none;
   }
+  .text-class-3:hover {
+    text-decoration: none;
+  }
 </style>

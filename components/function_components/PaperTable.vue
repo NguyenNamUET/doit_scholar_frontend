@@ -1,7 +1,7 @@
 <template>
       <div class="tile is-child is-vertical py-2">
         <a
-          class="text-class-2 has-text-weight-medium"
+          class="text-class-1 has-text-weight-medium"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
           {{search_result.title}}
@@ -11,16 +11,19 @@
         <div class="has-text-weight-light is-size-6">
           <!----------------------------------------- Authors ------------------------------------------->
           <span v-if="search_result.authors !== undefined">
-            <a
+            <span
               v-if="!author_hidden"
-              class="text-class-3 secondary_description"
               v-for="(author, index) in search_result.authors"
               :key="author.authorId"
-              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             >
-              {{author.name}}
-              <span v-if="index < search_result.authors.length - 1">,</span>
-            </a>
+              <a
+                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+                class="link-class-3 secondary_description"
+              >
+                {{author.name}}
+              </a>
+              <span v-if="index < search_result.authors.length - 1">, </span>
+            </span>
             <span
               class="less-more-button"
               v-if="!author_hidden"
@@ -29,16 +32,19 @@
               &nbspRút gọn
             </span>
 
-            <a
+            <span
               v-if="author_hidden"
-              class="text-class-3 secondary_description"
               v-for="(author, index) in search_result.authors.slice(0,3)"
               :key="author.authorId"
-              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
             >
-              {{author.name}}
+              <a
+                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+                class="link-class-3 secondary_description"
+              >
+                {{author.name}}
+              </a>
               <span v-if="index < search_result.authors.slice(0,3).length-1">,</span>
-            </a>
+            </span>
             <span
               class="less-more-button"
               v-if="author_hidden && search_result.authors.length - 3 > 0"
@@ -46,16 +52,21 @@
             >
               + {{search_result.authors.length - 3}} tác giả
             </span>
-            <br>
           </span>
-          <span class="tag is-primary is-small" v-if="search_result.year !== undefined">{{search_result.year}}</span>
-          <span class="tag is-warning is-small" v-if="search_result.isInfluential">Ảnh hưởng lớn</span>
           <span
             v-if="search_result.venue !== '' && search_result.venue !== undefined"
-            class="tag is-info is-small"
-            >
-            {{search_result.venue}}
+            class="text-class-3 color-class-3"
+          >
+            | {{search_result.venue}}
             </span>
+          <span v-if="search_result.year !== undefined" class="text-class-3 color-class-3"> | {{search_result.year}}</span>
+          <br>
+          <span
+            class="tag is-warning is-small"
+            v-if="search_result.isInfluential"
+          >
+            <span><i class="fas fa-fire"></i> Ảnh hưởng lớn</span>
+          </span>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
