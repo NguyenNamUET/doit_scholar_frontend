@@ -1,27 +1,30 @@
 <template>
-  <div id="search_result_container" class="tile is-ancestor">
+  <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child">
-        <nuxt-link
+        <a
           class="text-class-1"
-          :to="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
+          :href="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
         >
           {{search_result._source.title}}
-        </nuxt-link>
+        </a>
 
         <!----------------------------------------------------------------------------------------------->
-        <div class="has-text-weight-light is-size-6">
+        <div class="has-text-weight-light">
           <!----------------------------------------- Authors ------------------------------------------->
-          <a
+          <span
             v-if="!author_hidden"
-            class="text-class-3 secondary_description"
             v-for="(author, index) in search_result._source.authors"
             :key="author.authorId"
-            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
           >
-            {{author.name}}
-            <span v-if="index < search_result._source.authors.length - 1">,</span>
-          </a>
+            <a
+              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+              class="link-class-3 secondary_description"
+            >
+              {{author.name}}
+            </a>
+            <span v-if="index < search_result._source.authors.length - 1">, </span>
+          </span>
           <span
             class="less-more-button"
             v-if="!author_hidden"
@@ -30,16 +33,20 @@
             &nbspRút gọn
           </span>
 
-          <a
+          <span
             v-if="author_hidden"
-            class="text-class-3 secondary_description"
             v-for="(author, index) in search_result._source.authors.slice(0,3)"
             :key="author.authorId"
-            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+
           >
-            {{author.name}}
-            <span v-if="index < search_result._source.authors.slice(0,3).length-1">,</span>
-          </a>
+            <a
+              :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+              class="link-class-3 secondary_description"
+            >
+              {{author.name}}
+            </a>
+            <span v-if="index < search_result._source.authors.slice(0,3).length-1">, </span>
+          </span>
           <span
             class="less-more-button"
             v-if="author_hidden && search_result._source.authors.length - 3 > 0"
@@ -51,16 +58,20 @@
           <!----------------------------------------- Authors ------------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <a
+          <span
             v-if="!topic_hidden"
-            class="text-class-3 secondary_description"
             v-for="(topic, index) in search_result._source.topics"
             :key="topic.topicId"
-            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
+
           >
-            {{topic.topic}}
+            <a
+              :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
+              class="link-class-3"
+            >
+              {{topic.topic}}
+            </a>
             <span v-if="index < search_result._source.topics.length - 1">,</span>
-          </a>
+          </span>
           <span
             class="less-more-button"
             v-if="!topic_hidden"
@@ -69,14 +80,17 @@
             &nbspRút gọn
           </span>
 
-          <a
+          <span
             v-if="topic_hidden"
-            class="text-class-3 secondary_description"
             v-for="(topic, index) in search_result._source.topics.slice(0,1)"
-            :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
           >
-            {{topic.topic}}
-          </a>
+            <a
+              :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
+              class="link-class-3"
+            >
+              {{topic.topic}}
+            </a>
+          </span>
           <span
             v-if="topic_hidden && search_result._source.topics.length - 1 > 0"
             class="less-more-button"
@@ -93,7 +107,7 @@
           <!------------------------------------ Fields of study ---------------------------------------->
           <span v-if="search_result._source.fieldsOfStudy">
             <span v-if="!field_hidden"
-                  class="text-class-3 secondary_description"
+                  class="link-class-3"
             >
               {{this.full_fos}}
             </span>
@@ -106,13 +120,13 @@
             </span>
 
             <span v-if="field_hidden"
-                  class="text-class-3 secondary_description"
+                  class="link-class-3"
             >
               {{search_result._source.fieldsOfStudy[0]}}
             </span>
             <span
               v-if="field_hidden && search_result._source.fieldsOfStudy.length - 1 > 0"
-              class="text-class-3 secondary_description less-more-button"
+              class="link-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
               + {{search_result._source.fieldsOfStudy.length - 1}} lĩnh vực
@@ -122,12 +136,12 @@
         <!------------------------------------ Fields of study ---------------------------------------->
 
         <!------------------------------------------ Abstract ----------------------------------------->
-        <p v-if="!abstract_hidden" class="is-size-6">
+        <p v-if="!abstract_hidden && typeof search_result._source.abstract !== 'object'" class="text-class-2">
           {{search_result._source.abstract}}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
         </p>
-        <p v-else class="is-size-6">
-        <!--{{search_result._source.abstract.slice(0, search_result._source.abstract.length*0.4)}}-->
+        <p v-if="abstract_hidden && typeof search_result._source.abstract !== 'object'" class="text-class-2">
+          {{search_result._source.abstract.slice(0, 150)}}
           <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
         </p>
         <!------------------------------------------ Abstract ----------------------------------------->
@@ -136,10 +150,10 @@
         <nav class="level is-mobile">
           <div class="level-left is-small has-text-weight-light ">
             <a class="level-item">
-              <span class="text-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
+              <span class="link-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
             </a>
             <a class="level-item">
-              <span class="text-class-3"><i class="fas fa-retweet"></i> Xem trích dẫn</span>
+              <span class="link-class-3"><i class="fas fa-retweet"></i> Xem trích dẫn</span>
             </a>
           </div>
         </nav>
@@ -184,8 +198,5 @@
     background-color: white;
     margin-bottom: 30px;
     box-shadow: 0 0 6px rgba(2,20,31,0.1);
-  }
-  a:hover {
-    text-decoration: none;
   }
 </style>

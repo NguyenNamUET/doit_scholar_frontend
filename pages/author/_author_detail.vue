@@ -1,5 +1,12 @@
 <template>
-  <div class="section">
+  <div class="section" ref="top" id="top">
+    <a
+      v-show="false"
+      class="button"
+      v-scroll-to="{el: '#top', offset: -60, cancelable: false}"
+      ref="jumpPage"
+    >
+    </a>
     <div v-if="Object.keys(author_detail).length !== 0" class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
@@ -9,7 +16,7 @@
                 <p class="is-size-4">{{author_detail.name}}</p>
               </div>
               <div class="message-body">
-                <span>Số văn bản đã xuất bản</span>
+                <span>Số văn bản đã xuất bản: </span>
                 <span
                   class="has-text-right"
                   v-if="author_detail.papers.length !== undefined"
@@ -17,7 +24,7 @@
                   {{author_detail.papers.length}}
                 </span>
                 <br>
-                <span>Số trích dẫn có ảnh hưởng lớn {{author_detail.influentialCitationCount}}</span>
+                <span>Số trích dẫn có ảnh hưởng lớn: {{author_detail.influentialCitationCount}}</span>
               </div>
             </article>
           </div>
@@ -49,54 +56,59 @@
                   <p class="is-size-6">
                     Bạn đang xem
                     <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
-              {{ (current_paper_page-1)*per_page + 1}}-{{ (current_paper_page-1)*per_page + per_page}}
-              trong {{paper_length}} xuất bản
-            </span>
+                      {{ (current_paper_page-1)*per_page + 1}}-{{ (current_paper_page-1)*per_page + per_page}}
+                      trong {{paper_length}} xuất bản
+                    </span>
                     <span v-else>
-              {{ (current_paper_page-1)*per_page + 1}}-{{paper_length}}
-              trong {{paper_length}} xuất bản
-            </span>
+                      {{ (current_paper_page-1)*per_page + 1}}-{{paper_length}}
+                      trong {{paper_length}} xuất bản
+                    </span>
                   </p>
-                  <b-table
-                    :data="paper_data"
-                    :hoverable="true"
-                    :mobile-cards="true"
-                    :default-sort-direction="'desc'"
-                    :loading="is_loading"
+                  <PaperTable
+                    v-for="result in paper_data"
+                    v-bind:search_result="result"
                   >
+                  </PaperTable>
+<!--                  <b-table-->
+<!--                    :data="paper_data"-->
+<!--                    :hoverable="true"-->
+<!--                    :mobile-cards="true"-->
+<!--                    :default-sort-direction="'desc'"-->
+<!--                    :loading="is_loading"-->
+<!--                  >-->
 
-                    <template slot-scope="props">
-                      <b-table-column field="title" label="Tiêu đề">
-                        <nuxt-link
-                          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"
-                        >
-                          {{props.row.title}}
-                        </nuxt-link>
-                      </b-table-column>
+<!--                    <template slot-scope="props">-->
+<!--                      <b-table-column field="title" label="Tiêu đề">-->
+<!--                        <nuxt-link-->
+<!--                          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"-->
+<!--                        >-->
+<!--                          {{props.row.title}}-->
+<!--                        </nuxt-link>-->
+<!--                      </b-table-column>-->
 
-                      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >
-                        <ul>
-                          <li v-for="author in props.row.authors">
-                            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">
-                              {{author.name}}
-                            </a>
-                          </li>
-                        </ul>
-                      </b-table-column>
+<!--                      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >-->
+<!--                        <ul>-->
+<!--                          <li v-for="author in props.row.authors">-->
+<!--                            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">-->
+<!--                              {{author.name}}-->
+<!--                            </a>-->
+<!--                          </li>-->
+<!--                        </ul>-->
+<!--                      </b-table-column>-->
 
-                      <b-table-column field="year" label="Năm" numeric sortable >
-                        {{ props.row.year }}
-                      </b-table-column>
-                    </template>
+<!--                      <b-table-column field="year" label="Năm" numeric sortable >-->
+<!--                        {{ props.row.year }}-->
+<!--                      </b-table-column>-->
+<!--                    </template>-->
 
-                    <template slot="empty">
-                      <section class="section">
-                        <div class="content has-text-grey has-text-centered">
-                          <p>Không có dữ liệu :(</p>
-                        </div>
-                      </section>
-                    </template>
-                  </b-table>
+<!--                    <template slot="empty">-->
+<!--                      <section class="section">-->
+<!--                        <div class="content has-text-grey has-text-centered">-->
+<!--                          <p>Không có dữ liệu :(</p>-->
+<!--                        </div>-->
+<!--                      </section>-->
+<!--                    </template>-->
+<!--                  </b-table>-->
                   <Pagination
                     style="margin-left: 10%; margin-top: 10px;"
                     v-model="current_paper_page"
@@ -153,6 +165,9 @@
         }
       },
       methods: {
+        goToPage() {
+          this.$refs.jumpPage.click()
+        },
         formatTitle(title) {
           return formatTitle(title)
         },
@@ -163,6 +178,7 @@
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
+          this.goToPage()
           this.current_paper_page = page_num
           this.paper_data = result
           this.is_loading = false

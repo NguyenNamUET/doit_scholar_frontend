@@ -22,26 +22,20 @@
     >
       <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
       <template slot-scope="props">
-
         <i class="far fa-newspaper"></i>
-        <b-tooltip
-          :label="props.option._source.title"
-          position="is-right"
-        >
         <a :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id">
           {{props.option._source.title}}
         </a>
-        </b-tooltip>
+
         <div>
           Số trích dẫn của văn bản: {{props.option._source.citations_count}}
         </div>
-
       </template>
     </b-autocomplete>
   </div>
   <div class="control">
-    <p class="button is-primary" v-on:click="submitQuery">
-      Tìm kiếm
+    <p class="button is-warning" v-on:click="submitQuery">
+      <i class="fas fa-search"></i>Tìm kiếm
     </p>
   </div>
 </div>

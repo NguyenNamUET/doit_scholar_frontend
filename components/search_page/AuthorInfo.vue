@@ -40,7 +40,7 @@
   a:hover {
     text-decoration: none;
   }
-  a {
-    color: #3385ff
+  .text-class-3:hover {
+    text-decoration: none;
   }
 </style>

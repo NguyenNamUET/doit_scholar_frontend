@@ -1,7 +1,7 @@
 <template>
-  <div class="tile is-ancestor">
-    <div class="tile is-parent is-8 is-vertical">
-      <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+  <div class="tile py-2">
+      <nav class="pagination is-centered" role="navigation" aria-label="pagination"
+           :class="{'is-small': isSmall}">
         <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
            @click="prevPage()" @keyup.enter="prevPage()">Trước</a>
         <a v-if="!(lastPageSelected() && hidePrevNext)" class="pagination-next"
@@ -19,7 +19,6 @@
          </li>
         </ul>
       </nav>
-    </div>
   </div>
 
 </template>
@@ -28,6 +27,9 @@
 export default {
   name: "Pagination",
   props: {
+    isSmall:{
+      type: Boolean
+    },
     value: {
       type: Number
     },
@@ -177,4 +179,5 @@ export default {
 a:hover {
  text-decoration: none;
 }
+
 </style>
