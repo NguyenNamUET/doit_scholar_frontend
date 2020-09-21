@@ -22,7 +22,7 @@
             |
             ID văn bản: {{this.paper_detail.corpusId}}
           </p>
-          <h1 class="title">
+          <h1 class="title" style="color: #4E4B4B">
             <b>{{this.paper_detail.title}}</b>
           </h1>
           <!------------------------------------------ Source  ------------------------------------------->
@@ -142,38 +142,11 @@
           <!--------------------------------------- View pdf -------------------------------------------->
         </div>
       </div>
-
-      <!--------------------------------------- Citations Chart ------------------------------------------------->
-<!--      <div class="tile is-parent is-5">-->
-<!--        <div class="is-child">-->
-<!--          <article class="message is-info" v-if="this.chart_data.length > 0">-->
-<!--            <div class="message-header">-->
-<!--              <p>Số trích dẫn theo năm</p>-->
-<!--            </div>-->
-<!--            <div class="message-body">-->
-<!--              <CitationBar v-bind:dataset="this.chart_data" v-bind:labels="this.chart_labels"></CitationBar>-->
-<!--            </div>-->
-<!--          </article>-->
-
-<!--          <article class="message is-info" v-if="paper_detail.citationVelocity !== undefined">-->
-<!--            <div class="message-header">-->
-<!--              <p>Tình trạng về trích dẫn</p>-->
-<!--            </div>-->
-<!--            <div class="message-body">-->
-<!--              <p style="color: black;">-->
-<!--                Trung bình được trích dẫn {{paper_detail.citationVelocity}} lần từ {{this.paper_detail.year}} đến nay-->
-<!--              </p>-->
-<!--            </div>-->
-<!--          </article>-->
-<!--        </div>-->
-<!--      </div>-->
-      <!--------------------------------------- Citations Chart ------------------------------------------------->
-
     </div>
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
         <div
-          class="tabs is-toggle sticky-nav is-centered is-fullwidth"
+          class="tabs sticky-nav is-centered is-fullwidth"
           v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
         >
           <ul>
@@ -206,7 +179,7 @@
                 && scroll_position < (abstract_height + topic_height + citation_height)}"
                 ref="citation_box"
               >
-                Trích dẫn
+                {{citation_length}} trích dẫn
               </a>
             </li>
             <li v-if="ref_length > 0">
@@ -216,7 +189,7 @@
                 :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
                 ref="reference_box"
               >
-                Tham chiếu
+                {{ref_length}} tham chiếu
               </a>
             </li>
           </ul>
@@ -228,7 +201,8 @@
     <div class="tile is-ancestor" id="topic_box">
       <div class="tile is-parent is-vertical " v-if="paper_detail.topics.length > 0" >
         <article class="tile is-child content_box">
-          <p class="title content_title">Chủ đề được đề cập trong văn bản</p>
+          <p class="content_title">Chủ đề được đề cập trong văn bản</p>
+          <br>
           <div>
             <ul>
               <li
@@ -254,9 +228,15 @@
       <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
           <article class="tile is-child content_box">
-            <p class="title">Trích dẫn</p>
-            <p class="subtitle content_title">Các văn bản có nhắc tới văn bản này</p>
-            <p>
+            <p class="content_title">
+              Trích dẫn
+              <b-tooltip label="Các văn bản có nhắc tới văn bản này"
+                         position="is-right">
+                <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
+              </b-tooltip>
+            </p>
+            <br>
+            <p class="text-class-3" style="margin-left: 10px;">
               Bạn đang xem
               <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
                 {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
@@ -317,9 +297,15 @@
     <div class="tile is-ancestor is-vertical " id="reference_box">
       <div class="tile is-parent" v-if="ref_data.length > 0">
         <div class="tile is-child content_box">
-          <p class="title">Tham chiếu</p>
-          <p class="subtitle content_title">Các văn bản được nhắc tới trong văn bản này</p>
-          <p class="is-size-6">
+          <p class="content_title">
+            Tham chiếu
+            <b-tooltip label="Các văn bản được nhắc tới trong văn bản này"
+                       position="is-right">
+              <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
+            </b-tooltip>
+          </p>
+          <br>
+          <p class="text-class-3" style="margin-left: 10px;">
             Bạn đang xem
             <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
               {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
@@ -330,17 +316,23 @@
               trong {{ref_length}} tham chiếu
             </span>
           </p>
-          <PaperTable v-for="result in ref_data"
-                      v-bind:search_result="result">
-          </PaperTable>
-          <Pagination
-            v-model="current_ref_page"
-            :page-count="Math.ceil(ref_length / per_page)"
-            :click-handler="updateReference"
-            :page-range="3"
-            :margin-pages="2"
-            :isSmall="true">
-          </Pagination>
+          <div class="tile is-parent">
+            <div class="tile is-child">
+              <PaperTable
+                v-for="(result in ref_data"
+                v-bind:search_result="result"
+              >
+              </PaperTable>
+              <Pagination
+                v-model="current_ref_page"
+                :page-count="Math.ceil(ref_length / per_page)"
+                :click-handler="updateReference"
+                :page-range="3"
+                :margin-pages="2"
+                :isSmall="true">
+              </Pagination>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -524,25 +516,22 @@
       flex-direction: column;
       flex-wrap: wrap;
       display: flex;
-      height: 50vh;
+      height: 40vh;
       list-style-type: disc;
       list-style-position: inside;
     }
     li {
-      font-size: 16px;
+      font-size: 14px;
       margin: 5px;
     }
   }
 
   .content_title {
+    color: #36361F;
+    font-size: 22px;
+    font-weight: 600;
     border-bottom: 1px solid #d9dadb;
-    padding-bottom: 5px;
-  }
-
-  .content_box {
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 6px rgba(2,20,31,0.1);
+    padding: 10px;
   }
 
   .sticky-nav {
@@ -555,6 +544,8 @@
 
   .nav-item{
     color: #4e54c8;
+    border-right: 1px solid #E2E3E4;
+    border-left: 1px solid #E2E3E4;
   }
 
   .nav-item:hover {
@@ -565,6 +556,7 @@
   .in-view {
     background-color: #f9f9fa;
     font-weight: 600;
+    color: #054CA8;
   }
 
   .container {
