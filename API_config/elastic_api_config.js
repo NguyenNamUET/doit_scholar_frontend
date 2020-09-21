@@ -1,4 +1,5 @@
 const SEARCH_API =  'http://112.137.142.8:8080'
+const SEMANTIC_API = 'https://api.semanticscholar.org/v1'
 // 'http://112.137.142.8:8080'
 
 const SEARCH_DOCUMENTS = {
@@ -22,7 +23,14 @@ const SEARCH_DOCUMENTS = {
   autocomplete: SEARCH_API + '/s2api/papers/searchOnTyping',
 }
 
+const SEMANTIC_DOCUMENTS = {
+  paper_detail: SEMANTIC_API + '/paper',
+  author: SEMANTIC_API + '/author'
+}
+
 export {
   SEARCH_API,
-  SEARCH_DOCUMENTS
+  SEARCH_DOCUMENTS,
+  SEMANTIC_API,
+  SEMANTIC_DOCUMENTS
 }

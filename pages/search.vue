@@ -1,11 +1,13 @@
 <template>
-  <div v-if="this.search_results.length !== 0"
-       class="container"
-       id="page_container">
+  <div
+    v-if="this.search_results.length !== 0"
+    class="container"
+    id="page_container"
+  >
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <span class="text-class-1">
+          <span class="subtitle">
             <strong>Tìm được {{total_count | formatNumber}} kết quả cho "{{query_params.query}}"</strong>
           </span>
           <!------------------------      DROPDOWN HERE   --------------------------->
@@ -63,11 +65,14 @@
 
     <!--Took inspiration from this project
     https://github.com/lokyoung/vuejs-paginate/blob/master/src/components/Paginate.vue-->
-    <Pagination :page-count="(Math.ceil(this.total_count/this.per_page))"
-                v-model="current_page"
-                :click-handler="updatePage"
-                :page-range="3"
-                :margin-pages="2">
+    <Pagination
+      :page-count="(Math.ceil(this.total_count/this.per_page))"
+      v-model="current_page"
+      :click-handler="updatePage"
+      :page-range="3"
+      :margin-pages="2"
+      :is-small="true"
+    >
     </Pagination>
     <!-------------------------------------------------------------------------->
   </div>

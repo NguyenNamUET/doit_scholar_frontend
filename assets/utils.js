@@ -104,6 +104,10 @@ function filteredKeys_v2(obj, filter) {
   return values;
 }
 
+function isDictEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 export {
   formatNumber,
   filteredKeys, filteredKeys_v2,
@@ -112,5 +116,6 @@ export {
   formatTitle,
   chartColors,
   chart_prep,
-  fields_dict
+  fields_dict,
+  isDictEmpty
 }
