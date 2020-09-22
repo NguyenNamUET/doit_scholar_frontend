@@ -23,7 +23,7 @@
                 >
                   {{author_detail.papers.length}}
                 </span>
-                <br>
+
                 <span>Số trích dẫn có ảnh hưởng lớn: {{author_detail.influentialCitationCount}}</span>
               </div>
             </article>

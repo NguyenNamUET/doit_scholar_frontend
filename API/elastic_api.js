@@ -13,11 +13,7 @@ const paper_detail = async (paper_id) => {
 
 const all_author = async (query_params) => {
   try {
-    const result = await axios.post(SEARCH_DOCUMENTS.all_author, {
-        start: query_params.start,
-        size: query_params.size,
-      }
-    )
+    const result = await axios.get(SEARCH_DOCUMENTS.all_author)
     return result.data
   } catch(e) {
     console.log(e)
@@ -42,9 +38,7 @@ const all_paper = async (query_params) => {
 
 const all_field = async (query_params) => {
   try {
-    const result = await axios.post(SEARCH_DOCUMENTS.all_field, {
-      size: query_params.size
-    })
+    const result = await axios.post(SEARCH_DOCUMENTS.all_field)
     return result.data
   } catch(e) {
     console.log(e)
@@ -157,7 +151,7 @@ const author_by_name = async(query_params) => {
 
 const author_papers = async (query_params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + query_params.author_id + '/papers', {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.author_id + '/papers', {
       params: {
         start: query_params.start,
         size: query_params.size
