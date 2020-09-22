@@ -1,44 +1,49 @@
 <template>
   <div class="field has-addons">
-  <div class="control is-expanded">
-    <input
-      v-if="this.home"
-      v-on:keyup.enter="submitQuery"
-      v-model="search_query"
-      class="input"
-      type="text"
-      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
-    >
-    <b-autocomplete
-      v-else
-      v-model="search_query"
-      @keyup.enter.native="submitQuery"
-      style="position: relative; z-index: 2;"
-      :data="autocomplete_data"
-      @typing="getAutocomplete"
-      :loading="is_loading"
-      placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
-      @select="option => this.selected = option"
-    >
-      <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
-      <template slot-scope="props">
-        <i class="far fa-newspaper"></i>
-        <a :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id">
-          {{props.option._source.title}}
-        </a>
+    <div class="control is-expanded">
+      <input
+        v-if="this.home"
+        v-on:keyup.enter="submitQuery"
+        v-model="search_query"
+        class="input"
+        type="text"
+        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+      >
+      <b-autocomplete
+        v-else
+        v-model="search_query"
+        @keyup.enter.native="submitQuery"
+        class="autocomplete"
+        :data="autocomplete_data"
+        @typing="getAutocomplete"
+        :loading="is_loading"
+        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+        @select="option => this.selected = option"
+      >
+        <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
+        <template slot-scope="props">
+          <div class="suggestion">
+            <i class="far fa-newspaper"></i>
+            <a
+              style="max-width: 50px;"
+              :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id"
+            >
+              {{props.option._source.title}}
+            </a>
 
-        <div>
-          Số trích dẫn của văn bản: {{props.option._source.citations_count}}
-        </div>
-      </template>
-    </b-autocomplete>
+            <div class="text-class-3 color-class-3">
+              Số trích dẫn của văn bản: {{props.option._source.citations_count}}
+            </div>
+          </div>
+        </template>
+      </b-autocomplete>
+    </div>
+    <div class="control">
+      <p class="button is-warning" v-on:click="submitQuery">
+        <i class="fas fa-search"></i>Tìm kiếm
+      </p>
+    </div>
   </div>
-  <div class="control">
-    <p class="button is-warning" v-on:click="submitQuery">
-      <i class="fas fa-search"></i>Tìm kiếm
-    </p>
-  </div>
-</div>
 </template>
 
 <script>
@@ -55,7 +60,7 @@ export default {
           autocomplete_data: [],
           selected: null,
           is_loading: false,
-          raw_data: []
+          raw_data: [],
         }
       },
       // computed: {
@@ -85,7 +90,6 @@ export default {
           this.is_loading = false
         }),
         submitQuery() {
-          console.log(this.search_query)
           this.query_params = {
             query: this.search_query,
             start: 0,
@@ -97,7 +101,6 @@ export default {
             this.$router.push({name:'search', query: this.query_params})
           }
           else{
-            console.log("error")
             this.$buefy.toast.open({
               duration: 3000,
               message: `Thanh tìm kiếm <b>không thể để trống</b>`,
@@ -111,4 +114,11 @@ export default {
 </script>
 
 <style scoped>
+  .suggestion {
+    padding: 2px;
+  }
+  .autocomplete {
+    position: relative;
+    z-index: 2;
+  }
 </style>

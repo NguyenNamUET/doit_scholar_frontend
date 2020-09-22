@@ -1,5 +1,5 @@
 <template>
-      <div class="tile is-child is-vertical py-2">
+      <div class="tile is-child is-vertical">
         <a
           class="text-class-1 has-text-weight-medium"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
@@ -8,7 +8,7 @@
         </a>
 
         <!----------------------------------------------------------------------------------------------->
-        <div class="has-text-weight-light is-size-6">
+        <div class="has-text-weight-light">
           <!----------------------------------------- Authors ------------------------------------------->
           <span v-if="search_result.authors !== undefined">
             <span
@@ -69,7 +69,6 @@
             <span><i class="fas fa-fire"></i> Ảnh hưởng lớn</span>
           </span>
         </div>
-
       </div>
 </template>
 
@@ -99,8 +98,6 @@
   .tile{
     background-color: white;
     border-bottom: 1px solid #E2E3E4;
-  }
-  .text-class-2:hover {
-    text-decoration: underline;
+    padding: 15px 0 10px 0;
   }
 </style>

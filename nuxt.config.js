@@ -1,6 +1,10 @@
 import webpack from 'webpack'
 
 export default {
+  server: {
+    port: 3400,
+    host: '0.0.0.0'
+  },
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode
@@ -79,7 +83,9 @@ export default {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {},
+  axios: {
+    proxy: true
+  },
   /*
   ** Build configuration
   ** See https://nuxtjs.org/api/configuration-build/

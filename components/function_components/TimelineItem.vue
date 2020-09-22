@@ -2,28 +2,63 @@
     <div class="timeline-item is-primary">
       <div class="timeline-marker"></div>
       <div class="timeline-content">
-        <p class="title is-5">{{paper.year}}</p>
-        <div class="custom-timeline-conent">
-          <h1 class="text-class-1">
-              <a :href="'/paper/' + formatTitle(paper.title) + '.p' + '-' + paper.corpusID"
-              style="color: #1f6de2">
-                {{paper.title}}
+        <p class="text-class-3">{{paper.year}}</p>
+        <div>
+          <a
+              :href="'/paper/' + formatTitle(paper.title) + '.p' + '-' + paper.corpusID"
+              class="text-class-1"
+          >
+            {{paper.title}}
+          </a>
+          <div>
+            <span
+                v-if="!author_hidden"
+                v-for="(author, index) in paper.authors" class="author-timeline"
+            >
+              <a
+                  :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+                  class="link-class-3 secondary_description"
+              >
+                {{author.name}}
               </a>
-          </h1>
-          <div v-for="(author, index) in paper.authors" class="author-timeline">
-            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-            style="color: #8c9296" class="text-class-3">
+              <span v-if="index < paper.authors.length - 1">, </span>
+            </span>
+            <span
+                class="less-more-button"
+                v-if="!author_hidden"
+                v-on:click="author_hidden = true"
+            >
+            &nbspRút gọn
+          </span>
+            <span
+                v-if="author_hidden"
+                v-for="(author, index) in paper.authors.slice(0,3)"
+                :key="author.authorId"
+
+            >
+            <a
+                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+                class="link-class-3 secondary_description"
+            >
               {{author.name}}
-              <span v-if="index < paper.authors.length - 1">,</span>
             </a>
+            <span v-if="index < paper.authors.slice(0,3).length-1">, </span>
+          </span>
+            <span
+                class="less-more-button"
+                v-if="author_hidden && paper.authors.length - 3 > 0"
+                v-on:click="author_hidden = false"
+            >
+            + {{paper.authors.length - 3}} tác giả
+          </span>
           </div>
           <div v-if="paper.abstract !== null">
-            <p v-if="!abstract_hidden" class="is-size-6">
+            <p v-if="!abstract_hidden" class="text-class-2">
               {{paper.abstract}}
               <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
             </p>
-            <p v-else class="is-size-6">
-              {{paper.abstract.slice(0, paper.abstract.length*0.2)}}
+            <p v-else class="text-class-2">
+              {{paper.abstract.slice(0, 150)}}
               <a class="text-class-3" v-on:click="abstract_hidden = false">...Xem thêm</a>
             </p>
           </div>
@@ -41,7 +76,8 @@
       data(){
         return{
           abstract_hidden: true,
-          abstract: this.paper.abstract
+          abstract: this.paper.abstract,
+          author_hidden: true,
         }
       },
       props: {
@@ -60,11 +96,5 @@
 <style scoped>
 .author-timeline{
   display:inline;
-}
-.custom-timeline-conent{
-    background-color: white;
-    margin-bottom: 30px;
-    box-shadow: 0 0 6px rgba(2,20,31,0.1);
-    padding: 10px
 }
 </style>

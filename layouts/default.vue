@@ -59,9 +59,6 @@
               <b>Facebook: </b>
               <a href="https://facebook.com/doitvn">DoIT</a>
             </p>
-            <p>
-              Latest update: 3/9/2020 3:21PM
-            </p>
           </div>
         </div>
       </div>
@@ -110,9 +107,9 @@ export default {
       margin-top: 10px;
     }
     background: #4e54c8;
-    height: 200px;
+    height: 180px;
     color: white;
-    padding: 40px;
+    padding: 40px 40px 40px 80px;
   }
   @media only screen and (max-width: 1022px){
     .search-area {

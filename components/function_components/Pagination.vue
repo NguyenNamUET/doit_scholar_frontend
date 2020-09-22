@@ -1,5 +1,5 @@
 <template>
-  <div class="tile py-2">
+  <div class="tile py-2 mt-5">
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
         <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
