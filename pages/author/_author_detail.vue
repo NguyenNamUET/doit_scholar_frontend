@@ -2,7 +2,7 @@
     <div v-if="Object.keys(author_detail).length !== 0" class="container" ref="top" id="top">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
-          <div class="tile is-child">
+          <div class="tile is-child is-vertical">
             <div class="columns is-5">
               <div class="column is-one-quarter">
                 <div class="card_wrapper">
@@ -98,51 +98,12 @@
                       trong {{paper_length}} xuất bản
                     </span>
                       </p>
-                      <PaperTable
+                      <PaperTable class="pl-3"
                         v-for="result in paper_data"
                         v-bind:search_result="result"
                       >
                       </PaperTable>
-                      <!--                  <b-table-->
-                      <!--                    :data="paper_data"-->
-                      <!--                    :hoverable="true"-->
-                      <!--                    :mobile-cards="true"-->
-                      <!--                    :default-sort-direction="'desc'"-->
-                      <!--                    :loading="is_loading"-->
-                      <!--                  >-->
 
-                      <!--                    <template slot-scope="props">-->
-                      <!--                      <b-table-column field="title" label="Tiêu đề">-->
-                      <!--                        <nuxt-link-->
-                      <!--                          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"-->
-                      <!--                        >-->
-                      <!--                          {{props.row.title}}-->
-                      <!--                        </nuxt-link>-->
-                      <!--                      </b-table-column>-->
-
-                      <!--                      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >-->
-                      <!--                        <ul>-->
-                      <!--                          <li v-for="author in props.row.authors">-->
-                      <!--                            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">-->
-                      <!--                              {{author.name}}-->
-                      <!--                            </a>-->
-                      <!--                          </li>-->
-                      <!--                        </ul>-->
-                      <!--                      </b-table-column>-->
-
-                      <!--                      <b-table-column field="year" label="Năm" numeric sortable >-->
-                      <!--                        {{ props.row.year }}-->
-                      <!--                      </b-table-column>-->
-                      <!--                    </template>-->
-
-                      <!--                    <template slot="empty">-->
-                      <!--                      <section class="section">-->
-                      <!--                        <div class="content has-text-grey has-text-centered">-->
-                      <!--                          <p>Không có dữ liệu :(</p>-->
-                      <!--                        </div>-->
-                      <!--                      </section>-->
-                      <!--                    </template>-->
-                      <!--                  </b-table>-->
                       <Pagination
                         style="margin-top: 10px;"
                         v-model="current_paper_page"

@@ -381,7 +381,7 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor">
+    <div class="tile is-ancestor" v-if="suggestion_data.length > 0">
       <div class="tile is-parent">
         <div class="tile is-child">
           <p class="content_title">Văn bản liên quan</p>
@@ -566,10 +566,14 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
-        let suggestion_data = await paper_by_fos({
-          fields_of_study: data.fieldsOfStudy,
-          size: 9
-        })
+
+        let suggestion_data = []
+        if(data.fieldsOfStudy){
+          suggestion_data = await paper_by_fos({
+            fields_of_study: data.fieldsOfStudy,
+            size: 9
+          })
+        }
 
         if (Object.keys(data).length !== 0) {
           if (data.citations_length > 0) {

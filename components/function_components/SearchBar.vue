@@ -1,16 +1,15 @@
 <template>
   <div class="field has-addons">
     <div class="control is-expanded">
-      <input
-        v-if="this.home"
-        v-on:keyup.enter="submitQuery"
-        v-model="search_query"
-        class="input"
-        type="text"
-        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
-      >
+<!--      <input-->
+<!--        v-if="this.home"-->
+<!--        v-on:keyup.enter="submitQuery"-->
+<!--        v-model="search_query"-->
+<!--        class="input"-->
+<!--        type="text"-->
+<!--        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
+<!--      >-->
       <b-autocomplete
-        v-else
         v-model="search_query"
         @keyup.enter.native="submitQuery"
         class="autocomplete"
