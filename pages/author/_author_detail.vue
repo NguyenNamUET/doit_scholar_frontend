@@ -268,14 +268,6 @@ import SearchBar from "@/components/function_components/SearchBar";
     min-height: 100vh;
   }
 
-  .card_wrapper {
-    background-color: #4158D0;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
-    min-width: 250px;
-    padding: 3px 0 0 0;
-    position: relative;
-  }
-
   .author_name {
     font-size: 24px;
     font-weight: 600;

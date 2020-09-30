@@ -1,8 +1,8 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
-    <div class="tile is-ancestor" id="abstract_box" style="flex-wrap: wrap">
-      <div class="tile is-parent is-7">
-        <div class="tile is-child">
+    <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
+      <div class="tile is-parent">
+        <div class="tile is-child is-7">
           <!------------------------------------------ Source  ------------------------------------------->
           <p
             class="text-class-3"
@@ -131,21 +131,51 @@
           <nav class="level is-mobile mt-2">
             <div class="level-left is-small has-text-weight-light ">
               <a
-                class="level-item button is-info"
-                :href="'/pdf/' + formatTitle(paper_detail.title) + '.p-' + paper_id"
-                target="_blank"
+                class="level-item button is-warning"
+                v-if="!show_pdf"
+                v-on:click="handlePDF(true)"
               >
-                <span><i class="fas fa-external-link-alt"></i> Xem PDF</span>
+                <span><i class="fas fa-file-pdf"></i> Xem PDF</span>
+              </a>
+
+              <a
+                class="level-item button is-warning"
+                v-if="show_pdf"
+                v-on:click="handlePDF(false)"
+              >
+                <span><i class="fas fa-file-pdf"></i> Ẩn PDF</span>
               </a>
             </div>
           </nav>
           <!--------------------------------------- View pdf -------------------------------------------->
         </div>
+        <div class="tile is-child top_citation">
+          <span class="text-class-2">3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn</span>
+          <a
+            class="button is-warning is-small"
+            style="float: right"
+            v-on:click="$refs.citation_box.click()"
+          >
+            Xem tất cả
+          </a>
+          <PaperCard
+            v-for="result in citation_data.slice(0,3)"
+            :paper_detail="result"
+          >
+          </PaperCard>
+        </div>
+      </div>
+      <div class="tile is-parent" v-if="show_pdf">
+        <div class="tile is-child">
+          <div class="pdf_container content_box">
+            <PaperPDF></PaperPDF>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
-        <div
+    <div
           class="tabs sticky-nav is-centered is-fullwidth"
           v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
         >
@@ -179,7 +209,7 @@
                 && scroll_position < (abstract_height + topic_height + citation_height)}"
                 ref="citation_box"
               >
-                {{citation_length}} trích dẫn
+                {{citation_length | formatNumber}} trích dẫn
               </a>
             </li>
             <li v-if="ref_length > 0">
@@ -189,7 +219,7 @@
                 :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
                 ref="reference_box"
               >
-                {{ref_length}} tham chiếu
+                {{ref_length | formatNumber}} tham chiếu
               </a>
             </li>
           </ul>
@@ -230,8 +260,11 @@
           <article class="tile is-child content_box">
             <p class="content_title">
               Trích dẫn
-              <b-tooltip label="Các văn bản có nhắc tới văn bản này"
-                         position="is-right">
+              <b-tooltip
+                label="Các văn bản có nhắc tới văn bản này"
+                position="is-right"
+                type="is-light"
+              >
                 <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
               </b-tooltip>
             </p>
@@ -299,8 +332,11 @@
         <div class="tile is-child content_box">
           <p class="content_title">
             Tham chiếu
-            <b-tooltip label="Các văn bản được nhắc tới trong văn bản này"
-                       position="is-right">
+            <b-tooltip
+              label="Các văn bản được nhắc tới trong văn bản này"
+              type="is-light"
+              position="is-right"
+            >
               <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
             </b-tooltip>
           </p>
@@ -337,6 +373,16 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child">
+          <b-carousel>
+            <b-carousel-item v-for="(carousel, i) in carousels" :key="i">
+            </b-carousel-item>
+          </b-carousel>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!--Error page-->
@@ -349,16 +395,18 @@
 <script>
     import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
-    import {chart_prep} from "assets/utils";
+    import {chart_prep, formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
     import CitationBar from "../../components/search_page/CitationBar";
     import PaperTable from "../../components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
+    import PaperPDF from "~/components/function_components/PaperPDF";
+    import PaperCard from "~/components/static_components/PaperCard";
 
     export default {
       name: "_paper_detail",
-      components: {PaperTable, CitationBar, NuxtError, Pagination},
+      components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -380,6 +428,14 @@
       },
       data() {
         return {
+          carousels: [
+            { text: 'Slide 1', color: 'primary' },
+            { text: 'Slide 2', color: 'info' },
+            { text: 'Slide 3', color: 'success' },
+            { text: 'Slide 4', color: 'warning' },
+            { text: 'Slide 5', color: 'danger' }
+          ],
+
           citation_length: null,
           ref_length: null,
           citation_data: null,
@@ -410,9 +466,24 @@
           field_hidden: true,
           navigate: '',
           abstract_hidden: true,
+          show_pdf: false,
+        }
+      },
+      filters: {
+        formatNumber(number) {
+          return formatNumber(number)
         }
       },
       methods: {
+        handlePDF(show_pdf) {
+          this.show_pdf = show_pdf
+          if (show_pdf === true) {
+            this.abstract_height += 500
+          }
+          else {
+            this.abstract_height -= 500
+          }
+        },
         async updateCitation(page_num) {
           this.is_loading_citation = true
           let result = await paper_citation({
@@ -421,9 +492,9 @@
             size: this.per_page
           })
           this.$refs.citation_box.click()
-          // console.log("updateCitation: ", result)
           this.current_citation_page = page_num
           this.citation_data = result
+          this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
         },
         async updateReference(page_num) {
@@ -436,6 +507,7 @@
           this.$refs.reference_box.click()
           this.current_ref_page = page_num
           this.ref_data = result
+          this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
         },
         formatTitle(title) {
@@ -483,6 +555,7 @@
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
+          console.log(data.citations)
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
@@ -516,7 +589,7 @@
       flex-direction: column;
       flex-wrap: wrap;
       display: flex;
-      height: 40vh;
+      max-height: 40vh;
       list-style-type: disc;
       list-style-position: inside;
     }
@@ -562,7 +635,28 @@
   .container {
     padding: 40px 20px;
   }
+
   .button:hover {
     text-decoration: none;
+  }
+
+  .pdf_container {
+    overflow-y: scroll;
+    height: 500px;
+    background-color: #625261;
+  }
+
+  .related_content {
+    height: 250px;
+  }
+
+  .top_citation {
+    max-height: 500px;
+    border: 1px solid #d9dadb;
+    background-color: #f9f9fa;
+    padding: 10px;
+    p {
+      font-weight: 500;
+    }
   }
 </style>

@@ -1,10 +1,6 @@
 import webpack from 'webpack'
 
 export default {
-  server: {
-    port: 3400,
-    host: '0.0.0.0'
-  },
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode
@@ -76,7 +72,16 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     'nuxt-fontawesome',
-    'nuxt-buefy'
+    'nuxt-buefy',
+    ['nuxt-lazy-load', {
+      images: false,
+      videos: true,
+      audios: true,
+      iframes: true,
+      native: false,
+      polyfill: true,
+      directiveOnly: true,
+    }]
   ],
 
   /*
