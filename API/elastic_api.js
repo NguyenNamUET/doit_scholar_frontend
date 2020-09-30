@@ -60,8 +60,6 @@ const paper_by_title = async (query_params) => {
       deep_pagination:query_params.deep_pagination, last_paper_id:query_params.last_paper_id,
       return_top_author:query_params.return_top_author, top_author_size:query_params.top_author_size
     })
-    // console.log("paper_by_title query: ", query_params)
-    console.log("paper_by_title result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -101,6 +99,21 @@ const paper_by_topic = async(query_params) => {
       topics: query_params.topics,
       source: query_params.source
     })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const paper_by_fos = async(query_params) => {
+  try {
+    console.log("paper_by_fos:", query_params)
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
+      fields_of_study: query_params.fields_of_study,
+      size: query_params.size
+    })
+    console.log("paper_by_fos result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)

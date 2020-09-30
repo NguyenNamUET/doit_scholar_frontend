@@ -363,7 +363,7 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <PaperTable
-                v-for="(result in ref_data"
+                v-for="result in ref_data"
                 v-bind:search_result="result"
               >
               </PaperTable>
@@ -421,7 +421,7 @@
 </template>
 
 <script>
-import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+    import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
     import {chart_prep, formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
@@ -563,6 +563,9 @@ import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_r
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
 
         let data = await paper_detail(paper_id)
+        let data_dict = {}
+        let is_citation_empty = true
+        let is_ref_empty = true
         let suggestion_data = await paper_by_fos({
           fields_of_study: data.fieldsOfStudy,
           size: 9
