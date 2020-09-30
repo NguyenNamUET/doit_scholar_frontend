@@ -97,13 +97,13 @@ export default {
     }
   },
   async asyncData({query, store}) {
-    let author_count = await all_author({start:0, size:0})
-    let paper_count = await all_paper({start:0, size:0})
-    let fos_count = await all_field({size:0})
+    let author_count = await all_author()
+    let paper_count = await all_paper()
+    let fos_count = await all_field()
     return {
-      author_count: author_count.total.value,
-      paper_count: paper_count.total.value,
-      fos_count: fos_count.fos_unique_count.value
+      author_count: author_count,
+      paper_count: paper_count,
+      fos_count: fos_count
     }
   },
   methods: {

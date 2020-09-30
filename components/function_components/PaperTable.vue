@@ -53,6 +53,7 @@
               + {{search_result.authors.length - 3}} tác giả
             </span>
           </span>
+          <!----------------------------------------- Authors ------------------------------------------->
           <span
             v-if="search_result.venue !== '' && search_result.venue !== undefined"
             class="text-class-3 color-class-3"
@@ -67,7 +68,6 @@
           >
             <span><i class="fas fa-fire"></i> Ảnh hưởng lớn</span>
           </span>
-          <!----------------------------------------- Authors ------------------------------------------->
         </div>
       </div>
 </template>
