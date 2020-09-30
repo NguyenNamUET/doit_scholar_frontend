@@ -319,7 +319,7 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <PaperTable
-                v-for="(result in ref_data"
+                v-for="result in ref_data"
                 v-bind:search_result="result"
               >
               </PaperTable>
@@ -337,6 +337,8 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
+
+
   </div>
 
   <!--Error page-->
