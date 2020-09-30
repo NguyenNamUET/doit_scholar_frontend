@@ -398,10 +398,10 @@
               <div class="columns is-1">
                 <div
                   class="column"
-                  v-for="result in citation_data.slice(0,3)"
+                  v-for="result in suggestion_data.slice(0,3)"
                 >
                   <PaperCard
-                    :paper_detail="result"
+                    :paper_detail="result._source"
                   >
                   </PaperCard>
                 </div>
@@ -570,9 +570,6 @@
           fields_of_study: data.fieldsOfStudy,
           size: 9
         })
-        let data_dict = {}
-        let is_citation_empty = true
-        let is_ref_empty = true
 
         if (Object.keys(data).length !== 0) {
           if (data.citations_length > 0) {

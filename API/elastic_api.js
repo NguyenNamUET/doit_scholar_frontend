@@ -108,12 +108,10 @@ const paper_by_topic = async(query_params) => {
 
 const paper_by_fos = async(query_params) => {
   try {
-    console.log("paper_by_fos:", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
       fields_of_study: query_params.fields_of_study,
       size: query_params.size
     })
-    console.log("paper_by_fos result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -187,8 +185,6 @@ const paper_citation = async (query_params) => {
         size: 10
       }
     })
-    console.log("paper_citation query_params: ", query_params)
-    console.log("paper_citation result: ", result)
     return result.data
   } catch(e) {
     console.log(e)
@@ -239,21 +235,6 @@ const autocomplete = async(query_params) => {
   }
 }
 
-const paper_by_fos = async(query_params) => {
-  try {
-    console.log(query_params)
-    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
-      fields_of_study: query_params.fieldsOfStudy,
-      size: query_params.size
-    })
-    console.log(result.data, 'here')
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
-
 const citation_chart_data = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
@@ -261,7 +242,6 @@ const citation_chart_data = async (paper_id) => {
         paperID: paper_id
       }
     })
-    console.log(result.data)
     return result.data
   } catch(e) {
     console.log(e)

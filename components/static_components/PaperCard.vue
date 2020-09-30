@@ -8,9 +8,8 @@
       >
         {{paper_detail.title.slice(0,60)}}...
       </a>
-      <br>
       <p>
-<!--        {{paper_detail.abstract.slice(0,100)}}-->
+<!--        {{paper_detail.abstract.slice(0,80)}}-->
       </p>
       <span v-if="paper_detail.authors !== undefined">
       <span
