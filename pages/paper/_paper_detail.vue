@@ -1,38 +1,39 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
     <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
-      <div class="tile is-parent">
-        <div class="tile is-child is-7">
-          <!------------------------------------------ Source  ------------------------------------------->
-          <p
-            class="text-class-3"
-          >
-            DOI:
-            <a
-              v-if="paper_detail.doi !== undefined && paper_detail.doi !== null"
-              :href="'https://doi.org/' + paper_detail.doi"
-              class="link-class-3"
-              style="font-size: 14px;"
+      <div class="tile">
+        <div class="tile is-parent is-7">
+          <div class="tile is-child">
+            <!------------------------------------------ Source  ------------------------------------------->
+            <p
+              class="text-class-3"
             >
-              {{paper_detail.doi}}
-            </a>
-            <span v-else>
+              DOI:
+              <a
+                v-if="paper_detail.doi !== undefined && paper_detail.doi !== null"
+                :href="'https://doi.org/' + paper_detail.doi"
+                class="link-class-3"
+                style="font-size: 14px;"
+              >
+                {{paper_detail.doi}}
+              </a>
+              <span v-else>
               <i>Chưa có thông tin</i>
             </span>
-            |
-            ID văn bản: {{this.paper_detail.corpusId}}
-          </p>
-          <h1 class="title" style="color: #4E4B4B">
-            <b>{{this.paper_detail.title}}</b>
-          </h1>
-          <!------------------------------------------ Source  ------------------------------------------->
-          <div class="mb-4">
-            <!------------------------------------------ Authors  ------------------------------------------->
-            <span
-               v-if="!author_hidden"
-               v-for="(author, index) in paper_detail.authors"
-               :key="author.authorId"
-            >
+              |
+              ID văn bản: {{this.paper_detail.corpusId}}
+            </p>
+            <h1 class="title" style="color: #4E4B4B">
+              <b>{{this.paper_detail.title}}</b>
+            </h1>
+            <!------------------------------------------ Source  ------------------------------------------->
+            <div class="mb-4">
+              <!------------------------------------------ Authors  ------------------------------------------->
+              <span
+                v-if="!author_hidden"
+                v-for="(author, index) in paper_detail.authors"
+                :key="author.authorId"
+              >
               <a
                 :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
                 class="link-class-3 secondary_description"
@@ -42,18 +43,18 @@
               </a>
               <span v-if="index < paper_detail.authors.length - 1">, </span>
             </span>
-            <span class="text-class-3 less-more-button"
-                  v-if="!author_hidden"
-                  @click="author_hidden = true"
-            >
+              <span class="text-class-3 less-more-button"
+                    v-if="!author_hidden"
+                    @click="author_hidden = true"
+              >
               &nbspRút gọn
             </span>
 
-            <span
-               v-if="author_hidden"
-               v-for="(author, index) in paper_detail.authors.slice(0,3)"
-               :key="author.authorId"
-            >
+              <span
+                v-if="author_hidden"
+                v-for="(author, index) in paper_detail.authors.slice(0,3)"
+                :key="author.authorId"
+              >
               <a
                 class="link-class-3 secondary_description"
                 style="font-size: 14px;"
@@ -63,20 +64,20 @@
               </a>
               <span v-if="index < paper_detail.authors.slice(0,3).length-1">, </span>
             </span>
-            <span class="text-class-3 less-more-button"
-                  v-if="author_hidden && paper_detail.authors.length - 3 > 0"
-                  @click="author_hidden = false"
-            >
+              <span class="text-class-3 less-more-button"
+                    v-if="author_hidden && paper_detail.authors.length - 3 > 0"
+                    @click="author_hidden = false"
+              >
               &nbsp+ {{paper_detail.authors.length - 3}} tác giả
             </span>
-            <!------------------------------------------ Authors  ------------------------------------------->
-            |
-            <span class="color-class-3">{{paper_detail.year}} </span>
+              <!------------------------------------------ Authors  ------------------------------------------->
+              |
+              <span class="color-class-3">{{paper_detail.year}} </span>
 
-            <span v-if="paper_detail.year !== undefined">|</span>
+              <span v-if="paper_detail.year !== undefined">|</span>
 
-            <!------------------------------------ Fields of study ---------------------------------------->
-            <span v-if="paper_detail.fieldsOfStudy">
+              <!------------------------------------ Fields of study ---------------------------------------->
+              <span v-if="paper_detail.fieldsOfStudy">
               <span class="text-class-3 color-class-3"
                     v-if="!field_hidden">
                 {{this.full_fos}}
@@ -100,73 +101,80 @@
                 &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
               </span>
             </span>
-            <!------------------------------------ Fields of study ---------------------------------------->
+              <!------------------------------------ Fields of study ---------------------------------------->
 
-            <span v-if="paper_detail.venue.length !== 0"
-                  class="text-class-3 color-class-3">
+              <span v-if="paper_detail.venue.length !== 0"
+                    class="text-class-3 color-class-3">
               | {{paper_detail.venue}}
             </span>
-          </div>
-          <!------------------------------------------ Abstract  ------------------------------------------->
-          <div v-if="paper_detail.abstract">
-            <div v-if="!abstract_hidden" class="content">
-              <p class="text-class-2">
-                {{paper_detail.abstract}}
-                <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
-              </p>
             </div>
-            <div v-else class="content">
-              <p class="text-class-2">
-                {{paper_detail.abstract.slice(0, 700)}}
-                <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
-              </p>
+            <!------------------------------------------ Abstract  ------------------------------------------->
+            <div v-if="paper_detail.abstract">
+              <div v-if="!abstract_hidden" class="content">
+                <p class="text-class-2">
+                  {{paper_detail.abstract}}
+                  <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
+                </p>
+              </div>
+              <div v-else class="content">
+                <p class="text-class-2">
+                  {{paper_detail.abstract.slice(0, 700)}}
+                  <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
+                </p>
+              </div>
             </div>
-          </div>
-          <div v-else>
-            <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
-          </div>
-          <!------------------------------------------ Abstract  ------------------------------------------->
+            <div v-else>
+              <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
+            </div>
+            <!------------------------------------------ Abstract  ------------------------------------------->
 
-          <!--------------------------------------- View pdf -------------------------------------------->
-          <nav class="level is-mobile mt-2">
-            <div class="level-left is-small has-text-weight-light ">
-              <a
-                class="level-item button is-warning"
-                v-if="!show_pdf"
-                v-on:click="handlePDF(true)"
-              >
-                <span><i class="fas fa-file-pdf"></i> Xem PDF</span>
-              </a>
+            <!--------------------------------------- View pdf -------------------------------------------->
+            <nav class="level is-mobile mt-2">
+              <div class="level-left is-small has-text-weight-light ">
+                <a
+                  class="level-item button is-warning"
+                  v-if="!show_pdf"
+                  v-on:click="handlePDF(true)"
+                >
+                  <span><i class="fas fa-file-pdf"></i> Xem PDF</span>
+                </a>
 
-              <a
-                class="level-item button is-warning"
-                v-if="show_pdf"
-                v-on:click="handlePDF(false)"
-              >
-                <span><i class="fas fa-file-pdf"></i> Ẩn PDF</span>
-              </a>
-            </div>
-          </nav>
-          <!--------------------------------------- View pdf -------------------------------------------->
+                <a
+                  class="level-item button is-warning"
+                  v-if="show_pdf"
+                  v-on:click="handlePDF(false)"
+                >
+                  <span><i class="fas fa-file-pdf"></i> Ẩn PDF</span>
+                </a>
+              </div>
+            </nav>
+            <!--------------------------------------- View pdf -------------------------------------------->
+          </div>
         </div>
-        <div class="tile is-child top_citation">
-          <span class="text-class-2">3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn</span>
-          <a
-            class="button is-warning is-small"
-            style="float: right"
-            v-on:click="$refs.citation_box.click()"
-          >
-            Xem tất cả
-          </a>
-          <PaperCard
-            v-for="result in citation_data.slice(0,3)"
-            :paper_detail="result"
-          >
-          </PaperCard>
+        <div class="tile is-parent">
+          <div class="tile is-child top_citation" v-if="citation_length > 0">
+            <p>
+              3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn
+              <a
+                class="button is-light is-small"
+                style="float: right"
+                v-on:click="$refs.citation_box.click()"
+              >
+                Xem tất cả
+              </a>
+            </p>
+
+            <PaperCard
+              v-for="result in citation_data.slice(0,3)"
+              :paper_detail="result"
+            >
+            </PaperCard>
+          </div>
         </div>
       </div>
-      <div class="tile is-parent" v-if="show_pdf">
-        <div class="tile is-child">
+
+      <div class="tile is-parent" id="pdf_section">
+        <div class="tile is-child" v-if="show_pdf">
           <div class="pdf_container content_box">
             <PaperPDF></PaperPDF>
           </div>
@@ -376,8 +384,28 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <b-carousel>
-            <b-carousel-item v-for="(carousel, i) in carousels" :key="i">
+          <p class="content_title">Văn bản liên quan</p>
+          <b-carousel
+            :pause-hover="true"
+            :animated="'slide'"
+            :pause-info="false"
+            :icon-pack="'fa'"
+          >
+            <b-carousel-item
+              style="padding-right: 35px; padding-left: 35px;"
+              v-for="i in 3"
+            >
+              <div class="columns is-1">
+                <div
+                  class="column"
+                  v-for="result in citation_data.slice(0,3)"
+                >
+                  <PaperCard
+                    :paper_detail="result"
+                  >
+                  </PaperCard>
+                </div>
+              </div>
             </b-carousel-item>
           </b-carousel>
         </div>
@@ -393,7 +421,7 @@
 </template>
 
 <script>
-    import {paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+import {paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
     import {chart_prep, formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
@@ -428,14 +456,6 @@
       },
       data() {
         return {
-          carousels: [
-            { text: 'Slide 1', color: 'primary' },
-            { text: 'Slide 2', color: 'info' },
-            { text: 'Slide 3', color: 'success' },
-            { text: 'Slide 4', color: 'warning' },
-            { text: 'Slide 5', color: 'danger' }
-          ],
-
           citation_length: null,
           ref_length: null,
           citation_data: null,
@@ -460,7 +480,7 @@
 
           paper_id: null,
           paper_detail: null,
-
+          suggestion_data: null,
 
           author_hidden: true,
           field_hidden: true,
@@ -479,6 +499,7 @@
           this.show_pdf = show_pdf
           if (show_pdf === true) {
             this.abstract_height += 500
+            this.$scrollTo('#pdf_section')
           }
           else {
             this.abstract_height -= 500
@@ -545,6 +566,10 @@
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
+        let suggestion_data = await paper_by_fos({
+          fields_of_study: data.fieldsOfStudy,
+          size: 9
+        })
         if (Object.keys(data).length !== 0) {
           if (data.citations.length > 0)
             data_dict = chart_prep(data.citations)
@@ -555,8 +580,8 @@
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
-          console.log(data.citations)
           return {
+            suggestion_data: suggestion_data,
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
             chart_labels: Object.keys(data_dict),
@@ -568,7 +593,8 @@
             citation_length: data.citations_length,
             ref_length: data.references_length
           }
-        } else {
+        }
+        else {
           return {
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
@@ -651,12 +677,13 @@
   }
 
   .top_citation {
-    max-height: 500px;
+    max-height: 550px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;
     p {
       font-weight: 500;
+      font-size: 20px;
     }
   }
 </style>

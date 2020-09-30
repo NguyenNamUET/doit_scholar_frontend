@@ -1,13 +1,10 @@
-import {SEARCH_DOCUMENTS, SEMANTIC_DOCUMENTS} from "@/API_config/elastic_api_config";
+import {SEARCH_DOCUMENTS} from "@/API_config/elastic_api_config";
 import axios from "axios";
 import {isDictEmpty} from "assets/utils";
 
 const paper_detail = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
-    if (isDictEmpty(result.data)) {
-      result = await axios.get(SEMANTIC_DOCUMENTS.paper_detail + '/' + paper_id)
-    }
     return result.data
   } catch(e) {
     console.log(e)
@@ -140,9 +137,6 @@ const paper_by_fos_and_title = async(query_params) => {
 const author_by_id = async (author_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id)
-    if (isDictEmpty(result.data)) {
-      result = await axios.get(SEMANTIC_DOCUMENTS.author + '/' + author_id)
-    }
     return result.data
   } catch(e) {
     console.log(e)
@@ -238,6 +232,21 @@ const autocomplete = async(query_params) => {
   }
 }
 
+const paper_by_fos = async(query_params) => {
+  try {
+    console.log(query_params)
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
+      fields_of_study: query_params.fieldsOfStudy,
+      size: query_params.size
+    })
+    console.log(result.data, 'here')
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -246,6 +255,7 @@ export {
   paper_detail,
   paper_citation,
   paper_references,
+  paper_by_fos,
 
   all_topics,
   all_paper,

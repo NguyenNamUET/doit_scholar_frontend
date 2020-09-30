@@ -86,7 +86,6 @@ export default {
             size: 5
           })
           this.autocomplete_data = _.toArray(this.raw_data)
-          console.log('here',this.autocomplete_data)
           this.is_loading = false
         }),
         submitQuery() {

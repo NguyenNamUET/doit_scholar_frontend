@@ -4,14 +4,17 @@
       <a
         class="text-class-2 has-text-weight-medium"
         :href="'/paper/' + formatTitle(paper_detail.title) + '.p' + '-' + paper_detail.paperId"
+        :title="paper_detail.title"
       >
-        {{paper_detail.title}}
+        {{paper_detail.title.slice(0,60)}}...
       </a>
       <br>
+      <p>
+<!--        {{paper_detail.abstract.slice(0,100)}}-->
+      </p>
       <span v-if="paper_detail.authors !== undefined">
       <span
-        v-if="!author_hidden"
-        v-for="(author, index) in paper_detail.authors"
+        v-for="(author, index) in paper_detail.authors.slice(0,1)"
         :key="author.authorId"
       >
         <a
@@ -20,34 +23,6 @@
         >
           {{author.name}}
         </a>
-        <span v-if="index < paper_detail.authors.length - 1">, </span>
-      </span>
-      <span
-        class="less-more-button"
-        v-if="!author_hidden"
-        v-on:click="author_hidden = true"
-      >
-        &nbspRút gọn
-      </span>
-      <span
-        v-if="author_hidden"
-        v-for="(author, index) in paper_detail.authors.slice(0,3)"
-        :key="author.authorId"
-      >
-        <a
-          :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-          class="link-class-3 secondary_description"
-        >
-          {{author.name}}
-        </a>
-        <span v-if="index < paper_detail.authors.slice(0,3).length-1">,</span>
-      </span>
-      <span
-        class="less-more-button"
-        v-if="author_hidden && paper_detail.authors.length - 3 > 0"
-        v-on:click="author_hidden = false"
-      >
-        + {{paper_detail.authors.length - 3}} tác giả
       </span>
     </span>
       <span
@@ -83,6 +58,10 @@ export default {
 <style scoped>
   @import "assets/general_styling.scss";
   .card_wrapper {
-    margin: 10px 20px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+  .content_box {
+    max-height: 250px;
   }
 </style>
