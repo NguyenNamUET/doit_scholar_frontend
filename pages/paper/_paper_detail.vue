@@ -421,7 +421,7 @@
 </template>
 
 <script>
-import {paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
     import {chart_prep, formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
@@ -563,19 +563,24 @@ import {paper_by_fos, paper_citation, paper_detail, paper_references} from "@/AP
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
 
         let data = await paper_detail(paper_id)
-        let data_dict = {}
-        let is_citation_empty = true
-        let is_ref_empty = true
         let suggestion_data = await paper_by_fos({
           fields_of_study: data.fieldsOfStudy,
           size: 9
         })
+        let data_dict = {}
+        let is_citation_empty = true
+        let is_ref_empty = true
+
         if (Object.keys(data).length !== 0) {
-          if (data.citations.length > 0)
-            data_dict = chart_prep(data.citations)
-          is_citation_empty = false
-          if (data.references.length > 0)
+          if (data.citations_length > 0) {
+            data_dict = await citation_chart_data(paper_id)
+            data_dict = chart_prep(data_dict.citations_chart)
+            is_citation_empty = false
+          }
+          if (data.references_length > 0) {
             is_ref_empty = false
+          }
+
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -677,7 +682,7 @@ import {paper_by_fos, paper_citation, paper_detail, paper_references} from "@/AP
   }
 
   .top_citation {
-    max-height: 550px;
+    max-height: 430px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;

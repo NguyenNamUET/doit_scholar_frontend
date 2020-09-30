@@ -241,6 +241,21 @@ const paper_by_fos = async(query_params) => {
   }
 }
 
+const citation_chart_data = async (paper_id) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
+      params: {
+        paperID: paper_id
+      }
+    })
+    console.log(result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -250,6 +265,7 @@ export {
   paper_citation,
   paper_references,
   paper_by_fos,
+  citation_chart_data,
 
   all_topics,
   all_paper,

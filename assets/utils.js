@@ -75,11 +75,7 @@ const chartColors = {
 function chart_prep(citations) {
   let citation_count = {}
   for (let i=0;i<citations.length;i++) {
-    if (isNaN(citation_count[citations[i].year])) {
-      citation_count[citations[i].year] = 1
-    }
-    else
-      citation_count[citations[i].year]++
+    citation_count[citations[i].key] = citations[i].doc_count
   }
   return citation_count
 }
