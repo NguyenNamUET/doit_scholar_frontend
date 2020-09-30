@@ -2,7 +2,7 @@
     <div v-if="Object.keys(author_detail).length !== 0" class="container" ref="top" id="top">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
-          <div class="tile is-child">
+          <div class="tile is-child is-vertical">
             <div class="columns is-5">
               <div class="column is-one-quarter">
                 <div class="card_wrapper">
@@ -98,7 +98,7 @@
                       trong {{paper_length}} xuất bản
                     </span>
                       </p>
-                      <PaperTable
+                      <PaperTable class="pl-3"
                         v-for="result in paper_data"
                         v-bind:search_result="result"
                       >
@@ -266,14 +266,6 @@ import SearchBar from "@/components/function_components/SearchBar";
   .container {
     padding: 40px 20px;
     min-height: 100vh;
-  }
-
-  .card_wrapper {
-    background-color: #4158D0;
-    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
-    min-width: 250px;
-    padding: 3px 0 0 0;
-    position: relative;
   }
 
   .author_name {

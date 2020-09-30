@@ -59,8 +59,6 @@ const paper_by_title = async (query_params) => {
       deep_pagination:query_params.deep_pagination, last_paper_id:query_params.last_paper_id,
       return_top_author:query_params.return_top_author, top_author_size:query_params.top_author_size
     })
-    // console.log("paper_by_title query: ", query_params)
-    console.log("paper_by_title result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -100,6 +98,21 @@ const paper_by_topic = async(query_params) => {
       topics: query_params.topics,
       source: query_params.source
     })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const paper_by_fos = async(query_params) => {
+  try {
+    console.log("paper_by_fos query: ", query_params)
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
+      fields_of_study: query_params.fields_of_study,
+      size: query_params.size
+    })
+    console.log("paper_by_fos result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -173,8 +186,6 @@ const paper_citation = async (query_params) => {
         size: 10
       }
     })
-    console.log("paper_citation query_params: ", query_params)
-    console.log("paper_citation result: ", result)
     return result.data
   } catch(e) {
     console.log(e)
@@ -225,6 +236,20 @@ const autocomplete = async(query_params) => {
   }
 }
 
+const citation_chart_data = async (paper_id) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
+      params: {
+        paperID: paper_id
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -233,6 +258,8 @@ export {
   paper_detail,
   paper_citation,
   paper_references,
+  paper_by_fos,
+  citation_chart_data,
 
   all_topics,
   all_paper,
