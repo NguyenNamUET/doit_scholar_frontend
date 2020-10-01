@@ -5,7 +5,7 @@
         <p class="text-class-3">{{paper.year}}</p>
         <div>
           <a
-              :href="'/paper/' + formatTitle(paper.title) + '.p' + '-' + paper.corpusID"
+              :href="'/paper/' + formatTitle(paper.title) + '.p-' + paper.paperId"
               class="text-class-1"
           >
             {{paper.title}}
