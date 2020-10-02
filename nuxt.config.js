@@ -19,7 +19,8 @@ export default {
     title: process.env.npm_package_name || '',
     script: [
       {
-        src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js'
+        // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.js'
       }
     ],
     meta: [
@@ -28,7 +29,8 @@ export default {
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      // { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css' }
     ]
   },
   /*
@@ -103,6 +105,23 @@ export default {
         }
       }
     },
+    html:{
+      minify:{
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
+        minifyURLs: true,
+        removeComments: true,
+        removeEmptyElements: true
+      }
+    },
+    extractCSS: true,
     plugins: [
       new webpack.ProvidePlugin({
         // global modules

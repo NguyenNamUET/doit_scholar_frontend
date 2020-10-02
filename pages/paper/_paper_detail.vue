@@ -174,10 +174,12 @@
       </div>
 
       <div class="tile is-parent" id="pdf_section">
-        <div class="tile is-child" v-if="show_pdf">
-          <div class="pdf_container content_box">
-            <PaperPDF></PaperPDF>
-          </div>
+        <div class="tile is-child">
+<!--          <div class="pdf_container content_box">-->
+<!--            <PaperPDF></PaperPDF>-->
+<!--          </div>-->
+          <embed :src="'/pdf.pdf'" type="application/pdf" width="100%" height="1000px"/>
+
         </div>
       </div>
     </div>
@@ -253,7 +255,7 @@
           <br>
           <div>
             <ul
-              v-bind:style="{ maxHeight: paper_detail.topics.length + 'vh' }"
+              v-bind:style="{ maxHeight: paper_detail.topics.length*1.5 + 'vh' }"
             >
               <li
                 class="topic_list"
@@ -393,7 +395,7 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor" v-if="suggestion_data.length > 0" id="suggestion_box">
+    <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">
       <div class="tile is-parent">
         <div class="tile is-child">
           <p class="content_title">Văn bản liên quan</p>
@@ -402,13 +404,11 @@
             :pause-info="false"
             :arrow="false"
             :indicator-mode="'hover'"
-            :indicator-custom-size="'is-medium'"
             :indicator-style="'is-lines'"
-            :has-drag="true"
           >
             <b-carousel-item
               style="margin-bottom: 10px;"
-              v-for="page in (suggestion_data.length / 3)"
+              v-for="page in Math.round(suggestion_data.length / 3)"
             >
               <div class="columns is-1">
                 <div
@@ -594,9 +594,11 @@
         if (Object.keys(data).length !== 0) {
           if (data.citations_length > 0) {
             data_dict = await citation_chart_data(paper_id)
+            // console.log('raw ',data_dict)
             data_dict = chart_prep(data_dict.citations_chart)
             is_citation_empty = false
           }
+          // console.log(data_dict)
           if (data.references_length > 0) {
             is_ref_empty = false
           }
