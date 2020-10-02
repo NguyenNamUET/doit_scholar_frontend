@@ -6,10 +6,16 @@
         :href="'/paper/' + formatTitle(paper_detail.title) + '.p' + '-' + paper_detail.paperId"
         :title="paper_detail.title"
       >
-        {{paper_detail.title.slice(0,60)}}...
+        {{paper_detail.title.slice(0,35)}}
+        <span v-if="paper_detail.title.length > 30">...</span>
       </a>
-      <p>
-<!--        {{paper_detail.abstract.slice(0,80)}}-->
+      <br>
+      <p
+        :title="paper_detail.abstract"
+        v-if="paper_detail.abstract !== undefined && paper_detail.abstract !== null"
+      >
+        {{paper_detail.abstract.slice(0,60)}}
+        <span v-if="paper_detail.abstract.length > 60">...</span>
       </p>
       <span v-if="paper_detail.authors !== undefined">
       <span

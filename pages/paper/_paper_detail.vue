@@ -119,7 +119,7 @@
               <div v-else class="content">
                 <p class="text-class-2">
                   {{paper_detail.abstract.slice(0, 700)}}
-                  <a class="text-class-3" @click="abstract_hidden = false">...Xem thêm</a>
+                  <a class="text-class-3" v-if="paper_detail.abstract.length > 700" @click="abstract_hidden = false">...Xem thêm</a>
                 </p>
               </div>
             </div>
@@ -230,6 +230,16 @@
                 {{ref_length | formatNumber}} tham chiếu
               </a>
             </li>
+<!--            <li v-if="paper_detail.fieldsOfStudy">-->
+<!--              <a-->
+<!--                class="nav-item"-->
+<!--                v-scroll-to="{el: '#suggestion_box', offset: -100}"-->
+<!--                :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height + reference_height)}"-->
+<!--                ref="suggestion_box"-->
+<!--              >-->
+<!--                Văn bản liên quan-->
+<!--              </a>-->
+<!--            </li>-->
           </ul>
 
     </div>
@@ -242,7 +252,9 @@
           <p class="content_title">Chủ đề được đề cập trong văn bản</p>
           <br>
           <div>
-            <ul>
+            <ul
+              v-bind:style="{ maxHeight: paper_detail.topics.length + 'vh' }"
+            >
               <li
                 class="topic_list"
                 v-for="item in paper_detail.topics"
@@ -381,24 +393,27 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor" v-if="suggestion_data.length > 0">
+    <div class="tile is-ancestor" v-if="suggestion_data.length > 0" id="suggestion_box">
       <div class="tile is-parent">
         <div class="tile is-child">
           <p class="content_title">Văn bản liên quan</p>
           <b-carousel
             :pause-hover="true"
-            :animated="'slide'"
             :pause-info="false"
-            :icon-pack="'fa'"
+            :arrow="false"
+            :indicator-mode="'hover'"
+            :indicator-custom-size="'is-medium'"
+            :indicator-style="'is-lines'"
+            :has-drag="true"
           >
             <b-carousel-item
-              style="padding-right: 35px; padding-left: 35px;"
-              v-for="i in 3"
+              style="margin-bottom: 10px;"
+              v-for="page in (suggestion_data.length / 3)"
             >
               <div class="columns is-1">
                 <div
-                  class="column"
-                  v-for="result in suggestion_data.slice(0,3)"
+                  class="column is-one-third"
+                  v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
                 >
                   <PaperCard
                     :paper_detail="result._source"
@@ -468,6 +483,7 @@
           topic_height: null,
           citation_height: null,
           reference_height: null,
+          suggestion_height: null,
           scroll_position: null,
           is_citation_empty: true,
           is_ref_empty: true,
@@ -487,6 +503,7 @@
           navigate: '',
           abstract_hidden: true,
           show_pdf: false,
+          carousel_size: 3,
         }
       },
       filters: {
@@ -540,10 +557,10 @@
         getComponentHeight() {
           if(Object.keys(this.paper_detail).length !== 0){
             return [
-            document.getElementById('abstract_box').offsetHeight,
-            document.getElementById('topic_box').offsetHeight,
-            document.getElementById('citation_box').offsetHeight,
-            document.getElementById('reference_box').offsetHeight
+              document.getElementById('abstract_box').offsetHeight,
+              document.getElementById('topic_box').offsetHeight,
+              document.getElementById('citation_box').offsetHeight,
+              document.getElementById('reference_box').offsetHeight
           ]
           }
           else{
@@ -571,10 +588,9 @@
         if(data.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
             fields_of_study: data.fieldsOfStudy,
-            size: 9
+            size: 15
           })
         }
-
         if (Object.keys(data).length !== 0) {
           if (data.citations_length > 0) {
             data_dict = await citation_chart_data(paper_id)
@@ -624,7 +640,6 @@
       flex-direction: column;
       flex-wrap: wrap;
       display: flex;
-      max-height: 40vh;
       list-style-type: disc;
       list-style-position: inside;
     }
@@ -686,13 +701,13 @@
   }
 
   .top_citation {
-    max-height: 430px;
+    max-height: 380px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;
     p {
       font-weight: 500;
-      font-size: 20px;
+      font-size: 18px;
     }
   }
 </style>

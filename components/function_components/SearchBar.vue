@@ -21,19 +21,18 @@
       >
         <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
         <template slot-scope="props">
-          <div class="suggestion">
-            <i class="far fa-newspaper"></i>
-            <a
-              style="max-width: 50px;"
-              :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id"
-            >
-              {{props.option._source.title}}
-            </a>
+          <a
+            :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id"
+            :title="props.option._source.title"
+          >
+            <span>
+              <i class="far fa-newspaper"></i> {{props.option._source.title}}
+            </span>
 
             <div class="text-class-3 color-class-3">
               Số trích dẫn của văn bản: {{props.option._source.citations_count}}
             </div>
-          </div>
+          </a>
         </template>
       </b-autocomplete>
     </div>
@@ -82,10 +81,11 @@ export default {
           this.is_loading = true
           this.raw_data = await autocomplete({
             search_content: name,
-            size: 5
+            size: 10
           })
           this.autocomplete_data = _.toArray(this.raw_data)
           this.is_loading = false
+          console.log(this.autocomplete_data)
         }),
         submitQuery() {
           this.query_params = {
@@ -112,9 +112,6 @@ export default {
 </script>
 
 <style scoped>
-  .suggestion {
-    padding: 2px;
-  }
   .autocomplete {
     position: relative;
     z-index: 2;
