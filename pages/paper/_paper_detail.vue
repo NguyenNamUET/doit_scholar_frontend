@@ -27,7 +27,7 @@
               <b>{{this.paper_detail.title}}</b>
             </h1>
             <!------------------------------------------ Source  ------------------------------------------->
-            <div class="mb-4">
+            <div style="margin-bottom: 1rem;">
               <!------------------------------------------ Authors  ------------------------------------------->
               <span
                 v-if="!author_hidden"
@@ -129,7 +129,7 @@
             <!------------------------------------------ Abstract  ------------------------------------------->
 
             <!--------------------------------------- View pdf -------------------------------------------->
-            <nav class="level is-mobile mt-2">
+            <nav class="level is-mobile" style="margin-top: 0.5rem;">
               <div class="level-left is-small has-text-weight-light ">
                 <a
                   class="level-item button is-warning"
@@ -178,7 +178,7 @@
 <!--          <div class="pdf_container content_box">-->
 <!--            <PaperPDF></PaperPDF>-->
 <!--          </div>-->
-          <embed :src="'/pdf.pdf'" type="application/pdf" width="100%" height="1000px"/>
+          <embed v-if="show_pdf" :src="'/pdf.pdf'" type="application/pdf" width="100%" height="1000px"/>
 
         </div>
       </div>
@@ -186,52 +186,52 @@
 
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
     <div
-          class="tabs sticky-nav is-centered is-fullwidth"
-          v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
-        >
-          <ul>
-            <li>
-              <a
-                class="nav-item"
-                v-scroll-to="{el: '#abstract_box', offset: -100}"
-                :class="{'in-view': scroll_position < abstract_height}"
-                ref="abstract_box"
-              >
-                Tóm tắt
-              </a>
-            </li>
-            <li v-if="paper_detail.topics.length > 0">
-              <a
-                class="nav-item"
-                v-scroll-to="{el: '#topic_box', offset: -100}"
-                :class="{'in-view': scroll_position > abstract_height
-                && scroll_position < (abstract_height + topic_height)}"
-                ref="topic_box"
-              >
-                Chủ đề
-              </a>
-            </li>
-            <li v-if="citation_length > 0">
-              <a
-                class="nav-item"
-                v-scroll-to="{el: '#citation_box', offset: -100}"
-                :class="{'in-view': scroll_position > (abstract_height + topic_height)
-                && scroll_position < (abstract_height + topic_height + citation_height)}"
-                ref="citation_box"
-              >
-                {{citation_length | formatNumber}} trích dẫn
-              </a>
-            </li>
-            <li v-if="ref_length > 0">
-              <a
-                class="nav-item"
-                v-scroll-to="{el: '#reference_box', offset: -100}"
-                :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
-                ref="reference_box"
-              >
-                {{ref_length | formatNumber}} tham chiếu
-              </a>
-            </li>
+      class="tabs sticky-nav is-centered is-fullwidth"
+      v-if="paper_detail.references.length > 0 || paper_detail.topics.length > 0 || paper_detail.citations.length > 0"
+    >
+      <ul>
+        <li>
+          <a
+            class="nav-item"
+            v-scroll-to="{el: '#abstract_box', offset: -100}"
+            :class="{'in-view': scroll_position < abstract_height}"
+            ref="abstract_box"
+          >
+            Tóm tắt
+          </a>
+        </li>
+        <li v-if="paper_detail.topics.length > 0">
+          <a
+            class="nav-item"
+            v-scroll-to="{el: '#topic_box', offset: -100}"
+            :class="{'in-view': scroll_position > abstract_height
+               && scroll_position < (abstract_height + topic_height)}"
+            ref="topic_box"
+          >
+            Chủ đề
+          </a>
+        </li>
+        <li v-if="citation_length > 0">
+          <a
+            class="nav-item"
+            v-scroll-to="{el: '#citation_box', offset: -100}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height)
+               && scroll_position < (abstract_height + topic_height + citation_height)}"
+            ref="citation_box"
+          >
+            {{citation_length | formatNumber}} trích dẫn
+          </a>
+        </li>
+        <li v-if="ref_length > 0">
+          <a
+            class="nav-item"
+            v-scroll-to="{el: '#reference_box', offset: -100}"
+            :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
+            ref="reference_box"
+          >
+            {{ref_length | formatNumber}} tham chiếu
+          </a>
+        </li>
 <!--            <li v-if="paper_detail.fieldsOfStudy">-->
 <!--              <a-->
 <!--                class="nav-item"-->
@@ -303,20 +303,20 @@
               </span>
             </p>
             <div class="tile is-parent">
-              <div class="tile is-child is-8 pr-2">
+              <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <PaperTable
                   v-for="result in citation_data"
                   v-bind:search_result="result"
                 >
                 </PaperTable>
-                <Pagination
+                <LazyPagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
                   :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
                   :isSmall="true">
-                </Pagination>
+                </LazyPagination>
               </div>
               <div class="tile is-child is-4">
                 <div v-if="this.chart_data.length > 0">
@@ -343,8 +343,6 @@
           </article>
         </div>
       </div>
-
-
     </div>
     <!------------------------------------------ Citations Table -------------------------------------------------->
 
@@ -449,7 +447,7 @@
 
     export default {
       name: "_paper_detail",
-      components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
+      // components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -592,17 +590,14 @@
           })
         }
         if (Object.keys(data).length !== 0) {
-          if (data.citations_length > 0) {
-            data_dict = await citation_chart_data(paper_id)
-            // console.log('raw ',data_dict)
-            data_dict = chart_prep(data_dict.citations_chart)
+          if (data.citations_count > 0) {
+            let data = await citation_chart_data(paper_id)
             is_citation_empty = false
           }
           // console.log(data_dict)
-          if (data.references_length > 0) {
+          if (data.references_count > 0) {
             is_ref_empty = false
           }
-
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -617,8 +612,8 @@
             paper_detail: data,
             citation_data: data.citations,
             ref_data: data.references,
-            citation_length: data.citations_length,
-            ref_length: data.references_length
+            citation_length: data.citations_count,
+            ref_length: data.references_count
           }
         }
         else {

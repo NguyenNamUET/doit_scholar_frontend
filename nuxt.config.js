@@ -29,15 +29,14 @@ export default {
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      // { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
   /*
   ** Global CSS
   */
   css: [
-    {src: '~/assets/main.scss', lang: 'sass'}
+    // {src: '~/assets/main.scss', lang: 'sass'}
   ],
   /*
   ** Plugins to load before mounting the App
@@ -61,12 +60,7 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    '@nuxtjs/moment'
   ],
-  moment: {
-    locales: ['vi'],
-    defaultTimezone: 'Asia/Ha_Noi'
-  },
   /*
   ** Nuxt.js modules
   */
@@ -75,15 +69,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    ['nuxt-lazy-load', {
-      images: false,
-      videos: true,
-      audios: true,
-      iframes: true,
-      native: false,
-      polyfill: true,
-      directiveOnly: true,
-    }]
+    'nuxt-lazy-load'
   ],
 
   /*
