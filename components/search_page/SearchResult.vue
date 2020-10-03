@@ -150,6 +150,15 @@
         <nav class="level is-mobile">
           <div class="level-left is-small has-text-weight-light ">
             <a class="level-item">
+              <b-tooltip
+                :label="'Số trích dẫn: ' + search_result._source.citations_count + ' | Số tham chiếu: ' + search_result._source.references_count"
+                position="is-bottom"
+                type="is-light"
+              >
+                <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result.citations_count}}</b></span>
+              </b-tooltip>
+            </a>
+            <a class="level-item">
               <span class="link-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
             </a>
             <a class="level-item">

@@ -309,19 +309,18 @@
                   v-bind:search_result="result"
                 >
                 </PaperTable>
-                <LazyPagination
+                <Pagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
                   :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
                   :isSmall="true">
-                </LazyPagination>
+                </Pagination>
               </div>
               <div class="tile is-child is-4">
                 <div v-if="this.chart_data.length > 0">
                   <CitationBar
-                    class="chart"
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
                     :width="250" :height="250"
@@ -436,14 +435,8 @@
 <script>
     import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
     import {formatTitle} from "assets/utils";
-    import {chart_prep, formatNumber} from "assets/utils";
+    import {formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
-    import CitationBar from "../../components/search_page/CitationBar";
-    import PaperTable from "../../components/function_components/PaperTable";
-    import NuxtError from "@/components/static_components/ErrorPage";
-    import Pagination from "@/components/function_components/Pagination";
-    import PaperPDF from "~/components/function_components/PaperPDF";
-    import PaperCard from "~/components/static_components/PaperCard";
 
     export default {
       name: "_paper_detail",
@@ -455,8 +448,17 @@
         else{
           redirect('/')
         }
-
       },
+      // watch: {
+      //   scroll_position: async function (old_value, new_value) {
+      //     if (new_value > (this.abstract_height + this.topic_height)) {
+      //       let data = await citation_chart_data(this.paper_id)
+      //       console.log(data)
+      //       this.chart_labels = Object.keys(data.citations_chart)
+      //       this.chart_data = Object.values(data.citations_chart)
+      //     }
+      //   }
+      // },
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar'
@@ -592,6 +594,7 @@
         if (Object.keys(data).length !== 0) {
           if (data.citations_count > 0) {
             let data = await citation_chart_data(paper_id)
+            data_dict = data.citations_chart
             is_citation_empty = false
           }
           // console.log(data_dict)

@@ -17,19 +17,26 @@
         {{paper_detail.abstract.slice(0,60)}}
         <span v-if="paper_detail.abstract.length > 60">...</span>
       </p>
+      <b-tooltip
+        :label="'Số trích dẫn: ' + paper_detail.citations_count + ' | Số tham chiếu: ' + paper_detail.references_count"
+        position="is-top"
+        type="is-light"
+      >
+        <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}}</b></span>
+      </b-tooltip>
       <span v-if="paper_detail.authors !== undefined">
-      <span
+        <span
         v-for="(author, index) in paper_detail.authors.slice(0,1)"
         :key="author.authorId"
-      >
-        <a
-          :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-          class="link-class-3 secondary_description"
         >
-          {{author.name}}
-        </a>
+          <a
+            :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+            class="link-class-3 secondary_description"
+          >
+            {{author.name}}
+          </a>
+        </span>
       </span>
-    </span>
       <span
         v-if="paper_detail.venue !== '' && paper_detail.venue !== undefined"
         class="text-class-3 color-class-3"
