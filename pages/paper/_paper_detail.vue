@@ -172,18 +172,20 @@
           </div>
         </div>
       </div>
-
       <div class="tile is-parent" id="pdf_section">
-        <div class="tile is-child">
-<!--          <div class="pdf_container content_box">-->
-<!--            <PaperPDF></PaperPDF>-->
-<!--          </div>-->
-          <embed v-if="show_pdf" :src="'/pdf.pdf'" type="application/pdf" width="100%" height="1000px"/>
-
+        <div class="tile is-child" v-if="show_pdf">
+          <a
+            class="delete is-medium close_pdf"
+            v-on:click="handlePDF(false)"
+          ></a>
+          <iframe
+            :src="'http://docs.google.com/gview?url=' + this.paper_detail.pdf_url +'&embedded=true'"
+            id="pdf_container"
+          >
+          </iframe>
         </div>
       </div>
     </div>
-
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
     <div
       class="tabs sticky-nav is-centered is-fullwidth"
@@ -515,11 +517,8 @@
         handlePDF(show_pdf) {
           this.show_pdf = show_pdf
           if (show_pdf === true) {
-            this.abstract_height += 500
-            this.$scrollTo('#pdf_section')
-          }
-          else {
-            this.abstract_height -= 500
+            this.$nuxt.$loading.start()
+            setTimeout(() => this.$nuxt.$loading.finish(), 5000)
           }
         },
         async updateCitation(page_num) {
@@ -690,10 +689,26 @@
     text-decoration: none;
   }
 
-  .pdf_container {
-    overflow-y: scroll;
-    height: 500px;
-    background-color: #625261;
+  #pdf_container {
+    position:fixed;
+    top:60px;
+    left:0;
+    bottom:0;
+    right:0;
+    width:100%;
+    height:90%;
+    border:none;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    z-index:2;
+  }
+
+  .close_pdf {
+    position: fixed;
+    top: 80px;
+    right: 60px;
+    z-index: 4;
   }
 
   .related_content {
@@ -701,7 +716,7 @@
   }
 
   .top_citation {
-    max-height: 380px;
+    max-height: 550px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;

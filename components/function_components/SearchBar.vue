@@ -114,6 +114,6 @@ export default {
 <style scoped>
   .autocomplete {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
 </style>

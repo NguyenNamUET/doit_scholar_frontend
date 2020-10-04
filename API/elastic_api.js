@@ -110,7 +110,8 @@ const paper_by_fos = async(query_params) => {
     // console.log("paper_by_fos query: ", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
       fields_of_study: query_params.fields_of_study,
-      size: query_params.size
+      size: query_params.size,
+      fos_is_should: true
     })
     // console.log("paper_by_fos result: ", result.data)
     return result.data

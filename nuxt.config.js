@@ -28,6 +28,9 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
+    loading: {
+      continuous: true,
+    },
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -49,7 +52,6 @@ export default {
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
     {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
-    {src: '~/plugins/vue-pdf.js', mode: 'client'},
   ],
   /*
   ** Auto import components

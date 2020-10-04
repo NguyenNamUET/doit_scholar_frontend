@@ -17,13 +17,6 @@
         {{paper_detail.abstract.slice(0,60)}}
         <span v-if="paper_detail.abstract.length > 60">...</span>
       </p>
-      <b-tooltip
-        :label="'Số trích dẫn: ' + paper_detail.citations_count + ' | Số tham chiếu: ' + paper_detail.references_count"
-        position="is-top"
-        type="is-light"
-      >
-        <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}}</b></span>
-      </b-tooltip>
       <span v-if="paper_detail.authors !== undefined">
         <span
         v-for="(author, index) in paper_detail.authors.slice(0,1)"
@@ -42,8 +35,17 @@
         class="text-class-3 color-class-3"
       >
       | {{paper_detail.venue}}
-    </span>
+      </span>
       <span v-if="paper_detail.year !== undefined" class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
+      <div>
+        <b-tooltip
+          :label="'Số trích dẫn: ' + paper_detail.citations_count + ' | Số tham chiếu: ' + paper_detail.references_count"
+          position="is-right"
+          type="is-light"
+        >
+          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}}</b></span>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>

@@ -90,3 +90,8 @@ a {
   color: #f0a500;
   font-size: 14px;
 }
+
+.status_icon:hover {
+  text-decoration: underline;
+  cursor: default;
+}
