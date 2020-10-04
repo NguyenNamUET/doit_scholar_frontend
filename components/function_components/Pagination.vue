@@ -1,5 +1,5 @@
 <template>
-  <div class="tile py-2 mt-5">
+  <div class="tile">
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
         <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
@@ -178,6 +178,10 @@ export default {
 <style lang="css" scoped>
 a:hover {
  text-decoration: none;
+}
+
+.tile {
+  padding-top: 0.2rem; padding-bottom: 0.2rem; margin-top: 1.5rem;
 }
 
 </style>

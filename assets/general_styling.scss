@@ -85,3 +85,13 @@ a {
   padding: 3px 0 0 0;
   position: relative;
 }
+
+.status_icon {
+  color: #f0a500;
+  font-size: 14px;
+}
+
+.status_icon:hover {
+  text-decoration: underline;
+  cursor: default;
+}

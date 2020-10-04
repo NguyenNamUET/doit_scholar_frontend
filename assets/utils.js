@@ -1,6 +1,7 @@
 function formatNumber(number) {
   return number.toLocaleString('en-UK', {maximumFractionDigits: 0})
 }
+
 const fields_dict = {
   'Nghệ Thuật': 'Art',
   'Sinh Học': 'Biology',

@@ -1,6 +1,5 @@
 import {SEARCH_DOCUMENTS} from "@/API_config/elastic_api_config";
 import axios from "axios";
-import {isDictEmpty} from "assets/utils";
 
 const paper_detail = async (paper_id) => {
   try {
@@ -108,10 +107,13 @@ const paper_by_topic = async(query_params) => {
 
 const paper_by_fos = async(query_params) => {
   try {
+    // console.log("paper_by_fos query: ", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
       fields_of_study: query_params.fields_of_study,
-      size: query_params.size
+      size: query_params.size,
+      fos_is_should: true
     })
+    // console.log("paper_by_fos result: ", result.data)
     return result.data
   } catch(e) {
     console.log(e)
@@ -272,4 +274,3 @@ export {
   wiki_summary,
   autocomplete
 }
-

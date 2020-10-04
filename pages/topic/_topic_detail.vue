@@ -39,7 +39,7 @@
         let name_pattern = /.+(?=\-[0-9]+$)/g
         let topic_name = name_pattern.exec(route.params.topic_detail)
         let query_params = {topics: Array(topic_id[0]),
-          source: ["title","abstract","year","authors","corpusID"]
+          source: ["title","abstract","year","authors","paperId"]
         }
         let data = await paper_by_topic(query_params)
         console.log(data)

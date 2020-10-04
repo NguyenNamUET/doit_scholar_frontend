@@ -72,12 +72,10 @@
 
 <script>
 import SearchBar from "../components/function_components/SearchBar";
-import BackgroundEffect from "../components/static_components/BackgroundEffect";
 import {formatNumber} from "assets/utils";
 import {all_author, all_field, all_paper} from "@/API/elastic_api";
 
 export default {
-  components: {BackgroundEffect, SearchBar},
   layout: 'home_layout',
   head() {
     return {

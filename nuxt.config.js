@@ -23,7 +23,8 @@ export default {
     title: process.env.npm_package_name || '',
     script: [
       {
-        src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js'
+        // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.js'
       }
     ],
     meta: [
@@ -31,6 +32,9 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
+    loading: {
+      continuous: true,
+    },
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -39,7 +43,7 @@ export default {
   ** Global CSS
   */
   css: [
-    {src: '~/assets/main.scss', lang: 'sass'}
+    // {src: '~/assets/main.scss', lang: 'sass'}
   ],
   /*
   ** Plugins to load before mounting the App
@@ -52,7 +56,6 @@ export default {
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
     {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
-    {src: '~/plugins/vue-pdf.js', mode: 'client'},
   ],
   /*
   ** Auto import components
@@ -63,12 +66,7 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    '@nuxtjs/moment'
   ],
-  moment: {
-    locales: ['vi'],
-    defaultTimezone: 'Asia/Ha_Noi'
-  },
   /*
   ** Nuxt.js modules
   */
@@ -77,15 +75,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    ['nuxt-lazy-load', {
-      images: false,
-      videos: true,
-      audios: true,
-      iframes: true,
-      native: false,
-      polyfill: true,
-      directiveOnly: true,
-    }]
+    'nuxt-lazy-load'
   ],
 
   /*
@@ -107,6 +97,23 @@ export default {
         }
       }
     },
+    html:{
+      minify:{
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true,
+        minifyURLs: true,
+        removeComments: true,
+        removeEmptyElements: true
+      }
+    },
+    extractCSS: true,
     plugins: [
       new webpack.ProvidePlugin({
         // global modules
