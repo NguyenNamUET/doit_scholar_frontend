@@ -81,6 +81,23 @@ function chart_prep(citations) {
   return citation_count
 }
 
+function doughnut_chart_prep(datas) {
+  let chartData = {}
+  chartData.labels = Object.keys(datas)
+  chartData.datasets = []
+  let single_data = {}
+  single_data.backgroundColor = []
+  single_data.data = []
+  Object.keys(datas).forEach(function(key) {
+    let color = require('randomcolor')
+    let randomColor = color()
+    single_data.backgroundColor.push(randomColor)
+    single_data.data.push(datas[key])
+  });
+  chartData.datasets.push(single_data)
+  return chartData
+}
+
 function filteredKeys(obj, filter) {
   var key, keys = [];
   for (key in obj) {
@@ -114,5 +131,6 @@ export {
   chartColors,
   chart_prep,
   fields_dict,
-  isDictEmpty
+  isDictEmpty,
+  doughnut_chart_prep
 }

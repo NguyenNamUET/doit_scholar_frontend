@@ -84,6 +84,8 @@ a {
   background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
   padding: 3px 0 0 0;
   position: relative;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .status_icon {
@@ -94,4 +96,12 @@ a {
 .status_icon:hover {
   text-decoration: underline;
   cursor: default;
+}
+
+.content_title {
+  color: #36361F;
+  font-size: 22px;
+  font-weight: 600;
+  border-bottom: 1px solid #d9dadb;
+  padding: 10px;
 }

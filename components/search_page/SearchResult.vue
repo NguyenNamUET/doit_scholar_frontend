@@ -155,15 +155,25 @@
                 position="is-bottom"
                 type="is-light"
               >
-                <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result._source.citations_count}}</b></span>
+                <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result._source.citations_count}} trích dẫn</b></span>
               </b-tooltip>
             </a>
-            <a class="level-item">
+            <a
+              v-if="search_result._source.doi !== undefined && search_result._source.doi !== null"
+              :href="'https://doi.org/' + search_result._source.doi"
+              target="_blank"
+              class="level-item"
+            >
               <span class="link-class-3"><i class="fas fa-reply"></i> Xem tại nguồn</span>
             </a>
-            <a class="level-item">
-              <span class="link-class-3"><i class="fas fa-retweet"></i> Xem trích dẫn</span>
-            </a>
+            <span class="level-item">
+              <span
+                class="tag is-warning is-small"
+                v-if="search_result._source.pdf_url !== null"
+              >
+              <span><i class="fas fa-file-pdf"></i> Có PDF</span>
+            </span>
+            </span>
           </div>
         </nav>
         <!-------------------------------------- Action Buttons --------------------------------------->
@@ -203,9 +213,4 @@
 
 <style scoped>
   @import "assets/general_styling.scss";
-  #search_result_container {
-    background-color: white;
-    margin-bottom: 30px;
-    box-shadow: 0 0 6px rgba(2,20,31,0.1);
-  }
 </style>

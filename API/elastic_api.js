@@ -251,6 +251,50 @@ const citation_chart_data = async (paper_id) => {
   }
 }
 
+const most_cited_authors = async() => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.most_cited_authors)
+    return result.data
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
+
+const most_cited_papers = async() => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.most_cited_papers)
+    return result.data
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
+
+const fos_graph_data = async(queryParams) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.fos_count, {
+      params: {
+        size: queryParams.size
+      }
+    })
+    return result.data
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
+
+const venue_graph_data = async() => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.venue_count)
+    return result.data
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
+
 export {
   paper_by_abstract,
   paper_by_title,
@@ -266,6 +310,11 @@ export {
   all_paper,
   all_author,
   all_field,
+
+  most_cited_authors,
+  most_cited_papers,
+  fos_graph_data,
+  venue_graph_data,
 
   author_by_id,
   author_by_name,

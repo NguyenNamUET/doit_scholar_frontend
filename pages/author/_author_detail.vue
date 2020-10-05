@@ -86,73 +86,37 @@
                       <DropDown :dd_data="{msg:'Hội nghị', fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
                     </div>
                     <br>
-                    <div>
-                      <p class="text-class-3">
-                        Bạn đang xem
-                        <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
+                    <div class="tile is-ancestor">
+                      <div class="tile is-parent">
+                        <div class="tile is-child content_box">
+                          <p class="text-class-3">
+                            Bạn đang xem
+                            <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
                       {{ (current_paper_page-1)*per_page + 1}}-{{ (current_paper_page-1)*per_page + per_page}}
                       trong {{paper_length}} xuất bản
                     </span>
-                        <span v-else>
+                            <span v-else>
                       {{ (current_paper_page-1)*per_page + 1}}-{{paper_length}}
                       trong {{paper_length}} xuất bản
                     </span>
-                      </p>
-                      <PaperTable class="pl-3"
-                        v-for="result in paper_data"
-                        v-bind:search_result="result"
-                      >
-                      </PaperTable>
-                      <!--                  <b-table-->
-                      <!--                    :data="paper_data"-->
-                      <!--                    :hoverable="true"-->
-                      <!--                    :mobile-cards="true"-->
-                      <!--                    :default-sort-direction="'desc'"-->
-                      <!--                    :loading="is_loading"-->
-                      <!--                  >-->
-
-                      <!--                    <template slot-scope="props">-->
-                      <!--                      <b-table-column field="title" label="Tiêu đề">-->
-                      <!--                        <nuxt-link-->
-                      <!--                          :to="'/paper/' + formatTitle(props.row.title) + '.p' + '-' + props.row.paperId"-->
-                      <!--                        >-->
-                      <!--                          {{props.row.title}}-->
-                      <!--                        </nuxt-link>-->
-                      <!--                      </b-table-column>-->
-
-                      <!--                      <b-table-column v-if="props.row.authors !== undefined" field="name" label="Tác giả" >-->
-                      <!--                        <ul>-->
-                      <!--                          <li v-for="author in props.row.authors">-->
-                      <!--                            <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId ">-->
-                      <!--                              {{author.name}}-->
-                      <!--                            </a>-->
-                      <!--                          </li>-->
-                      <!--                        </ul>-->
-                      <!--                      </b-table-column>-->
-
-                      <!--                      <b-table-column field="year" label="Năm" numeric sortable >-->
-                      <!--                        {{ props.row.year }}-->
-                      <!--                      </b-table-column>-->
-                      <!--                    </template>-->
-
-                      <!--                    <template slot="empty">-->
-                      <!--                      <section class="section">-->
-                      <!--                        <div class="content has-text-grey has-text-centered">-->
-                      <!--                          <p>Không có dữ liệu :(</p>-->
-                      <!--                        </div>-->
-                      <!--                      </section>-->
-                      <!--                    </template>-->
-                      <!--                  </b-table>-->
-                      <Pagination
-                        style="margin-top: 10px;"
-                        v-model="current_paper_page"
-                        :page-count="Math.ceil(paper_length / per_page)"
-                        :click-handler="updatePaper"
-                        :page-range="3"
-                        :margin-pages="1"
-                        :is-small="true"
-                      >
-                      </Pagination>
+                          </p>
+                          <PaperTable
+                            v-for="result in paper_data"
+                            v-bind:search_result="result"
+                          >
+                          </PaperTable>
+                          <Pagination
+                            style="margin-top: 10px;"
+                            v-model="current_paper_page"
+                            :page-count="Math.ceil(paper_length / per_page)"
+                            :click-handler="updatePaper"
+                            :page-range="3"
+                            :margin-pages="1"
+                            :is-small="true"
+                          >
+                          </Pagination>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div v-if="this.current_tab === 'influence'">

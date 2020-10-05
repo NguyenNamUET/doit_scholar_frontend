@@ -43,7 +43,7 @@
           position="is-right"
           type="is-light"
         >
-          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}}</b></span>
+          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}} trích dẫn</b></span>
         </b-tooltip>
       </div>
     </div>
@@ -71,10 +71,6 @@ export default {
 
 <style scoped>
   @import "assets/general_styling.scss";
-  .card_wrapper {
-    margin-bottom: 15px;
-    margin-top: 15px;
-  }
   .content_box {
     max-height: 250px;
   }

@@ -1,6 +1,6 @@
 <script>
   import { Bar } from 'vue-chartjs'
-  import {chartColors} from "../../assets/utils";
+  import {chartColors} from "assets/utils"
 
   export default {
     extends: Bar,
