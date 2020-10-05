@@ -17,6 +17,10 @@ const SEARCH_DOCUMENTS = {
   author_by_name: SEARCH_API + '/s2api/authors/getAuthorByName',
   wiki_summary: SEARCH_API + '/s2api/wiki/getTermSummary',
   autocomplete: SEARCH_API + '/s2api/papers/searchOnTyping',
+  most_cited_authors: SEARCH_API + '/s2api/authors/homepageAuthors',
+  most_cited_papers: SEARCH_API + '/s2api/papers/homepagePapers',
+  fos_count: SEARCH_API + '/s2api/papers/fosGraph',
+  venue_count: SEARCH_API + '/s2api/papers/venuesGraph'
 }
 
 export {

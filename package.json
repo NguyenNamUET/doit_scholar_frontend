@@ -26,6 +26,7 @@
     "nuxt-fontawesome": "^0.4.0",
     "nuxt-jsonld": "^1.4.10",
     "nuxt-lazy-load": "^1.2.4",
+    "randomcolor": "^0.6.2",
     "vue-chartjs": "^3.5.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-number-animation": "^1.0.5",

@@ -1,9 +1,4 @@
-import { Bar } from 'vue-chartjs'
+import Vue from 'vue'
+import VueCharts from 'vue-chartjs';
 
-export default {
-  extends: Bar,
-  props: ['data', 'options'],
-  mounted () {
-    this.renderChart(this.data, this.options)
-  }
-}
+Vue.use(VueCharts);

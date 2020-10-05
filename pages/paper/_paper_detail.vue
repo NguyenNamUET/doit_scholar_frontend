@@ -129,7 +129,7 @@
             <!------------------------------------------ Abstract  ------------------------------------------->
 
             <!--------------------------------------- View pdf -------------------------------------------->
-            <nav class="level is-mobile" style="margin-top: 0.5rem;">
+            <nav class="level is-mobile" style="margin-top: 0.5rem;" v-if="paper_detail.pdf_url !== null">
               <div class="level-left is-small has-text-weight-light ">
                 <a
                   class="level-item button is-warning"
@@ -297,11 +297,11 @@
               Bạn đang xem
               <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
                 {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
-                trong {{citation_length}} trích dẫn
+                trong {{citation_length | formatNumber}} trích dẫn
               </span>
               <span v-else>
                 {{ (current_citation_page-1)*per_page + 1}}-{{citation_length}}
-                trong {{citation_length}} trích dẫn
+                trong {{citation_length | formatNumber}} trích dẫn
               </span>
             </p>
             <div class="tile is-parent">
@@ -366,11 +366,11 @@
             Bạn đang xem
             <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
               {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
-              trong {{ref_length}} tham chiếu
+              trong {{ref_length | formatNumber}} tham chiếu
             </span>
             <span v-else>
               {{ (current_ref_page-1)*per_page + 1}}-{{ref_length}}
-              trong {{ref_length}} tham chiếu
+              trong {{ref_length | formatNumber}} tham chiếu
             </span>
           </p>
           <div class="tile is-parent">
@@ -518,7 +518,7 @@
           this.show_pdf = show_pdf
           if (show_pdf === true) {
             this.$nuxt.$loading.start()
-            setTimeout(() => this.$nuxt.$loading.finish(), 5000)
+            setTimeout(() => this.$nuxt.$loading.finish(), 3000)
           }
         },
         async updateCitation(page_num) {
@@ -584,7 +584,7 @@
         let is_ref_empty = true
 
         let suggestion_data = []
-        if(data.fieldsOfStudy){
+        if(data?.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
             fields_of_study: data.fieldsOfStudy,
             size: 15
@@ -646,14 +646,6 @@
       font-size: 14px;
       margin: 5px;
     }
-  }
-
-  .content_title {
-    color: #36361F;
-    font-size: 22px;
-    font-weight: 600;
-    border-bottom: 1px solid #d9dadb;
-    padding: 10px;
   }
 
   .sticky-nav {

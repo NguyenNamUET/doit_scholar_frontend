@@ -67,7 +67,7 @@
             position="is-bottom"
             type="is-light"
           >
-            <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result.citations_count}}</b></span>
+            <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result.citations_count}} trích dẫn</b></span>
           </b-tooltip>
           <span
             class="tag is-warning is-small"
