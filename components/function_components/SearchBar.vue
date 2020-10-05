@@ -1,14 +1,6 @@
 <template>
   <div class="field has-addons">
     <div class="control is-expanded">
-<!--      <input-->
-<!--        v-if="this.home"-->
-<!--        v-on:keyup.enter="submitQuery"-->
-<!--        v-model="search_query"-->
-<!--        class="input"-->
-<!--        type="text"-->
-<!--        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."-->
-<!--      >-->
       <b-autocomplete
         v-model="search_query"
         @keyup.enter.native="submitQuery"
@@ -50,7 +42,6 @@ import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
-      props: ['home'],
       data() {
         return {
           search_query: '',
