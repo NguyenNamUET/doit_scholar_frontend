@@ -216,7 +216,7 @@
 
         await store.dispatch('search_result/paper_by_title', query_params)
         if(store.state.search_result.search_results.length > 0) {
-          console.log(store.state.search_result.search_results)
+          // console.log(store.state.search_result.search_results)
           return {
              query_params: query,
              current_page: parseInt(query['page']),
@@ -263,7 +263,7 @@
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
           let fos_checked = checkedCategories
-          console.log("updateFOSChecked: ", fos_checked)
+          // console.log("updateFOSChecked: ", fos_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
@@ -321,7 +321,7 @@
         },
         updateVenuesChecked(checkedCategories){
           let venues_checked = checkedCategories
-          console.log("updateVenuesChecked: ", venues_checked)
+          // console.log("updateVenuesChecked: ", venues_checked)
           let router_query = {query: this.$route.query.query,
                               start: 0,
                               size: this.$route.query.size,
