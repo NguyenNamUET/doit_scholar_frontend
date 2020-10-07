@@ -40,7 +40,7 @@ export const mutations = {
 
 export const actions = {
   async paper_by_title(context, payload) {
-    console.log('query', payload);
+    // console.log('query', payload);
     let result = await paper_by_title(payload);
     context.commit('submit_search_result', result);
   },

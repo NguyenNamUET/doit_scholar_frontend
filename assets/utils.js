@@ -60,7 +60,29 @@ const publication_type = [
 ]
 
 function formatTitle(title) {
+  //Ko hoạt động vs mọi ngôn ngữ, check hàm ở dưới genBibtex
   return title.trim().replace(/[\(|\[|{]([^)]*)[\)|\]|}]/g, '').replace(/\s+|\W+/g, '-').replace(/\-{2,}/g, '-').replace(/\-$/g,'')
+}
+
+function genBibtex(paper_detail) {
+  let key = formatTitle(paper_detail.author[0].name) + '-' + paper_detail?.year || ''
+  let result = '@article{' + key + ',' + '<br>'
+
+  let author = ''
+  paper_detail.author.forEach(function (item, index) {
+    author += item.name
+    if (index < paper_detail.author.length - 1) {
+      author += ' and '
+    }
+  })
+
+  result = result.concat('<p>&emsp;\t' + 'doi = ' + '{' + paper_detail.doi + '}' + '</p>')
+  result = result.concat('<p>&emsp;\t' + 'author = ' + '{' + author + '}' + '</p>')
+  result = result.concat('<p>&emsp;\t' + 'year = ' + '{' + (paper_detail?.year || '' ) + '}' + '</p>')
+  result = result.concat('<p>&emsp;' + 'journal = ' + '{' + (paper_detail?.venue || '') + '}' + '</p>')
+  result = result.concat('<p>&emsp;' + 'title = ' + '{' + paper_detail.title + '}' + '</p>')
+  result = result.concat('<p>}</p>')
+  return result
 }
 
 const chartColors = {
@@ -117,7 +139,6 @@ function filteredKeys_v2(obj, filter) {
   }
   return values;
 }
-
 function isDictEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
@@ -132,5 +153,6 @@ export {
   chart_prep,
   fields_dict,
   isDictEmpty,
-  doughnut_chart_prep
+  doughnut_chart_prep,
+  genBibtex
 }

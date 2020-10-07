@@ -231,23 +231,18 @@ import SearchBar from "@/components/function_components/SearchBar";
     padding: 40px 20px;
     min-height: 100vh;
   }
-
   .author_name {
     font-size: 24px;
     font-weight: 600;
   }
-
   .author_stat {
     font-weight: 700;
     color: #dc710f;
     font-size: 14px;
   }
-
   .tab_title {
-    text-decoration: none;
     color: #756c6c;
   }
-
   #sort_section {
     padding: 0 10px 10px 10px;
     border-bottom: 1px solid #d9dadb;

@@ -220,7 +220,7 @@
 
             <button
               class="button is-info is-light is-outlined"
-              @click="show_cite_modal = true"
+              @click="handle_cite_button"
             >
               <span><i class="fas fa-quote-left"></i> Trích dẫn</span>
             </button>
@@ -229,32 +229,28 @@
               <div class="modal-card">
                 <header class="modal-card-head">
                   <p class="modal-card-title">
-                    <b>Tác giả ({{search_result._source.authors.length}})</b>
+                    <b>Trích dẫn</b>
                   </p>
                   <button class="delete" aria-label="close" @click="show_cite_modal = false"></button>
                 </header>
                 <section class="modal-card-body">
-                  <!--                Tìm cách để hover đc cả row và ấn đc cả row, như scinapse-->
-                  <b-table
-                    :data="this.search_result._source.authors"
-                    :hoverable="true"
+                  <b-tabs
+                    v-model="active_cite_tab"
                   >
-                    <b-table-column field="name" width="40" v-slot="props">
-                      {{ props }}
-                    </b-table-column>
-
-                    <b-table-column field="WorkPlace">
-                      <template v-slot="props">
-                        Nơi công tác
-                      </template>
-                    </b-table-column>
-
-                    <b-table-column field="h-index">
-                      <template v-slot="props">
-                        h-index
-                      </template>
-                    </b-table-column>
-                  </b-table>
+                    <b-tab-item
+                      label="BibTeX"
+                    >
+                      <div class="tab_container">
+                        <p v-html="bibtex"></p>
+                        <div
+                          class="copy_button"
+                          @click="copyBibtex"
+                        >
+                          <span><i class="fas fa-copy"></i></span>
+                        </div>
+                      </div>
+                    </b-tab-item>
+                  </b-tabs>
                 </section>
               </div>
             </div>
@@ -268,7 +264,7 @@
 
 <script>
 import CitationBar from "./CitationBar";
-import {formatTitle} from "../../assets/utils";
+import {formatTitle, genBibtex} from "../../assets/utils";
 
 export default {
   name: "SearchResult",
@@ -281,22 +277,40 @@ export default {
       field_hidden: true,
       abstract_hidden: true,
       show_author_modal: false,
-      show_cite_modal: false
-    }
-  },
-  computed: {
-    full_fos: function () {
-      return _.join(this.search_result._source.fieldsOfStudy, ', ')
+      show_cite_modal: false,
+      active_cite_tab: 0,
+      bibtex: null,
     }
   },
   methods: {
     formatTitle(title) {
       return formatTitle(title)
     },
-    seeAllAuthors() {
-      console.log('modal')
+    handle_cite_button() {
+      this.show_cite_modal = true
+      this.genBibtex()
+    },
+    genBibtex() {
+      let bibtex_data = {}
+      bibtex_data.doi = this.search_result._source?.doi || ''
+      bibtex_data.year = this.search_result._source?.year || ''
+      bibtex_data.author = this.search_result._source.authors
+      bibtex_data.title = this.search_result._source.title
+      bibtex_data.journal = this.search_result._source?.venue || ''
+      this.bibtex = genBibtex(bibtex_data)
+    },
+    copyBibtex() {
+      let htmlToText = require('html-to-text');
+      let bibtex_text = htmlToText.fromString(this.bibtex)
+      this.$copyText(bibtex_text)
+      this.$buefy.toast.open({
+        duration: 800,
+        message: `Đã sao chép!`,
+        position: 'is-bottom',
+        type: 'is-success'
+      })
     }
-  }
+  },
 }
 </script>
 
@@ -308,5 +322,17 @@ export default {
 }
 .button.is-info.is-light.is-outlined {
   font-size: 14px;
+}
+.tab_container {
+  background-color: #f4f4f5;
+  overflow-y: scroll;
+  max-height: 250px;
+  padding: 20px;
+}
+.copy_button {
+  font-size: 30px;
+  float: right;
+  width: 20px;
+  position: sticky;
 }
 </style>

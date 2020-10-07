@@ -51,7 +51,7 @@ export default {
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     {src: '~/plugins/vuetimeline.js' },
-    {src: '~/plugins/vue-infinite-scroll.js', ssr: false},
+    '~/plugins/vue_clipboard.js'
   ],
   /*
   ** Auto import components
@@ -71,8 +71,12 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    'nuxt-lazy-load'
+    'nuxt-lazy-load',
+    '@nuxtjs/sentry'
   ],
+  sentry: {
+    dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
+  },
 
   /*
   ** Axios module configuration

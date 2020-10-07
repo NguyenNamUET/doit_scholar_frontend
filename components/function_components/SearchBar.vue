@@ -76,7 +76,7 @@ export default {
           })
           this.autocomplete_data = _.toArray(this.raw_data)
           this.is_loading = false
-          console.log(this.autocomplete_data)
+          // console.log(this.autocomplete_data)
         }),
         submitQuery() {
           this.query_params = {
