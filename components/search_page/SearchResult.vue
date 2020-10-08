@@ -15,10 +15,13 @@
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
             <a
               class="link-class-3 secondary_description"
+              v-if="search_result._source.venue !== undefined && search_result._source.venue !== null && search_result._source.venue !== ''"
             >
-              <b>INFOCOM (International Conference on Computer Communications)</b>
+              <b>{{search_result._source.venue}}</b>
             </a>
-            <span>&sdot;</span>
+            <span
+              v-if="search_result._source.venue !== undefined && search_result._source.venue !== null && search_result._source.venue !== ''"
+            >&sdot;</span>
             <a
               v-if="!field_hidden"
               class="link-class-3"
@@ -207,10 +210,22 @@
                 <span>DOI <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
+            <a
+              v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined && !search_result._source.pdf_url.endsWith('.pdf')"
+              :href="search_result._source.pdf_url"
+              target="_blank"
+              class="level-item"
+            >
+              <button
+                class="button is-info is-light is-outlined"
+              >
+                <span>{{search_result._source.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
+              </button>
+            </a>
             <span class="level-item">
               <span
                 class="tag is-success is-small"
-                v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined"
+                v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined && search_result._source.pdf_url.endsWith('.pdf')"
               >
               <span>PDF <i class="fas fa-check"></i></span>
             </span>

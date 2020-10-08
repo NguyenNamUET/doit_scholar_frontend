@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="tile is-ancestor is-vertical">
-      <div class="tile is-parent is-8" >
+      <div class="tile is-parent is-7" >
         <div class="tile is-child">
           <h1 class="title">
             <b>{{topic_name}}</b>
@@ -9,11 +9,12 @@
         </div>
       </div>
     </div>
-    <div class="content_box">
+    <div>
       <div class="tile is-parent is-vertical">
-        <div class="timeline">
+        <div>
           <div  v-for="item in papers">
-            <TimelineItem v-bind:paper="item._source"></TimelineItem>
+            {{item}}
+<!--            <SearchResult :search_result="item"></SearchResult>-->
           </div>
         </div>
       </div>
@@ -24,10 +25,11 @@
 <script>
     import TimelineItem from "../../components/function_components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
+    import SearchResult from "@/components/search_page/SearchResult";
     //import {wiki_summary} from "@/API/elastic_api";
     export default {
       name: "_topic_detail",
-      components: {TimelineItem},
+      components: {SearchResult, TimelineItem},
       head() {
         return {
           title: this.topic_name + ' | DoIT Scholar'
@@ -42,7 +44,6 @@
           source: ["title","abstract","year","authors","paperId"]
         }
         let data = await paper_by_topic(query_params)
-        console.log(data)
         //let wiki_topic_summary = await wiki_summary({name: topic_name})
         if(Object.keys(data).length !== 0 ){
           return {

@@ -50,7 +50,6 @@ export default {
     '~/plugins/vue-scrollto.js',
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
-    {src: '~/plugins/vuetimeline.js' },
     '~/plugins/vue_clipboard.js'
   ],
   /*

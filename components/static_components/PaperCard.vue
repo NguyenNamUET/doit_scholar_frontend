@@ -74,4 +74,7 @@ export default {
   .content_box {
     max-height: 250px;
   }
+  .text-class-2 {
+    color: #0352ba;
+  }
 </style>

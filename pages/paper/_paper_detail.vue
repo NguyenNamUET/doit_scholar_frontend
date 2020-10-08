@@ -129,7 +129,11 @@
             <!------------------------------------------ Abstract  ------------------------------------------->
 
             <!--------------------------------------- View pdf -------------------------------------------->
-            <nav class="level is-mobile" style="margin-top: 0.5rem;" v-if="paper_detail.pdf_url !== null">
+            <nav
+              class="level is-mobile"
+              style="margin-top: 0.5rem;"
+              v-if="paper_detail.pdf_url !== null && paper_detail.pdf_url !== undefined && paper_detail.pdf_url.endsWith('.pdf')"
+            >
               <div class="level-left is-small has-text-weight-light ">
                 <a
                   class="level-item button is-warning"
@@ -600,6 +604,7 @@
           if (data.references_count > 0) {
             is_ref_empty = false
           }
+          console.log(data)
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);

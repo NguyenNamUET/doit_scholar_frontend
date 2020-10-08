@@ -8,7 +8,7 @@
         :data="autocomplete_data"
         @typing="getAutocomplete"
         :loading="is_loading"
-        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, từ khóa của văn bản,..."
         @select="option => this.selected = option"
       >
         <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>

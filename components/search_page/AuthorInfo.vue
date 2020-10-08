@@ -43,4 +43,7 @@
   .text-class-3:hover {
     text-decoration: none;
   }
+  .text-class-2 {
+    color: #0352ba;
+  }
 </style>
