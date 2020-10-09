@@ -1,8 +1,15 @@
 import en from '../locales/en.json'
 import vi from '../locales/vi.json'
-export default {
+
+export const i18n = {
   strategy: 'prefix',
-  locale: ['en','vi'],
-  fallbackLocale: 'en',
-  messages: { en, vi }
+  locales: [
+    'en',
+    'vi'
+  ],
+  defaultLocale: 'en',
+  vueI18n: {
+    fallbackLocale: 'en',
+    messages: { en, vi }
+  }
 }

@@ -8,7 +8,7 @@
               <img
                 class="logo"
                 src="~/static/logo.png"
-                alt="DoIT Scholar: Tra cứu văn bản học thuật"
+                alt="DoIT Scholar"
               >
             </a>
 
@@ -30,7 +30,7 @@
           <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
-                <SearchBar style="min-width: 50vw"></SearchBar>
+                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')" style="min-width: 50vw"></SearchBar>
               </div>
             </div>
           </div>

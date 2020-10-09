@@ -1,4 +1,5 @@
 import webpack from 'webpack'
+import {i18n} from "./config/i18n";
 
 export default {
   /*
@@ -60,7 +61,11 @@ export default {
   /*
   ** Nuxt.js dev-modules
   */
-  buildModules: [],
+  buildModules: [
+    [
+      'nuxt-i18n', i18n
+    ]
+  ],
   /*
   ** Nuxt.js modules
   */

@@ -1,3 +1,80 @@
 {
-  "home_message": "xin chào"
+  "general_attribute": {
+    "paper": "Văn bản",
+    "author": "Tác giả",
+    "venue": "Hội nghị",
+
+    "previous": "Trước",
+    "next": "Sau",
+    "search": "Tìm kiếm",
+    "see_more": "...Xem thêm",
+    "list_label": "Đang xem {{start}} - {{end}} trong {{total}} văn bản",
+    "search_bar_placeholder": "Tìm kiếm văn bản",
+    "cite": "Trích dẫn",
+
+    "topic": "Chủ đề",
+    "citation": "Trích dẫn",
+    "reference": "Tham chiếu",
+    "fos": "Lĩnh vực",
+    "publication": "Xuất bản",
+    "abstract": "Tóm tắt"
+  },
+
+  "default_layout": {
+    "header": {
+      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản"
+    },
+    "footer" : {
+      "address": "Địa chỉ",
+      "address_value": "Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội"
+    }
+  },
+
+  "home_page": {
+    "title": "Bộ máy tìm kiếm cho dữ liệu học thuật",
+    "paper_carousel": {
+      "title": "Văn bản được trích dẫn nhiều nhất"
+    },
+    "author_carousel": {
+      "title": "Tác giả được trích dẫn nhiều nhất",
+      "citation": "Số lần được trích dẫn",
+      "publication": "Số xuất bản",
+      "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
+    },
+    "fos_carousel": {
+      "title": "Lĩnh vực nghiên cứu nổi bật",
+      "count": "Số văn bản"
+    },
+    "page_stat": {
+      "author_count": "Tác giả",
+      "paper_count": "Văn bản",
+      "fos_count": "Lĩnh vực"
+    },
+    "chart": {
+      "paper_by_fos_chart": "Số văn bản theo lĩnh vực",
+      "paper_by_venue_chart": "Số văn bản theo hội nghị"
+    }
+  },
+
+  "search_page": {
+    "result_stat": "Khoảng {{result_count}} kết quả cho từ khóa {{keyword}}",
+    "see_all_author": "Xem tất cả tác giả"
+  },
+
+  "paper_detail_page": {
+    "paper_id": "ID văn bản",
+    "related_paper": "Văn bản liên quan"
+  },
+
+  "author_detail": {
+    "tabs": {
+      "publication_nav": "Xuất bản",
+      "influence_nav": "Ảnh hưởng"
+    },
+    "author_info": {
+      "citation": "Số lần được trích dẫn",
+      "publication": "Số xuất bản",
+      "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
+    }
+  }
 }
