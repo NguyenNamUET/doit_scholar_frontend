@@ -70,7 +70,6 @@ export default {
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .content_box {
     max-height: 250px;
   }

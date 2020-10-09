@@ -36,7 +36,6 @@
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   a:hover {
     text-decoration: none;
   }

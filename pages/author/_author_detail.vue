@@ -226,7 +226,6 @@ import SearchBar from "@/components/function_components/SearchBar";
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .container {
     padding: 40px 20px;
     min-height: 100vh;

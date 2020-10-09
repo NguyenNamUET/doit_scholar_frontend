@@ -1,4 +1,4 @@
-import {SEARCH_DOCUMENTS} from "@/API_config/elastic_api_config";
+import {SEARCH_DOCUMENTS} from "@/config/elastic_api_config";
 import axios from "axios";
 
 const paper_detail = async (paper_id) => {

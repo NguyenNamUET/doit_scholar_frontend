@@ -101,7 +101,6 @@
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .tile{
     background-color: white;
     border-bottom: 1px solid #E2E3E4;
