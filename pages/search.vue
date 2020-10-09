@@ -353,7 +353,6 @@
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .container {
     padding: 40px 20px;
   }

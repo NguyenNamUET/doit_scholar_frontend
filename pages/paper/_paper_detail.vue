@@ -638,7 +638,6 @@
 </script>
 
 <style scoped lang="scss">
-  @import "assets/general_styling.scss";
   #topic_box {
     ul {
       flex-direction: column;

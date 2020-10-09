@@ -330,7 +330,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "assets/general_styling.scss";
 .util_level {
   border-top: 1px solid #d9dadb;
   padding-top: 10px;
