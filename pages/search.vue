@@ -8,13 +8,28 @@
       <div class="tile is-parent">
         <div class="tile is-child">
           <span class="subtitle">
-            <strong>Tìm được {{total_count | formatNumber}} kết quả cho "{{query_params.query}}"</strong>
+            <i18n
+              tag="strong"
+              path="search_page.result_stat"
+            >
+              <template v-slot:result_count>
+                <span>
+                    {{ total_count | formatNumber }}
+                </span>
+             </template>
+              <template v-slot:keyword>
+                <span>
+                    "{{ query_params.query }}"
+                </span>
+             </template>
+            </i18n>
+<!--            <strong> Tìm được {{ total_count | formatNumber }} kết quả cho "{{ query_params.query }}"</strong>-->
           </span>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div id="sort_section">
-            <DropDown :dd_data="{msg:'Lĩnh vực', fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg:'Tác giả', fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg:'Hội nghị', fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
+            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -31,7 +46,7 @@
             >
             </AuthorCard>
             <a class="column is-full link-class-3" v-on:click="author_hidden = false">
-              Xem thêm tác giả
+              {{ $t('search_page.see_all_author') }}
             </a>
         </div>
 
@@ -42,7 +57,7 @@
           >
           </AuthorCard>
           <a class="column is-full link-class-3" v-on:click="author_hidden = true">
-            Ẩn bớt tác giả
+            {{ $t('search_page.see_fewer_author') }}
           </a>
         </div>
 
@@ -258,7 +273,7 @@
 
           delete router_query["return_top_author"]
           delete router_query["return_fos_aggs"]
-          this.$router.push({name: 'search', query: router_query})
+          this.$router.push({name: this.localeRoute('search').name, query: router_query})
         },
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
@@ -288,7 +303,7 @@
               router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
             }
           }
-          this.$router.push({name: 'search', query: router_query})
+          this.$router.push({name: this.localeRoute('search').name, query: router_query})
         },
         updateAuthorsChecked(checkedCategories) {
           let authors_checked = checkedCategories
@@ -317,7 +332,7 @@
               router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
             }
           }
-          this.$router.push({name: 'search', query: router_query})
+          this.$router.push({name: this.localeRoute('search').name, query: router_query})
         },
         updateVenuesChecked(checkedCategories){
           let venues_checked = checkedCategories
@@ -346,7 +361,7 @@
               router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
             }
           }
-          this.$router.push({name: 'search', query: router_query})
+          this.$router.push({name: this.localeRoute('search').name, query: router_query})
         }
       }
     }

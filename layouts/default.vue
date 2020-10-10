@@ -8,7 +8,7 @@
               <img
                 class="logo"
                 src="~/static/logo.png"
-                alt="DoIT Scholar: Tra cứu văn bản học thuật"
+                alt="DoIT Scholar"
               >
             </a>
 
@@ -30,8 +30,35 @@
           <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
-                <SearchBar style="min-width: 50vw"></SearchBar>
+                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')" style="min-width: 50vw"></SearchBar>
               </div>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <b-dropdown aria-role="list">
+                <button class="button is-light" slot="trigger" slot-scope="{ active }">
+                  <span>{{ $t('default_layout.header.lang_switch') }}</span>
+                  <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
+                </button>
+
+                <b-dropdown-item
+                  v-for="locale in availableLocales"
+                >
+                  <nuxt-link
+                    :key="locale.code"
+                    :to="switchLocalePath(locale.code)"
+                  >
+                    <span v-if="locale.name === 'English'">
+                      Tiếng Anh
+                    </span>
+                    <span v-else>
+                      {{ locale.name }}
+                    </span>
+                  </nuxt-link>
+                </b-dropdown-item>
+              </b-dropdown>
             </div>
           </div>
         </div>
@@ -46,8 +73,8 @@
           <div class="column">
             <p>
               <i class="fas fa-map-marker-alt"></i>
-              <b>Địa chỉ: </b>
-              Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội
+              <b>{{ $t('default_layout.footer.address') }} </b>
+              {{ $t('default_layout.footer.address_value') }}
             </p>
             <p>
               <i class="fas fa-envelope"></i>
@@ -79,6 +106,11 @@ export default {
     return {
       showNav: false,
       nowTime: moment().format('LLL')
+    }
+  },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
     }
   },
   methods: {

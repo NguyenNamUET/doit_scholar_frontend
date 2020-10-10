@@ -1,4 +1,5 @@
 import webpack from 'webpack'
+import {i18n} from "./config/i18n";
 
 export default {
   /*
@@ -60,7 +61,11 @@ export default {
   /*
   ** Nuxt.js dev-modules
   */
-  buildModules: [],
+  buildModules: [
+    [
+      'nuxt-i18n', i18n
+    ]
+  ],
   /*
   ** Nuxt.js modules
   */
@@ -69,11 +74,11 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    'nuxt-lazy-load',
+    'nuxt-lazy-load'
   ],
-  sentry: {
-    dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
-  },
+  // sentry: {
+  //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
+  // },
 
   /*
   ** Axios module configuration

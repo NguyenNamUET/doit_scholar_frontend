@@ -8,7 +8,7 @@
             >
               <strong class="text-class-2">{{author_name}}</strong>
             </a>
-            <p class="text-class-3">{{doc_count}} xuất bản liên quan đến từ khóa</p>
+            <p class="text-class-3">{{doc_count}} {{ $t('general_attribute.publication') }}</p>
         </div>
       </div>
     </article>

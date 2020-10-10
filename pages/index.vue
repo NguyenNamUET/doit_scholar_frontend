@@ -1,18 +1,53 @@
 <template>
   <div>
     <section class="hero is-medium" id="content">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <b-dropdown aria-role="list">
+                  <button class="button is-light" slot="trigger" slot-scope="{ active }">
+                    <span>{{ $t('default_layout.header.lang_switch') }}</span>
+                    <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
+                  </button>
+
+                  <b-dropdown-item
+                    v-for="locale in availableLocales"
+                  >
+                    <nuxt-link
+                      :key="locale.code"
+                      :to="switchLocalePath(locale.code)"
+                    >
+                    <span v-if="locale.name === 'English'">
+                      Tiếng Anh
+                    </span>
+                      <span v-else>
+                      {{ locale.name }}
+                    </span>
+                    </nuxt-link>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
           <img
             class="logo"
             src="~/static/logo.png"
-            alt="DoIT Scholar: Tra cứu văn bản học thuật"
+            alt="DoIT Scholar"
           >
           <div class="subtitle has-text-black">
-            Tra Cứu Dữ Liệu Học Thuật
+            {{$t('home_page.title')}}
           </div>
-          <SearchBar style="box-shadow: 0 5px 8px 1px #C5C8C9;"/>
+          <SearchBar
+            :placeholder="$t('default_layout.header.search_bar_placeholder')"
+            style="box-shadow: 0 5px 8px 1px #C5C8C9;"
+          />
         </div>
         <div class="container carousel_container">
           <b-carousel
@@ -26,7 +61,7 @@
               <p
                 class="content_title"
               >
-                Tác giả được trích dẫn nhiều nhất
+                {{$t('home_page.author_carousel.title')}}
               </p>
               <div class="columns is-1">
                 <div
@@ -44,7 +79,9 @@
                       <table style="width: 100%">
                         <tr v-if="result.citationsCount !== undefined">
                           <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">Số lần được trích dẫn </span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.citation')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -56,7 +93,9 @@
                         </tr>
                         <tr v-if="result.totalPapers !== undefined">
                           <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">Số văn bản đã xuất bản </span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.publication')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -68,7 +107,9 @@
                         </tr>
                         <tr v-if="result.influentialCitationCount !== undefined">
                           <td>
-                            <span class="text-class-3 color-class-3">Số trích dẫn có ảnh hưởng lớn</span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.highlighted_citation')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -87,7 +128,8 @@
               <p
                 class="content_title"
               >
-                Văn bản được trích dẫn nhiều nhất</p>
+                {{$t('home_page.paper_carousel.title')}}
+              </p>
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
@@ -105,7 +147,7 @@
               <p
                 class="content_title"
               >
-                Lĩnh vực nhiều văn bản nhất
+                {{$t('home_page.fos_carousel.title')}}
               </p>
               <div class="columns is-1">
                 <div
@@ -119,7 +161,7 @@
                       >
                         {{key}}
                       </a>
-                      <p>Tổng số văn bản: {{value}}</p>
+                      <p>{{$t('home_page.fos_carousel.count')}}: {{value}}</p>
                     </div>
                   </div>
                 </div>
@@ -139,7 +181,7 @@
                   :duration="1.5"
                   :format="formatNumber"
                 />
-                <span class="status_description">Tác giả</span>
+                <span class="status_description">{{$t('home_page.page_stat.author_count')}}</span>
               </div>
               <div>
                 <number
@@ -150,7 +192,7 @@
                   :format="formatNumber"
                   :duration="1.5"
                 />
-                <span class="status_description">Văn bản</span>
+                <span class="status_description">{{$t('home_page.page_stat.paper_count')}}</span>
               </div>
               <div>
                 <number
@@ -161,19 +203,19 @@
                   :format="formatNumber"
                   :duration="1.5"
                 />
-                <span class="status_description">Lĩnh vực</span>
+                <span class="status_description">{{$t('home_page.page_stat.fos_count')}}</span>
               </div>
 
             </div>
             <div class="column has-text-centered is-half content_box">
               <DoughnutGraph
                 :dataset="fos_chart_data"
-                :title="'Văn bản theo lĩnh vực'"
+                :title="$t('home_page.chart.paper_by_fos_chart')"
                 style="height: 250px; width: 250px; display: inline-block"
               ></DoughnutGraph>
               <DoughnutGraph
                 :dataset="venue_chart_data"
-                :title="'Văn bản theo hội nghị'"
+                :title="$t('home_page.chart.paper_by_venue_chart')"
                 style="height: 250px; width: 250px; display: inline-block"
               >
 
@@ -189,8 +231,8 @@
               <div class="column">
                 <p>
                   <i class="fas fa-map-marker-alt"></i>
-                  <b>Địa chỉ: </b>
-                  Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội
+                  <b>{{ $t('default_layout.footer.address') }}: </b>
+                  {{ $t('default_layout.footer.address_value') }}
                 </p>
                 <p>
                   <i class="fas fa-envelope"></i>
@@ -208,7 +250,6 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -280,6 +321,11 @@ export default {
   filters: {
     formatNumber(number) {
       return formatNumber(number)
+    }
+  },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
     }
   },
   methods: {
