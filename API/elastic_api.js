@@ -1,19 +1,11 @@
 import {SEARCH_DOCUMENTS} from "@/config/elastic_api_config";
 import axios from "axios";
 
-const paper_detail = async (paper_id) => {
-  try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
 
+/***************************************** Counting function ******************************************/
 const all_author = async (query_params) => {
   try {
-    const result = await axios.get(SEARCH_DOCUMENTS.all_author)
+    const result = await axios.get(SEARCH_DOCUMENTS.count_authors)
     return result.data
   } catch(e) {
     console.log(e)
@@ -24,7 +16,7 @@ const all_author = async (query_params) => {
 
 const all_paper = async (query_params) => {
   try {
-    const result = await axios.post(SEARCH_DOCUMENTS.all_paper, {
+    const result = await axios.get(SEARCH_DOCUMENTS.count_paper, {
         start: 0,
         size: 0,
       }
@@ -38,7 +30,29 @@ const all_paper = async (query_params) => {
 
 const all_field = async (query_params) => {
   try {
-    const result = await axios.post(SEARCH_DOCUMENTS.all_field)
+    const result = await axios.get(SEARCH_DOCUMENTS.count_field)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const all_topics = async() => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.count_topics)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+/***************************************** Counting function ******************************************/
+
+/***************************************** Search paper function ******************************************/
+const paper_detail = async (paper_id) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
     return result.data
   } catch(e) {
     console.log(e)
@@ -82,15 +96,6 @@ const paper_by_abstract = async(query_params) => {
   }
 }
 
-const all_topics = async() => {
-  try {
-    let result = await axios.get(SEARCH_DOCUMENTS.all_topics)
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
 
 const paper_by_topic = async(query_params) => {
   try {
@@ -140,8 +145,11 @@ const paper_by_fos_and_title = async(query_params) => {
     return null
   }
 }
+/***************************************** Search paper function ******************************************/
 
-/////////////////AUTHOR/////////////////////////////////
+
+/***************************************** Search author function ******************************************/
+
 const author_by_id = async (author_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id)
@@ -179,7 +187,10 @@ const author_papers = async (query_params) => {
     return null
   }
 }
+/***************************************** Search author function ******************************************/
 
+
+/**************************************** Function for both paper and author page ********************************/
 const paper_citation = async (query_params) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.paper_id + '/citations', {
@@ -209,9 +220,9 @@ const paper_references = async(query_params) => {
     return null
   }
 }
+/**************************************** Function for both paper and author page ********************************/
 
-
-/////////////////WIKI/////////////////////////////////
+/*************** WIKI ********************/
 const wiki_summary = async(query_params) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.wiki_summary, {
@@ -223,7 +234,9 @@ const wiki_summary = async(query_params) => {
     return null
   }
 }
+/*************** WIKI ********************/
 
+/************** Autocomple search *************/
 const autocomplete = async(query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
@@ -237,7 +250,9 @@ const autocomplete = async(query_params) => {
     return null
   }
 }
+/************** Autocomple search *************/
 
+/************************************************* Homepage function **********************************************/
 const citation_chart_data = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
@@ -274,7 +289,7 @@ const most_cited_papers = async() => {
 
 const fos_graph_data = async(queryParams) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.fos_count, {
+    let result = await axios.get(SEARCH_DOCUMENTS.fos_graph, {
       params: {
         size: queryParams.size
       }
@@ -288,13 +303,14 @@ const fos_graph_data = async(queryParams) => {
 
 const venue_graph_data = async() => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.venue_count)
+    let result = await axios.get(SEARCH_DOCUMENTS.venue_graph)
     return result.data
   } catch (e) {
     console.log(e)
     return null
   }
 }
+/************************************************* Homepage function **********************************************/
 
 export {
   paper_by_abstract,

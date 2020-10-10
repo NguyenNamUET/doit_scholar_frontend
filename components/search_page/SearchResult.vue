@@ -102,68 +102,7 @@
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <div>
-            <span class="small_icon"><i class="fas fa-user-alt"></i></span>
-            <span style="display: inline-block; vertical-align: top;">
-              <p
-                v-if="author_hidden"
-                v-for="(author, index) in search_result._source.authors.slice(0,3)"
-                :key="author.authorId"
-              >
-                <a
-                  :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-                  class="link-class-3 secondary_description"
-                >
-                  <b>{{ author.name }}</b>
-                </a>
-              </p>
-              <span
-                class="less-more-button"
-                v-if="author_hidden && search_result._source.authors.length - 3 > 0"
-                v-on:click="show_author_modal = true"
-              >
-                Xem tất cả {{ search_result._source.authors.length }} tác giả
-              </span>
-            </span>
-          </div>
-
-          <!----------------------------------------- Authors Modal ------------------------------------------->
-          <div class="modal" v-bind:class="{ 'is-active': show_author_modal }">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-              <header class="modal-card-head">
-                <p class="modal-card-title">
-                  <b>Tác giả ({{search_result._source.authors.length}})</b>
-                </p>
-                <button class="delete" aria-label="close" @click="show_author_modal = false"></button>
-              </header>
-              <section class="modal-card-body">
-<!--                Tìm cách để hover đc cả row và ấn đc cả row, như scinapse-->
-                <b-table
-                  :data="this.search_result._source.authors"
-                  :hoverable="true"
-                >
-                  <b-table-column field="name" width="40" v-slot="props">
-                    {{ props }}
-                  </b-table-column>
-
-                  <b-table-column field="WorkPlace">
-                    <template v-slot="props">
-                      Nơi công tác
-                    </template>
-                  </b-table-column>
-
-                  <b-table-column field="h-index">
-                    <template v-slot="props">
-                      h-index
-                    </template>
-                  </b-table-column>
-                </b-table>
-              </section>
-            </div>
-          </div>
-          <!----------------------------------------- Authors Modal ------------------------------------------->
-
+          <AuthorModal v-bind:authors="search_result._source.authors"></AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
@@ -279,19 +218,18 @@
 
 <script>
 import CitationBar from "./CitationBar";
+import AuthorModal from "./AuthorModal";
 import {formatTitle, genBibtex} from "../../assets/utils";
 
 export default {
   name: "SearchResult",
-  components: {CitationBar},
+  components: {CitationBar, AuthorModal},
   props: ['search_result'],
   data() {
     return {
-      author_hidden: true,
       topic_hidden: true,
       field_hidden: true,
       abstract_hidden: true,
-      show_author_modal: false,
       show_cite_modal: false,
       active_cite_tab: 0,
       bibtex: null,
@@ -349,4 +287,5 @@ export default {
   width: 20px;
   position: sticky;
 }
+
 </style>

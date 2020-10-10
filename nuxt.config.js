@@ -71,9 +71,9 @@ export default {
     'nuxt-buefy',
     'nuxt-lazy-load',
   ],
-  // sentry: {
-  //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
-  // },
+  sentry: {
+    dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
+  },
 
   /*
   ** Axios module configuration

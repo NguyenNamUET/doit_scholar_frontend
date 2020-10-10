@@ -1,7 +1,3 @@
-function formatNumber(number) {
-  return number.toLocaleString('en-UK', {maximumFractionDigits: 0})
-}
-
 const fields_dict = {
   'Nghệ Thuật': 'Art',
   'Sinh Học': 'Biology',
@@ -59,6 +55,9 @@ const publication_type = [
   'Phân tích siêu dữ liệu'
 ]
 
+function formatNumber(number) {
+  return number.toLocaleString('en-UK', {maximumFractionDigits: 0})
+}
 function formatTitle(title) {
   //Ko hoạt động vs mọi ngôn ngữ, check hàm ở dưới genBibtex
   return title.trim().replace(/[\(|\[|{]([^)]*)[\)|\]|}]/g, '').replace(/\s+|\W+/g, '-').replace(/\-{2,}/g, '-').replace(/\-$/g,'')

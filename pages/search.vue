@@ -25,22 +25,22 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
         <div class="tile is-child columns is-multiline" v-if="author_hidden">
-            <AuthorInfo
+            <AuthorCard
               v-for="author in author_info.slice(0,3)"
               v-bind:author_info="author"
             >
-            </AuthorInfo>
+            </AuthorCard>
             <a class="column is-full link-class-3" v-on:click="author_hidden = false">
               Xem thêm tác giả
             </a>
         </div>
 
         <div class="tile is-child columns is-multiline" v-else>
-          <AuthorInfo
+          <AuthorCard
             v-for="author in this.author_info"
             v-bind:author_info="author"
           >
-          </AuthorInfo>
+          </AuthorCard>
           <a class="column is-full link-class-3" v-on:click="author_hidden = true">
             Ẩn bớt tác giả
           </a>
@@ -88,7 +88,7 @@
     import {filteredKeys, filteredKeys_v2} from "../assets/utils";
     import DropDown from "../components/function_components/DropDown";
     import {publication_type} from "../assets/utils";
-    import AuthorInfo from "../components/search_page/AuthorInfo";
+    import AuthorCard from "../components/search_page/AuthorCard";
     import SearchResult from "../components/search_page/SearchResult";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
@@ -96,7 +96,7 @@
     export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorInfo, DropDown, Pagination, NuxtError},
+      components: {SearchResult, AuthorCard, DropDown, Pagination, NuxtError},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'

@@ -301,22 +301,22 @@
 </template>
 
 <script>
-import {doughnut_chart_prep, formatNumber} from "assets/utils";
-import {
-  all_author,
-  all_field,
-  all_paper,
-  fos_graph_data,
-  most_cited_authors,
-  most_cited_papers, venue_graph_data
-} from "@/API/elastic_api";
-import DoughnutGraph from "@/components/static_components/DoughnutGraph";
-import AuthorInfo from "@/components/search_page/AuthorInfo";
-import PaperCard from "@/components/static_components/PaperCard";
-import {formatTitle} from 'assets/utils';
+  import {doughnut_chart_prep, formatNumber} from "assets/utils";
+  import {
+    all_author,
+    all_field,
+    all_paper,
+    fos_graph_data,
+    most_cited_authors,
+    most_cited_papers, venue_graph_data
+  } from "@/API/elastic_api";
+  import DoughnutGraph from "@/components/static_components/DoughnutGraph";
+  import AuthorCard from "@/components/search_page/AuthorCard";
+  import PaperCard from "@/components/static_components/PaperCard";
+  import {formatTitle} from 'assets/utils';
 
 export default {
-  components: {PaperCard, AuthorInfo, DoughnutGraph},
+  components: {PaperCard, AuthorCard, DoughnutGraph},
   layout: 'home_layout',
   head() {
     return {
