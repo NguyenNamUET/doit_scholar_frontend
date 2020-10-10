@@ -18,7 +18,7 @@
 <script>
     import {formatTitle} from 'assets/utils';
     export default {
-      name: "AuthorInfo",
+      name: "AuthorCard",
       props: ['author_info'],
       data() {
         return {

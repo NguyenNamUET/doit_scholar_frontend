@@ -170,14 +170,14 @@
 </template>
 
 <script>
-import {formatNumber, formatTitle} from "assets/utils";
+    import {formatNumber, formatTitle} from "assets/utils";
     import {author_by_id, author_papers, paper_citation} from "@/API/elastic_api";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
-import SearchResult from "@/components/search_page/SearchResult";
-import Pagination from "@/components/function_components/Pagination";
-import SearchBar from "@/components/function_components/SearchBar";
+    import SearchResult from "@/components/search_page/SearchResult";
+    import Pagination from "@/components/function_components/Pagination";
+    import SearchBar from "@/components/function_components/SearchBar";
 
     export default {
       name: "_author_detail",
