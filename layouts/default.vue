@@ -34,6 +34,33 @@
               </div>
             </div>
           </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <b-dropdown aria-role="list">
+                <button class="button is-light" slot="trigger" slot-scope="{ active }">
+                  <span>{{ $t('default_layout.header.lang_switch') }}</span>
+                  <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
+                </button>
+
+                <b-dropdown-item
+                  v-for="locale in availableLocales"
+                >
+                  <nuxt-link
+                    :key="locale.code"
+                    :to="switchLocalePath(locale.code)"
+                  >
+                    <span v-if="locale.name === 'English'">
+                      Tiếng Anh
+                    </span>
+                    <span v-else>
+                      {{ locale.name }}
+                    </span>
+                  </nuxt-link>
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+          </div>
         </div>
       </nav>
     </div>
@@ -46,8 +73,8 @@
           <div class="column">
             <p>
               <i class="fas fa-map-marker-alt"></i>
-              <b>Địa chỉ: </b>
-              Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội
+              <b>{{ $t('default_layout.footer.address') }} </b>
+              {{ $t('default_layout.footer.address_value') }}
             </p>
             <p>
               <i class="fas fa-envelope"></i>
@@ -79,6 +106,11 @@ export default {
     return {
       showNav: false,
       nowTime: moment().format('LLL')
+    }
+  },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
     }
   },
   methods: {

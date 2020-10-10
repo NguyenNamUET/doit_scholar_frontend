@@ -1,6 +1,38 @@
 <template>
   <div>
     <section class="hero is-medium" id="content">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <b-dropdown aria-role="list">
+                  <button class="button is-light" slot="trigger" slot-scope="{ active }">
+                    <span>{{ $t('default_layout.header.lang_switch') }}</span>
+                    <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
+                  </button>
+
+                  <b-dropdown-item
+                    v-for="locale in availableLocales"
+                  >
+                    <nuxt-link
+                      :key="locale.code"
+                      :to="switchLocalePath(locale.code)"
+                    >
+                    <span v-if="locale.name === 'English'">
+                      Tiếng Anh
+                    </span>
+                      <span v-else>
+                      {{ locale.name }}
+                    </span>
+                    </nuxt-link>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
@@ -377,6 +409,11 @@ export default {
   filters: {
     formatNumber(number) {
       return formatNumber(number)
+    }
+  },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
     }
   },
   methods: {

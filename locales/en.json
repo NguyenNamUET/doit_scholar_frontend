@@ -7,12 +7,16 @@
     "previous": "Previous",
     "next": "Next",
     "search": "Search",
-    "see_more": "...See More",
-    "list_label": "Showing {{start}} - {{end}} of {{total}} papers",
+    "list_label": "Showing {start} - {end} of {total} papers",
     "search_bar_placeholder": "Search for paper",
-    "cite": "cite",
+    "cite": "Cite",
+    "more": "See more",
+    "less": "See less",
+    "unavailable": "Unavailable",
+    "show": "Show",
+    "hide": "Hide",
 
-    "topic": "Topic",
+    "topic": "Topics",
     "citation": "Citations",
     "reference": "References",
     "fos": "Fields of study",
@@ -22,7 +26,8 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Search papers by title, authors, doi or keywords"
+      "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "lang_switch": "Switch to"
     },
     "footer" : {
       "address": "Address",
@@ -57,16 +62,22 @@
   },
 
   "search_page": {
-    "result_stat": "About {{result_count}} results for keyword {{keyword}}",
-    "see_all_author": "See all authors"
+    "result_stat": "About {result_count} results for keyword {keyword}",
+    "see_all_author": "See all authors",
+    "see_fewer_author": "See fewer authors"
   },
 
   "paper_detail_page": {
     "paper_id": "Paper ID",
-    "related_paper": "Related Papers"
+    "related_paper": "Related Papers",
+    "citation_tooltip": "Other papers which mention this paper",
+    "reference_tooltip": "Papers referenced by this paper",
+    "highlight_citation_box": {
+      "title": "{number} popular citations in {total} papers"
+    }
   },
 
-  "author_detail": {
+  "author_detail_page": {
     "tabs": {
       "publication_nav": "Publications",
       "influence_nav": "Influence"

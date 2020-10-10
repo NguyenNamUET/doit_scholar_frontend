@@ -86,9 +86,9 @@ export default {
             size: 10,
             top_author_size: 10,
             page: 1
-            }
+          }
           if(this.search_query!==""){
-            this.$router.push({name:'search', query: this.query_params})
+            this.$router.push({name: this.localeRoute('search').name, query: this.query_params})
           }
           else{
             this.$buefy.toast.open({

@@ -35,7 +35,7 @@
               v-if="!field_hidden"
               v-on:click="field_hidden = true"
             >
-              &nbspRút gọn
+              &nbsp{{ $t('general_attribute.less') }}
             </span>
 
             <a
@@ -49,7 +49,7 @@
               class="link-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
-              + {{ search_result._source.fieldsOfStudy.length - 1 }} lĩnh vực
+              + {{ search_result._source.fieldsOfStudy.length - 1 }} {{ $t('general_attribute.fos') }}
             </span>
           </p>
           <!------------------------------------ Fields of study ---------------------------------------->
@@ -76,7 +76,7 @@
               v-if="!topic_hidden"
               v-on:click="topic_hidden = true"
             >
-            &nbspRút gọn
+            &nbsp{{ $t('general_attribute.less') }}
             </span>
 
             <span
@@ -96,7 +96,7 @@
               class="less-more-button"
               v-on:click="topic_hidden = false"
             >
-            + {{ search_result._source.topics.length - 5 }} chủ đề
+            + {{ search_result._source.topics.length - 5 }} {{ $t('general_attribute.topic') }}
           </span>
           </p>
           <!------------------------------------------ Topics ------------------------------------------->
@@ -122,7 +122,7 @@
                 v-if="author_hidden && search_result._source.authors.length - 3 > 0"
                 v-on:click="show_author_modal = true"
               >
-                Xem tất cả {{ search_result._source.authors.length }} tác giả
+                {{ $t('search_page.see_all_author') }}
               </span>
             </span>
           </div>
@@ -133,7 +133,7 @@
             <div class="modal-card">
               <header class="modal-card-head">
                 <p class="modal-card-title">
-                  <b>Tác giả ({{search_result._source.authors.length}})</b>
+                  <b>{{ $t('general_attribute.author') }} ({{search_result._source.authors.length}})</b>
                 </p>
                 <button class="delete" aria-label="close" @click="show_author_modal = false"></button>
               </header>
@@ -173,7 +173,7 @@
           class="text-class-2"
         >
           {{ search_result._source.abstract }}
-          <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+          <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
           v-if="abstract_hidden && typeof search_result._source.abstract !== 'object'"
@@ -184,7 +184,7 @@
             class="text-class-3"
             v-if="search_result._source.abstract.length > 400"
             v-on:click="abstract_hidden = false"
-          >...Xem thêm</a>
+          >...{{ $t('general_attribute.more') }}</a>
         </p>
         <br>
         <!------------------------------------------ Abstract ----------------------------------------->
@@ -195,7 +195,7 @@
               <button
                 class="button is-info is-light is-outlined"
               >
-                {{ search_result._source.citations_count }} trích dẫn
+                {{ search_result._source.citations_count }} {{ $t('general_attribute.citation') }}
               </button>
             </a>
             <a
@@ -237,14 +237,14 @@
               class="button is-info is-light is-outlined"
               @click="handle_cite_button"
             >
-              <span><i class="fas fa-quote-left"></i> Trích dẫn</span>
+              <span><i class="fas fa-quote-left"></i> {{ $t('general_attribute.cite') }}</span>
             </button>
             <div class="modal" v-bind:class="{ 'is-active': show_cite_modal }">
               <div class="modal-background"></div>
               <div class="modal-card">
                 <header class="modal-card-head">
                   <p class="modal-card-title">
-                    <b>Trích dẫn</b>
+                    <b>{{ $t('general_attribute.cite') }}</b>
                   </p>
                   <button class="delete" aria-label="close" @click="show_cite_modal = false"></button>
                 </header>

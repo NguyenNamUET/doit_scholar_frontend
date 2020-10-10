@@ -7,10 +7,14 @@
     "previous": "Trước",
     "next": "Sau",
     "search": "Tìm kiếm",
-    "see_more": "...Xem thêm",
-    "list_label": "Đang xem {{start}} - {{end}} trong {{total}} văn bản",
+    "list_label": "Đang xem {start} - {end} trong {total} văn bản",
     "search_bar_placeholder": "Tìm kiếm văn bản",
     "cite": "Trích dẫn",
+    "more": "Xem thêm",
+    "less": "Ẩn bớt",
+    "unavailable": "Chưa có thông tin",
+    "show": "Xem",
+    "hide": "Ẩn",
 
     "topic": "Chủ đề",
     "citation": "Trích dẫn",
@@ -22,7 +26,8 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản"
+      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản",
+      "lang_switch": "Chuyển sang"
     },
     "footer" : {
       "address": "Địa chỉ",
@@ -57,16 +62,21 @@
   },
 
   "search_page": {
-    "result_stat": "Khoảng {{result_count}} kết quả cho từ khóa {{keyword}}",
+    "result_stat": "Khoảng {result_count} kết quả cho từ khóa {keyword}",
     "see_all_author": "Xem tất cả tác giả"
   },
 
   "paper_detail_page": {
     "paper_id": "ID văn bản",
-    "related_paper": "Văn bản liên quan"
+    "related_paper": "Văn bản liên quan",
+    "citation_tooltip": "Các văn bản nhắc tới văn bản này",
+    "reference_tooltip": "Các văn bản được nhắc tới bởi văn bản này",
+    "highlight_citation_box": {
+      "title": "{number} trích dẫn nổi bật trong {total} văn bản"
+    }
   },
 
-  "author_detail": {
+  "author_detail_page": {
     "tabs": {
       "publication_nav": "Xuất bản",
       "influence_nav": "Ảnh hưởng"

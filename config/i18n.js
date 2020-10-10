@@ -4,10 +4,17 @@ import vi from '../locales/vi.json'
 export const i18n = {
   strategy: 'prefix',
   locales: [
-    'en',
-    'vi'
+    {
+      code: 'en',
+      name: 'English',
+    },
+    {
+      code: 'vi',
+      name: 'Vietnamese'
+    }
   ],
   defaultLocale: 'en',
+  lazy: true,
   vueI18n: {
     fallbackLocale: 'en',
     messages: { en, vi }
