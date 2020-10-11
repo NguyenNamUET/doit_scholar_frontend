@@ -99,7 +99,7 @@ const paper_by_abstract = async(query_params) => {
 
 const paper_by_topic = async(query_params) => {
   try {
-    console.log(query_params)
+    // console.log(query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_topic, {
       topics: query_params.topics,
       source: query_params.source
@@ -120,6 +120,21 @@ const paper_by_fos = async(query_params) => {
       fos_is_should: true
     })
     // console.log("paper_by_fos result: ", result.data)
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const paper_by_venue = async(query_params) => {
+  try {
+    // console.log("paper_by_fos query: ", query_params)
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
+      venues: query_params.venue,
+      start: query_params.start,
+      size: query_params.size
+    })
     return result.data
   } catch(e) {
     console.log(e)
@@ -321,6 +336,7 @@ export {
   paper_citation,
   paper_references,
   paper_by_fos,
+  paper_by_venue,
   citation_chart_data,
 
   all_topics,

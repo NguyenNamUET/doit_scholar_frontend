@@ -15,6 +15,7 @@ const SEARCH_DOCUMENTS = {
   paper_by_topic: SEARCH_API + '/s2api/papers/searchPaperByTopics',
   paper_by_title_and_fos: SEARCH_API + '/s2api/papers/searchPaperByTitleAndFOS',
   paper_by_fos: SEARCH_API + '/s2api/papers/searchPaperFOS',
+  paper_by_venue: SEARCH_API + 's2api/papers/searchPaperByVenue',
 
   author_by_id: SEARCH_API + '/s2api/authors',
   author_by_name: SEARCH_API + '/s2api/authors/getAuthorByName',

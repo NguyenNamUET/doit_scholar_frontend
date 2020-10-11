@@ -19,7 +19,7 @@
         v-if="author_hidden && authors.length - 3 > 0"
         v-on:click="show_author_modal = true"
       >
-        Xem tất cả {{ authors.length}}  tác giả
+        {{ $t('search_page.see_all_author') }}
       </span>
     </span>
 
@@ -28,7 +28,7 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title has-text-weight-semibold">
-            Tác giả ({{authors.length}})
+            {{ $t('general_attribute.author') }} ({{authors.length}})
           </p>
           <button class="delete" aria-label="close" @click="show_author_modal = false"></button>
         </header>

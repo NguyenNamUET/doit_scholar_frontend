@@ -12,7 +12,7 @@
     <div>
       <div class="tile is-parent is-vertical">
         <div>
-          <div  v-for="item in papers">
+          <div v-for="item in papers">
             {{item}}
 <!--            <SearchResult :search_result="item"></SearchResult>-->
           </div>
@@ -44,6 +44,7 @@
           source: ["title","abstract","year","authors","paperId"]
         }
         let data = await paper_by_topic(query_params)
+        console.log(data)
         //let wiki_topic_summary = await wiki_summary({name: topic_name})
         if(Object.keys(data).length !== 0 ){
           return {
