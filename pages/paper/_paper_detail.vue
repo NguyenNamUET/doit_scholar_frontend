@@ -18,10 +18,10 @@
                 {{paper_detail.doi}}
               </a>
               <span v-else>
-              <i>Chưa có thông tin</i>
+              <i>{{ $t('general_attribute.unavailable') }}</i>
             </span>
               |
-              ID văn bản: {{this.paper_detail.corpusId}}
+              {{ $t('paper_detail_page.paper_id') }}: {{this.paper_detail.corpusId}}
             </p>
             <h1 class="title" style="color: #4E4B4B">
               <b>{{this.paper_detail.title}}</b>
@@ -47,7 +47,7 @@
                     v-if="!author_hidden"
                     @click="author_hidden = true"
               >
-              &nbspRút gọn
+              &nbsp{{ $t('general_attribute.less') }}
             </span>
 
               <span
@@ -68,7 +68,7 @@
                     v-if="author_hidden && paper_detail.authors.length - 3 > 0"
                     @click="author_hidden = false"
               >
-              &nbsp+ {{paper_detail.authors.length - 3}} tác giả
+              &nbsp+ {{paper_detail.authors.length - 3}} {{ $t('general_attribute.author') }}
             </span>
               <!------------------------------------------ Authors  ------------------------------------------->
               |
@@ -86,7 +86,7 @@
                     v-if="!field_hidden"
                     @click="field_hidden = true"
               >
-                &nbspRút gọn
+                &nbsp{{ $t('general_attribute.less') }}
               </span>
 
               <span class="text-class-3 color-class-3"
@@ -98,7 +98,7 @@
                     v-if="field_hidden && paper_detail.fieldsOfStudy.length - 1 > 0"
                     @click="field_hidden = false"
               >
-                &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} lĩnh vực
+                &nbsp+ {{paper_detail.fieldsOfStudy.length - 1}} {{ $t('general_attribute.fos') }}
               </span>
             </span>
               <!------------------------------------ Fields of study ---------------------------------------->
@@ -113,30 +113,38 @@
               <div v-if="!abstract_hidden" class="content">
                 <p class="text-class-2">
                   {{paper_detail.abstract}}
-                  <a class="text-class-3" @click="abstract_hidden = true">...Ẩn bớt</a>
+                  <a class="text-class-3" @click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
                 </p>
               </div>
               <div v-else class="content">
                 <p class="text-class-2">
                   {{paper_detail.abstract.slice(0, 700)}}
-                  <a class="text-class-3" v-if="paper_detail.abstract.length > 700" @click="abstract_hidden = false">...Xem thêm</a>
+                  <a
+                    class="text-class-3"
+                    v-if="paper_detail.abstract.length > 700"
+                    @click="abstract_hidden = false"
+                  >...{{ $t('general_attribute.more') }}</a>
                 </p>
               </div>
             </div>
             <div v-else>
-              <p class="is-size-6"><i>Không có thông tin về Tóm tắt</i></p>
+              <p class="is-size-6"><i>{{ $t('general_attribute.unavailable') }}</i></p>
             </div>
             <!------------------------------------------ Abstract  ------------------------------------------->
 
             <!--------------------------------------- View pdf -------------------------------------------->
-            <nav class="level is-mobile" style="margin-top: 0.5rem;" v-if="paper_detail.pdf_url !== null">
+            <nav
+              class="level is-mobile"
+              style="margin-top: 0.5rem;"
+              v-if="paper_detail.pdf_url !== null && paper_detail.pdf_url !== undefined && paper_detail.pdf_url.endsWith('.pdf')"
+            >
               <div class="level-left is-small has-text-weight-light ">
                 <a
                   class="level-item button is-warning"
                   v-if="!show_pdf"
                   v-on:click="handlePDF(true)"
                 >
-                  <span><i class="fas fa-file-pdf"></i> Xem PDF</span>
+                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.show') }} PDF</span>
                 </a>
 
                 <a
@@ -144,7 +152,7 @@
                   v-if="show_pdf"
                   v-on:click="handlePDF(false)"
                 >
-                  <span><i class="fas fa-file-pdf"></i> Ẩn PDF</span>
+                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.hide') }} PDF</span>
                 </a>
               </div>
             </nav>
@@ -154,13 +162,23 @@
         <div class="tile is-parent">
           <div class="tile is-child top_citation" v-if="citation_length > 0">
             <p>
-              3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn
+              <i18n
+                tag="span"
+                path="paper_detail_page.highlight_citation_box.title"
+              >
+                <template v-slot:number>
+                  <span>3</span>
+                </template>
+                <template v-slot:total>
+                  <span>{{citation_length | formatNumber}}</span>
+                </template>
+              </i18n>
               <a
                 class="button is-light is-small"
                 style="float: right"
                 v-on:click="$refs.citation_box.click()"
               >
-                Xem tất cả
+                {{ $t('general_attribute.more') }}
               </a>
             </p>
 
@@ -199,7 +217,7 @@
             :class="{'in-view': scroll_position < abstract_height}"
             ref="abstract_box"
           >
-            Tóm tắt
+            {{ $t('general_attribute.abstract') }}
           </a>
         </li>
         <li v-if="paper_detail.topics.length > 0">
@@ -210,7 +228,7 @@
                && scroll_position < (abstract_height + topic_height)}"
             ref="topic_box"
           >
-            Chủ đề
+            {{ $t('general_attribute.topic') }}
           </a>
         </li>
         <li v-if="citation_length > 0">
@@ -221,7 +239,7 @@
                && scroll_position < (abstract_height + topic_height + citation_height)}"
             ref="citation_box"
           >
-            {{citation_length | formatNumber}} trích dẫn
+            {{citation_length | formatNumber}} {{ $t('general_attribute.citation') }}
           </a>
         </li>
         <li v-if="ref_length > 0">
@@ -231,7 +249,7 @@
             :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height)}"
             ref="reference_box"
           >
-            {{ref_length | formatNumber}} tham chiếu
+            {{ref_length | formatNumber}} {{ $t('general_attribute.reference') }}
           </a>
         </li>
 <!--            <li v-if="paper_detail.fieldsOfStudy">-->
@@ -252,9 +270,8 @@
     <!---------------------------------------------- Topics ------------------------------------------------------->
     <div class="tile is-ancestor" id="topic_box">
       <div class="tile is-parent is-vertical " v-if="paper_detail.topics.length > 0" >
+        <p class="content_title">{{ $t('general_attribute.topic') }}</p>
         <article class="tile is-child content_box">
-          <p class="content_title">Chủ đề được đề cập trong văn bản</p>
-          <br>
           <div>
             <ul
               v-bind:style="{ maxHeight: paper_detail.topics.length*1.5 + 'vh' }"
@@ -281,36 +298,51 @@
     <div class="tile is-ancestor" id="citation_box" >
       <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
-          <article class="tile is-child content_box">
+          <article class="tile is-child">
             <p class="content_title">
-              Trích dẫn
+              {{ $t('general_attribute.citation') }}
               <b-tooltip
-                label="Các văn bản có nhắc tới văn bản này"
+                :label="$t('paper_detail_page.citation_tooltip')"
                 position="is-right"
                 type="is-light"
               >
                 <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
               </b-tooltip>
             </p>
-            <br>
-            <p class="text-class-3" style="margin-left: 10px;">
-              Bạn đang xem
-              <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
-                {{ (current_citation_page-1)*per_page + 1}}-{{ (current_citation_page-1)*per_page + per_page}}
-                trong {{citation_length | formatNumber}} trích dẫn
-              </span>
-              <span v-else>
-                {{ (current_citation_page-1)*per_page + 1}}-{{citation_length}}
-                trong {{citation_length | formatNumber}} trích dẫn
-              </span>
+            <p class="text-class-3">
+              <i18n
+                tag="span"
+                path="general_attribute.list_label"
+              >
+                <template v-slot:start>
+                  <span>
+                      {{ (current_citation_page-1)*per_page + 1}}
+                  </span>
+                </template>
+                <template
+                  v-slot:end
+                >
+                  <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
+                      {{ (current_citation_page-1)*per_page + per_page}}
+                  </span>
+                  <span v-else>
+                      {{citation_length}}
+                  </span>
+                </template>
+                <template v-slot:total>
+                  <span>
+                      {{citation_length | formatNumber}}
+                  </span>
+                </template>
+              </i18n>
             </p>
             <div class="tile is-parent">
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
-                <PaperTable
+                <SearchResult
                   v-for="result in citation_data"
                   v-bind:search_result="result"
                 >
-                </PaperTable>
+                </SearchResult>
                 <Pagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
@@ -350,36 +382,51 @@
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
       <div class="tile is-parent" v-if="ref_data.length > 0">
-        <div class="tile is-child content_box">
+        <div class="tile is-child">
           <p class="content_title">
-            Tham chiếu
+            {{ $t('general_attribute.reference') }}
             <b-tooltip
-              label="Các văn bản được nhắc tới trong văn bản này"
+              :label="$t('paper_detail_page.reference_tooltip')"
               type="is-light"
               position="is-right"
             >
               <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
             </b-tooltip>
           </p>
-          <br>
-          <p class="text-class-3" style="margin-left: 10px;">
-            Bạn đang xem
-            <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
-              {{ (current_ref_page-1)*per_page + 1}}-{{ (current_ref_page-1)*per_page + per_page}}
-              trong {{ref_length | formatNumber}} tham chiếu
-            </span>
-            <span v-else>
-              {{ (current_ref_page-1)*per_page + 1}}-{{ref_length}}
-              trong {{ref_length | formatNumber}} tham chiếu
-            </span>
+          <p class="text-class-3">
+            <i18n
+              tag="span"
+              path="general_attribute.list_label"
+            >
+              <template v-slot:start>
+                  <span>
+                      {{ (current_ref_page-1)*per_page + 1}}
+                  </span>
+              </template>
+              <template
+                v-slot:end
+              >
+                  <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
+                      {{ (current_ref_page-1)*per_page + per_page}}
+                  </span>
+                <span v-else>
+                      {{ref_length}}
+                  </span>
+              </template>
+              <template v-slot:total>
+                  <span>
+                      {{ref_length | formatNumber}}
+                  </span>
+              </template>
+            </i18n>
           </p>
           <div class="tile is-parent">
-            <div class="tile is-child">
-              <PaperTable
+            <div class="tile is-child is-8">
+              <SearchResult
                 v-for="result in ref_data"
                 v-bind:search_result="result"
               >
-              </PaperTable>
+              </SearchResult>
               <Pagination
                 v-model="current_ref_page"
                 :page-count="Math.ceil(ref_length / per_page)"
@@ -397,7 +444,7 @@
     <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <p class="content_title">Văn bản liên quan</p>
+          <p class="content_title">{{ $t('paper_detail_page.related_paper') }}</p>
           <b-carousel
             :pause-hover="true"
             :pause-info="false"
@@ -439,10 +486,11 @@
     import {formatTitle} from "assets/utils";
     import {formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
+    import SearchResult from "@/components/search_page/SearchResult";
 
     export default {
       name: "_paper_detail",
-      // components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
+      components: {SearchResult},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -600,6 +648,7 @@
           if (data.references_count > 0) {
             is_ref_empty = false
           }
+          console.log(data)
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -633,7 +682,6 @@
 </script>
 
 <style scoped lang="scss">
-  @import "assets/general_styling.scss";
   #topic_box {
     ul {
       flex-direction: column;

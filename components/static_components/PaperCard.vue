@@ -39,11 +39,11 @@
       <span v-if="paper_detail.year !== undefined" class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
       <div>
         <b-tooltip
-          :label="'Số trích dẫn: ' + paper_detail.citations_count + ' | Số tham chiếu: ' + paper_detail.references_count"
+          :label="paper_detail.citations_count + ' ' + $t('general_attribute.citation')  + ' | ' + paper_detail.references_count + ' ' + $t('general_attribute.reference')"
           position="is-right"
           type="is-light"
         >
-          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}} trích dẫn</b></span>
+          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}} {{ $t('general_attribute.citation') }}</b></span>
         </b-tooltip>
       </div>
     </div>
@@ -70,8 +70,10 @@ export default {
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .content_box {
     max-height: 250px;
+  }
+  .text-class-2 {
+    color: #0352ba;
   }
 </style>

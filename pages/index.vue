@@ -1,18 +1,53 @@
 <template>
   <div>
     <section class="hero is-medium" id="content">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <b-dropdown aria-role="list">
+                  <button class="button is-light" slot="trigger" slot-scope="{ active }">
+                    <span>{{ $t('default_layout.header.lang_switch') }}</span>
+                    <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
+                  </button>
+
+                  <b-dropdown-item
+                    v-for="locale in availableLocales"
+                  >
+                    <nuxt-link
+                      :key="locale.code"
+                      :to="switchLocalePath(locale.code)"
+                    >
+                    <span v-if="locale.name === 'English'">
+                      Tiếng Anh
+                    </span>
+                      <span v-else>
+                      {{ locale.name }}
+                    </span>
+                    </nuxt-link>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
           <img
             class="logo"
             src="~/static/logo.png"
-            alt="DoIT Scholar: Tra cứu văn bản học thuật"
+            alt="DoIT Scholar"
           >
           <div class="subtitle has-text-black">
-            Tra Cứu Dữ Liệu Học Thuật
+            {{$t('home_page.title')}}
           </div>
-          <SearchBar style="box-shadow: 0 5px 8px 1px #C5C8C9;"/>
+          <SearchBar
+            :placeholder="$t('default_layout.header.search_bar_placeholder')"
+            style="box-shadow: 0 5px 8px 1px #C5C8C9;"
+          />
         </div>
         <div class="container carousel_container">
           <b-carousel
@@ -26,7 +61,7 @@
               <p
                 class="content_title"
               >
-                Tác giả được trích dẫn nhiều nhất
+                {{$t('home_page.author_carousel.title')}}
               </p>
               <div class="columns is-1">
                 <div
@@ -44,7 +79,9 @@
                       <table style="width: 100%">
                         <tr v-if="result.citationsCount !== undefined">
                           <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">Số lần được trích dẫn </span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.citation')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -56,7 +93,9 @@
                         </tr>
                         <tr v-if="result.totalPapers !== undefined">
                           <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">Số văn bản đã xuất bản </span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.publication')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -68,7 +107,9 @@
                         </tr>
                         <tr v-if="result.influentialCitationCount !== undefined">
                           <td>
-                            <span class="text-class-3 color-class-3">Số trích dẫn có ảnh hưởng lớn</span>
+                            <span class="text-class-3 color-class-3">
+                              {{$t('home_page.author_carousel.highlighted_citation')}}
+                            </span>
                           </td>
                           <td>
                             <span
@@ -87,7 +128,8 @@
               <p
                 class="content_title"
               >
-                Văn bản được trích dẫn nhiều nhất</p>
+                {{$t('home_page.paper_carousel.title')}}
+              </p>
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
@@ -105,7 +147,7 @@
               <p
                 class="content_title"
               >
-                Lĩnh vực nhiều văn bản nhất
+                {{$t('home_page.fos_carousel.title')}}
               </p>
               <div class="columns is-1">
                 <div
@@ -119,7 +161,7 @@
                       >
                         {{key}}
                       </a>
-                      <p>Tổng số văn bản: {{value}}</p>
+                      <p>{{$t('home_page.fos_carousel.count')}}: {{value}}</p>
                     </div>
                   </div>
                 </div>
@@ -139,7 +181,7 @@
                   :duration="1.5"
                   :format="formatNumber"
                 />
-                <span class="status_description">Tác giả</span>
+                <span class="status_description">{{$t('home_page.page_stat.author_count')}}</span>
               </div>
               <div>
                 <number
@@ -150,7 +192,7 @@
                   :format="formatNumber"
                   :duration="1.5"
                 />
-                <span class="status_description">Văn bản</span>
+                <span class="status_description">{{$t('home_page.page_stat.paper_count')}}</span>
               </div>
               <div>
                 <number
@@ -161,107 +203,19 @@
                   :format="formatNumber"
                   :duration="1.5"
                 />
-                <span class="status_description">Lĩnh vực</span>
+                <span class="status_description">{{$t('home_page.page_stat.fos_count')}}</span>
               </div>
 
-<!--              <ul class="Words">-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">&nbsp;</p>-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                    class="number_status"-->
-<!--                    ref="author_count"-->
-<!--                    :from="0"-->
-<!--                    :to=author_count-->
-<!--                    :duration="1.5"-->
-<!--                    :format="formatNumber"/>-->
-<!--                  </p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                      class="number_status"-->
-<!--                      ref="author_count"-->
-<!--                      :from="0"-->
-<!--                      :to=author_count-->
-<!--                      :duration="1.5"-->
-<!--                      :format="formatNumber"/>-->
-<!--                  </p>-->
-<!--                  <p class="text_effect">Tác giả</p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">Tác giả</p>-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                      class="number_status"-->
-<!--                      ref="doc_count"-->
-<!--                      :from="0"-->
-<!--                      :to=paper_count-->
-<!--                      :format="formatNumber"-->
-<!--                      :duration="1.5"-->
-<!--                    />-->
-<!--                  </p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                      class="number_status"-->
-<!--                      ref="doc_count"-->
-<!--                      :from="0"-->
-<!--                      :to=paper_count-->
-<!--                      :format="formatNumber"-->
-<!--                      :duration="1.5"-->
-<!--                    />-->
-<!--                  </p>-->
-<!--                  <p class="text_effect">Văn bản</p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">Văn bản</p>-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                      class="number_status"-->
-<!--                      ref="field_count"-->
-<!--                      :from="0"-->
-<!--                      :to=fos_count-->
-<!--                      :format="formatNumber"-->
-<!--                      :duration="1.5"-->
-<!--                    />-->
-<!--                  </p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">-->
-<!--                    <number-->
-<!--                      class="number_status"-->
-<!--                      ref="field_count"-->
-<!--                      :from="0"-->
-<!--                      :to=fos_count-->
-<!--                      :format="formatNumber"-->
-<!--                      :duration="1.5"-->
-<!--                    />-->
-<!--                  </p>-->
-<!--                  <p class="text_effect">-->
-<!--                    Lĩnh vực-->
-<!--                  </p>-->
-<!--                </li>-->
-<!--                <li class="Words-line">-->
-<!--                  <p class="text_effect">-->
-<!--                    Lĩnh vực-->
-<!--                  </p>-->
-<!--                  <p class="text_effect">-->
-<!--                    &nbsp;-->
-<!--                  </p>-->
-<!--                </li>-->
-<!--              </ul>-->
             </div>
             <div class="column has-text-centered is-half content_box">
               <DoughnutGraph
                 :dataset="fos_chart_data"
-                :title="'Văn bản theo lĩnh vực'"
+                :title="$t('home_page.chart.paper_by_fos_chart')"
                 style="height: 250px; width: 250px; display: inline-block"
               ></DoughnutGraph>
               <DoughnutGraph
                 :dataset="venue_chart_data"
-                :title="'Văn bản theo hội nghị'"
+                :title="$t('home_page.chart.paper_by_venue_chart')"
                 style="height: 250px; width: 250px; display: inline-block"
               >
 
@@ -277,8 +231,8 @@
               <div class="column">
                 <p>
                   <i class="fas fa-map-marker-alt"></i>
-                  <b>Địa chỉ: </b>
-                  Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội
+                  <b>{{ $t('default_layout.footer.address') }}: </b>
+                  {{ $t('default_layout.footer.address_value') }}
                 </p>
                 <p>
                   <i class="fas fa-envelope"></i>
@@ -296,27 +250,26 @@
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
 <script>
-import {doughnut_chart_prep, formatNumber} from "assets/utils";
-import {
-  all_author,
-  all_field,
-  all_paper,
-  fos_graph_data,
-  most_cited_authors,
-  most_cited_papers, venue_graph_data
-} from "@/API/elastic_api";
-import DoughnutGraph from "@/components/static_components/DoughnutGraph";
-import AuthorInfo from "@/components/search_page/AuthorInfo";
-import PaperCard from "@/components/static_components/PaperCard";
-import {formatTitle} from 'assets/utils';
+  import {doughnut_chart_prep, formatNumber} from "assets/utils";
+  import {
+    all_author,
+    all_field,
+    all_paper,
+    fos_graph_data,
+    most_cited_authors,
+    most_cited_papers, venue_graph_data
+  } from "@/API/elastic_api";
+  import DoughnutGraph from "@/components/static_components/DoughnutGraph";
+  import AuthorCard from "@/components/search_page/AuthorCard";
+  import PaperCard from "@/components/static_components/PaperCard";
+  import {formatTitle} from 'assets/utils';
 
 export default {
-  components: {PaperCard, AuthorInfo, DoughnutGraph},
+  components: {PaperCard, AuthorCard, DoughnutGraph},
   layout: 'home_layout',
   head() {
     return {
@@ -370,6 +323,11 @@ export default {
       return formatNumber(number)
     }
   },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
+    }
+  },
   methods: {
     formatNumber(number) {
       return formatNumber(number)
@@ -382,7 +340,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "assets/general_styling.scss";
   ._container {
     //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     //background-size: 400% 400%;
@@ -448,77 +405,7 @@ export default {
     font-size: 1.5rem;
     color: #2e414f;
   }
-
-
-  //.Words {
-  //  //margin: 0 auto;
-  //  //padding: 80px 0;
-  //  //font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-  //  font-size: 50px;
-  //  font-weight: 600;
-  //  letter-spacing: -2px;
-  //  text-transform: uppercase;
-  //  // Sort out nasty text fuzz
-  //  transform: translate3d(0, 0, 0);
-  //  -webkit-font-smoothing: antialiased;
-  //  -webkit-font-kerning: normal;
-  //  -webkit-text-size-adjust: 100%;
-  //}
-  //
-  //$total-lines: 6;
-  //
-  //
-  ///*
-  //** Leave these unless you want
-  //** to open a whole can of worms
-  //*/
-  //$left-offset: 15px;
-  //$clip-height: 60px;
-  //$line-height: $clip-height - 5px;
-  ///*
-  //** Apply common styles to each line of text
-  //*/
-  //.Words-line {
-  //  height: $clip-height;
-  //  overflow: hidden;
-  //  position: relative;
-  //
-  //  // Change the perspective of each alternating line
-  //  &:nth-child(odd) {
-  //    transform: skew(60deg, -30deg) scaleY(.66667);
-  //  }
-  //  &:nth-child(even) {
-  //    transform: skew(0deg, -30deg) scaleY(1.33333);
-  //  }
-  //
-  //  // Loop over the total lines and apply a left offset
-  //  @for $i from 1 through $total-lines+1 {
-  //    &:nth-child(#{$i}) {
-  //      left: $left-offset * $i;
-  //    }
-  //  }
-  //}
-  //
-  //
-  ///*
-  //** Fine-grained text styles
-  //*/
-  //.text_effect {
-  //  height: $clip-height;
-  //  line-height: $line-height;
-  //  padding: 0 10px;
-  //  transition: all .4s ease-in-out;
-  //  transform: translate3d(0, 0, 0);
-  //  vertical-align: top;
-  //  white-space: nowrap;
-  //}
-  //
-  ///*
-  //** The hover interaction
-  //*/
-  //.Words:hover {
-  //  p {
-  //    transform: translate3d(0, -($clip-height), 0);
-  //  }
-  //}
+  .text-class-2 {
+    color: #0352ba;
+  }
 </style>

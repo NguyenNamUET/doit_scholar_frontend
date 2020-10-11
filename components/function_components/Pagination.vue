@@ -3,9 +3,9 @@
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
         <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
-           @click="prevPage()" @keyup.enter="prevPage()">Trước</a>
+           @click="prevPage()" @keyup.enter="prevPage()">{{ $t('general_attribute.previous') }}</a>
         <a v-if="!(lastPageSelected() && hidePrevNext)" class="pagination-next"
-           @click="nextPage()" @keyup.enter="nextPage()">Sau</a>
+           @click="nextPage()" @keyup.enter="nextPage()">{{ $t('general_attribute.next') }}</a>
 
         <ul class="pagination-list">
           <li v-for="page in pages">
@@ -181,7 +181,7 @@ a:hover {
 }
 
 .tile {
-  padding-top: 0.2rem; padding-bottom: 0.2rem; margin-top: 1.5rem;
+  padding-top: 0.2rem; padding-bottom: 0.2rem;
 }
 
 </style>

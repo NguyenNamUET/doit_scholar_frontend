@@ -13,7 +13,7 @@
                     <table style="width: 100%">
                       <tr v-if="author_detail.papers.length !== undefined">
                         <td style="width: 90%">
-                          <span class="text-class-3 color-class-3">Số văn bản đã xuất bản </span>
+                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.publication') }} </span>
                         </td>
                         <td>
                       <span
@@ -25,7 +25,7 @@
                       </tr>
                       <tr v-if="author_detail.influentialCitationCount !== undefined">
                         <td>
-                          <span class="text-class-3 color-class-3">Số trích dẫn có ảnh hưởng lớn</span>
+                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.highlighted_citation') }}</span>
                         </td>
                         <td>
                       <span
@@ -46,7 +46,7 @@
                         class="tab_title"
                         style="text-decoration: none;"
                       >
-                        <span><i class="fas fa-newspaper"></i> Tất cả xuất bản</span>
+                        <span><i class="fas fa-newspaper"></i> {{ $t('author_detail_page.tabs.publication_nav') }}</span>
                       </a>
                     </li>
                     <li v-bind:class="{'is-active' : current_tab === 'influence'}">
@@ -55,14 +55,41 @@
                         class="tab_title"
                         style="text-decoration: none;"
                       >
-                        <span><i class="fas fa-project-diagram"></i> Biểu đồ sức ảnh hưởng</span>
+                        <span><i class="fas fa-project-diagram"></i> {{ $t('author_detail_page.tabs.influence_nav') }}</span>
                       </a>
                     </li>
                   </ul>
                 </div>
                 <div class="tab-content">
                   <div v-if="this.current_tab === 'publication'">
-                    <div id="sort_section">
+                    <p class="text-class-3">
+                      <i18n
+                        tag="span"
+                        path="general_attribute.list_label"
+                      >
+                        <template v-slot:start>
+                                <span>
+                                    {{ (current_paper_page-1)*per_page + 1}}
+                                </span>
+                        </template>
+                        <template
+                          v-slot:end
+                        >
+                                <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
+                                    {{ (current_paper_page-1)*per_page + per_page}}
+                                </span>
+                          <span v-else>
+                                  {{paper_length}}
+                                </span>
+                        </template>
+                        <template v-slot:total>
+                                <span>
+                                    {{paper_length | formatNumber}}
+                                </span>
+                        </template>
+                      </i18n>
+                    </p>
+                    <div class="filter_section content_box">
                       <div style="display: inline-block">
                         <div class="field has-addons">
                           <div class="control is-expanded">
@@ -71,42 +98,29 @@
                               v-model="search_query"
                               class="input"
                               type="text"
-                              placeholder="Tìm kiếm xuất bản"
+                              :placeholder="$t('general_attribute.search_bar_placeholder')"
                             >
                           </div>
                           <div class="control">
                             <p class="button is-warning" v-on:click="submitQuery">
-                              <i class="fas fa-search"></i>Tìm kiếm
+                              <i class="fas fa-search"></i>{{ $t('general_attribute.search') }}
                             </p>
                           </div>
                         </div>
                       </div>
-                      <DropDown :dd_data="{msg:'Lĩnh vực', fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-                      <DropDown :dd_data="{msg:'Tác giả', fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-                      <DropDown :dd_data="{msg:'Hội nghị', fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>-->
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>-->
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>-->
                     </div>
-                    <br>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">
-                        <div class="tile is-child content_box">
-                          <p class="text-class-3">
-                            Bạn đang xem
-                            <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
-                      {{ (current_paper_page-1)*per_page + 1}}-{{ (current_paper_page-1)*per_page + per_page}}
-                      trong {{paper_length}} xuất bản
-                    </span>
-                            <span v-else>
-                      {{ (current_paper_page-1)*per_page + 1}}-{{paper_length}}
-                      trong {{paper_length}} xuất bản
-                    </span>
-                          </p>
-                          <PaperTable
+                        <div class="tile is-child">
+                          <SearchResult
                             v-for="result in paper_data"
                             v-bind:search_result="result"
                           >
-                          </PaperTable>
+                          </SearchResult>
                           <Pagination
-                            style="margin-top: 10px;"
                             v-model="current_paper_page"
                             :page-count="Math.ceil(paper_length / per_page)"
                             :click-handler="updatePaper"
@@ -145,14 +159,14 @@
 </template>
 
 <script>
-import {formatNumber, formatTitle} from "assets/utils";
+    import {formatNumber, formatTitle} from "assets/utils";
     import {author_by_id, author_papers, paper_citation} from "@/API/elastic_api";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
-import SearchResult from "@/components/search_page/SearchResult";
-import Pagination from "@/components/function_components/Pagination";
-import SearchBar from "@/components/function_components/SearchBar";
+    import SearchResult from "@/components/search_page/SearchResult";
+    import Pagination from "@/components/function_components/Pagination";
+    import SearchBar from "@/components/function_components/SearchBar";
 
     export default {
       name: "_author_detail",
@@ -203,7 +217,8 @@ import SearchBar from "@/components/function_components/SearchBar";
           this.is_loading = false
         }
       },
-      async asyncData({route, $axios}) {
+      async asyncData({route
+                        , $axios}) {
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
         let data = await author_by_id(author_id)
@@ -226,7 +241,6 @@ import SearchBar from "@/components/function_components/SearchBar";
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .container {
     padding: 40px 20px;
     min-height: 100vh;
@@ -242,10 +256,5 @@ import SearchBar from "@/components/function_components/SearchBar";
   }
   .tab_title {
     color: #756c6c;
-  }
-  #sort_section {
-    padding: 0 10px 10px 10px;
-    border-bottom: 1px solid #d9dadb;
-    width: 100%;
   }
 </style>

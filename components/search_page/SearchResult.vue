@@ -4,59 +4,63 @@
       <div class="tile is-child content_box">
         <a
           class="text-class-1"
-          :href="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
+          :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
-          <b>{{ search_result._source.title }}</b>
+          <b>{{ search_result.title }}</b>
         </a>
         <!----------------------------------------------------------------------------------------------->
         <div class="has-text-weight-light">
           <!------------------------------------ Fields of study ---------------------------------------->
-          <p v-if="search_result._source.fieldsOfStudy">
+          <p v-if="search_result.fieldsOfStudy">
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
             <a
               class="link-class-3 secondary_description"
+              :href="'/journal/' + formatTitle(search_result.venue)"
+              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
             >
-              <b>INFOCOM (International Conference on Computer Communications)</b>
+              <b>{{search_result.venue}}</b>
             </a>
-            <span>&sdot;</span>
+            <span
+              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
+            >&sdot;</span>
             <a
               v-if="!field_hidden"
               class="link-class-3"
-              v-for="(fos,index) in search_result._source.fieldsOfStudy"
+              v-for="(fos,index) in search_result.fieldsOfStudy"
             >
               {{ fos }}
-              <span v-if="index < search_result._source.fieldsOfStudy.length - 1">,</span>
+              <span v-if="index < search_result.fieldsOfStudy.length - 1">,</span>
             </a>
             <span
               class="less-more-button"
               v-if="!field_hidden"
               v-on:click="field_hidden = true"
             >
-              &nbspRút gọn
+              &nbsp{{ $t('general_attribute.less') }}
             </span>
 
             <a
               v-if="field_hidden"
               class="link-class-3"
             >
-              {{ search_result._source.fieldsOfStudy[0] }}
+              {{ search_result.fieldsOfStudy[0] }}
             </a>
             <span
-              v-if="field_hidden && search_result._source.fieldsOfStudy.length - 1 > 0"
+              v-if="field_hidden && search_result.fieldsOfStudy.length - 1 > 0"
               class="link-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
-              + {{ search_result._source.fieldsOfStudy.length - 1 }} lĩnh vực
+              + {{ search_result.fieldsOfStudy.length - 1 }} {{ $t('general_attribute.fos') }}
             </span>
           </p>
           <!------------------------------------ Fields of study ---------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <p v-if="search_result._source.topics.length > 0">
+          <p v-if="search_result.topics.length > 0">
             <span class="small_icon"><i class="fas fa-sticky-note"></i></span>
             <span
               v-if="!topic_hidden"
-              v-for="(topic, index) in search_result._source.topics"
+              v-for="(topic, index) in search_result.topics"
               :key="topic.topicId"
 
             >
@@ -66,19 +70,19 @@
               >
                 {{ topic.topic }}
               </a>
-              <span v-if="index < search_result._source.topics.length - 1">,</span>
+              <span v-if="index < search_result.topics.length - 1">,</span>
             </span>
             <span
               class="less-more-button"
               v-if="!topic_hidden"
               v-on:click="topic_hidden = true"
             >
-            &nbspRút gọn
+            &nbsp{{ $t('general_attribute.less') }}
             </span>
 
             <span
               v-if="topic_hidden"
-              v-for="(topic, index) in search_result._source.topics.slice(0,5)"
+              v-for="(topic, index) in search_result.topics.slice(0,5)"
             >
               <a
                 :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
@@ -86,118 +90,57 @@
               >
                 {{ topic.topic }}
               </a>
-              <span v-if="index < search_result._source.topics.slice(0,5).length - 1">,</span>
+              <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
           </span>
             <span
-              v-if="topic_hidden && search_result._source.topics.length > 5"
+              v-if="topic_hidden && search_result.topics.length > 5"
               class="less-more-button"
               v-on:click="topic_hidden = false"
             >
-            + {{ search_result._source.topics.length - 5 }} chủ đề
+            + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}
           </span>
           </p>
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <div>
-            <span class="small_icon"><i class="fas fa-user-alt"></i></span>
-            <span style="display: inline-block; vertical-align: top;">
-              <p
-                v-if="author_hidden"
-                v-for="(author, index) in search_result._source.authors.slice(0,3)"
-                :key="author.authorId"
-              >
-                <a
-                  :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
-                  class="link-class-3 secondary_description"
-                >
-                  <b>{{ author.name }}</b>
-                </a>
-              </p>
-              <span
-                class="less-more-button"
-                v-if="author_hidden && search_result._source.authors.length - 3 > 0"
-                v-on:click="show_author_modal = true"
-              >
-                Xem tất cả {{ search_result._source.authors.length }} tác giả
-              </span>
-            </span>
-          </div>
-
-          <!----------------------------------------- Authors Modal ------------------------------------------->
-          <div class="modal" v-bind:class="{ 'is-active': show_author_modal }">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-              <header class="modal-card-head">
-                <p class="modal-card-title">
-                  <b>Tác giả ({{search_result._source.authors.length}})</b>
-                </p>
-                <button class="delete" aria-label="close" @click="show_author_modal = false"></button>
-              </header>
-              <section class="modal-card-body">
-<!--                Tìm cách để hover đc cả row và ấn đc cả row, như scinapse-->
-                <b-table
-                  :data="this.search_result._source.authors"
-                  :hoverable="true"
-                >
-                  <b-table-column field="name" width="40" v-slot="props">
-                    {{ props }}
-                  </b-table-column>
-
-                  <b-table-column field="WorkPlace">
-                    <template v-slot="props">
-                      Nơi công tác
-                    </template>
-                  </b-table-column>
-
-                  <b-table-column field="h-index">
-                    <template v-slot="props">
-                      h-index
-                    </template>
-                  </b-table-column>
-                </b-table>
-              </section>
-            </div>
-          </div>
-          <!----------------------------------------- Authors Modal ------------------------------------------->
-
+          <AuthorModal v-bind:authors="search_result.authors"></AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
         <!------------------------------------------ Abstract ----------------------------------------->
         <p
-          v-if="!abstract_hidden && typeof search_result._source.abstract !== 'object'"
+          v-if="!abstract_hidden && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
-          {{ search_result._source.abstract }}
-          <a class="text-class-3" v-on:click="abstract_hidden = true">...Ẩn bớt</a>
+          {{ search_result.abstract }}
+          <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
-          v-if="abstract_hidden && typeof search_result._source.abstract !== 'object'"
+          v-if="abstract_hidden && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
-          {{ search_result._source.abstract.slice(0, 400) }}
+          {{ search_result.abstract.slice(0, 400) }}
           <a
             class="text-class-3"
-            v-if="search_result._source.abstract.length > 400"
+            v-if="search_result.abstract.length > 400"
             v-on:click="abstract_hidden = false"
-          >...Xem thêm</a>
+          >...{{ $t('general_attribute.more') }}</a>
         </p>
         <br>
         <!------------------------------------------ Abstract ----------------------------------------->
         <!-------------------------------------- Action Buttons --------------------------------------->
         <nav class="level is-mobile util_level">
           <div class="level-left is-small">
-            <a class="level-item" v-if="search_result._source.citations_count > 0">
+            <a class="level-item" v-if="search_result.citations_count > 0">
               <button
                 class="button is-info is-light is-outlined"
               >
-                {{ search_result._source.citations_count }} trích dẫn
+                {{ search_result.citations_count }} {{ $t('general_attribute.citation') }}
               </button>
             </a>
             <a
-              v-if="search_result._source.doi !== undefined && search_result._source.doi !== null"
-              :href="'https://doi.org/' + search_result._source.doi"
+              v-if="search_result.doi !== undefined && search_result.doi !== null"
+              :href="'https://doi.org/' + search_result.doi"
               target="_blank"
               class="level-item"
             >
@@ -207,11 +150,24 @@
                 <span>DOI <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
+            <a
+              v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && !search_result.pdf_url.endsWith('.pdf')"
+              :href="search_result.pdf_url"
+              target="_blank"
+              class="level-item"
+            >
+              <button
+                class="button is-info is-light is-outlined"
+              >
+                <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
+              </button>
+            </a>
             <span class="level-item">
               <span
                 class="tag is-success is-small"
-                v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined"
+                v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && search_result.pdf_url.endsWith('.pdf')"
               >
+<!--                {{search_result.pdf_url}}-->
               <span>PDF <i class="fas fa-check"></i></span>
             </span>
             </span>
@@ -222,14 +178,14 @@
               class="button is-info is-light is-outlined"
               @click="handle_cite_button"
             >
-              <span><i class="fas fa-quote-left"></i> Trích dẫn</span>
+              <span><i class="fas fa-quote-left"></i> {{ $t('general_attribute.cite') }}</span>
             </button>
             <div class="modal" v-bind:class="{ 'is-active': show_cite_modal }">
               <div class="modal-background"></div>
               <div class="modal-card">
                 <header class="modal-card-head">
                   <p class="modal-card-title">
-                    <b>Trích dẫn</b>
+                    <b>{{ $t('general_attribute.cite') }}</b>
                   </p>
                   <button class="delete" aria-label="close" @click="show_cite_modal = false"></button>
                 </header>
@@ -264,19 +220,18 @@
 
 <script>
 import CitationBar from "./CitationBar";
+import AuthorModal from "./AuthorModal";
 import {formatTitle, genBibtex} from "../../assets/utils";
 
 export default {
   name: "SearchResult",
-  components: {CitationBar},
+  components: {CitationBar, AuthorModal},
   props: ['search_result'],
   data() {
     return {
-      author_hidden: true,
       topic_hidden: true,
       field_hidden: true,
       abstract_hidden: true,
-      show_author_modal: false,
       show_cite_modal: false,
       active_cite_tab: 0,
       bibtex: null,
@@ -292,11 +247,11 @@ export default {
     },
     genBibtex() {
       let bibtex_data = {}
-      bibtex_data.doi = this.search_result._source?.doi || ''
-      bibtex_data.year = this.search_result._source?.year || ''
-      bibtex_data.author = this.search_result._source.authors
-      bibtex_data.title = this.search_result._source.title
-      bibtex_data.journal = this.search_result._source?.venue || ''
+      bibtex_data.doi = this.search_result?.doi || ''
+      bibtex_data.year = this.search_result?.year || ''
+      bibtex_data.author = this.search_result.authors
+      bibtex_data.title = this.search_result.title
+      bibtex_data.journal = this.search_result?.venue || ''
       this.bibtex = genBibtex(bibtex_data)
     },
     copyBibtex() {
@@ -305,7 +260,7 @@ export default {
       this.$copyText(bibtex_text)
       this.$buefy.toast.open({
         duration: 800,
-        message: `Đã sao chép!`,
+        message: this.$t('general_attribute.copy'),
         position: 'is-bottom',
         type: 'is-success'
       })
@@ -315,7 +270,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "assets/general_styling.scss";
 .util_level {
   border-top: 1px solid #d9dadb;
   padding-top: 10px;
@@ -335,4 +289,5 @@ export default {
   width: 20px;
   position: sticky;
 }
+
 </style>

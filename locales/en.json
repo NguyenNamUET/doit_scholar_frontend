@@ -1,0 +1,99 @@
+{
+  "general_attribute": {
+    "paper": "Paper",
+    "author": "Authors",
+    "venue": "Journal",
+
+    "previous": "Previous",
+    "next": "Next",
+    "search": "Search",
+    "list_label": "Showing {start} - {end} of {total} papers",
+    "search_bar_placeholder": "Search for paper",
+    "cite": "Cite",
+    "more": "See more",
+    "less": "See less",
+    "unavailable": "Unavailable",
+    "show": "Show",
+    "hide": "Hide",
+    "copy": "Copied",
+
+    "topic": "Topics",
+    "citation": "Citations",
+    "reference": "References",
+    "fos": "Fields of study",
+    "publication": "Publications",
+    "abstract": "Abstract"
+  },
+
+  "default_layout": {
+    "header": {
+      "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "lang_switch": "Switch to"
+    },
+    "footer" : {
+      "address": "Address",
+      "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
+    }
+  },
+
+  "home_page": {
+    "title": "A search engine for scientific literature",
+    "paper_carousel": {
+      "title": "Most cited papers"
+    },
+    "author_carousel": {
+      "title": "Most cited authors",
+      "citation": "Citations",
+      "publication": "Publications",
+      "highlighted_citation": "Highly influenced citations"
+    },
+    "fos_carousel": {
+      "title": "Popular fields of study",
+      "count": "Number of papers"
+    },
+    "page_stat": {
+      "author_count": "Authors",
+      "paper_count": "Papers",
+      "fos_count": "Fields of study"
+    },
+    "chart": {
+      "paper_by_fos_chart": "Papers per field of study",
+      "paper_by_venue_chart": "Papers per journal"
+    }
+  },
+
+  "search_page": {
+    "result_stat": "About {result_count} results for keyword {keyword}",
+    "see_all_author": "See all authors",
+    "see_fewer_author": "See fewer authors"
+  },
+
+  "paper_detail_page": {
+    "paper_id": "Paper ID",
+    "related_paper": "Related Papers",
+    "citation_tooltip": "Other papers which mention this paper",
+    "reference_tooltip": "Papers referenced by this paper",
+    "highlight_citation_box": {
+      "title": "{number} popular citations in {total} papers"
+    }
+  },
+
+  "author_detail_page": {
+    "tabs": {
+      "publication_nav": "Publications",
+      "influence_nav": "Influence"
+    },
+    "author_info": {
+      "citation": "Citations",
+      "publication": "Publications",
+      "highlighted_citation": "Highly influenced citations"
+    }
+  },
+
+  "journal_detail_page": {
+    "publication_chart": {
+      "title": "Publications per year"
+    }
+  }
+}
+

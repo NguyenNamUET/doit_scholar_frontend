@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-one-third">
+  <div>
     <article class="media">
       <div class="media-content">
         <div class="content">
@@ -8,7 +8,7 @@
             >
               <strong class="text-class-2">{{author_name}}</strong>
             </a>
-            <p class="text-class-3">{{doc_count}} xuất bản liên quan đến từ khóa</p>
+            <p class="text-class-3">{{doc_count}} {{ $t('general_attribute.publication') }}</p>
         </div>
       </div>
     </article>
@@ -18,7 +18,7 @@
 <script>
     import {formatTitle} from 'assets/utils';
     export default {
-      name: "AuthorInfo",
+      name: "AuthorCard",
       props: ['author_info'],
       data() {
         return {
@@ -36,11 +36,13 @@
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   a:hover {
     text-decoration: none;
   }
   .text-class-3:hover {
     text-decoration: none;
+  }
+  .text-class-2 {
+    color: #0352ba;
   }
 </style>

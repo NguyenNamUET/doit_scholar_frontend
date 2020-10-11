@@ -30,8 +30,6 @@
 </template>
 
 <script>
-    import {fields_dict} from "assets/utils";
-
     export default {
       name: "DropDown",
       props: ['dd_data'],

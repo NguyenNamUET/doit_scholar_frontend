@@ -69,12 +69,13 @@
           >
             <span class="status_icon"><i class="fas fa-signal"></i> <b>{{search_result.citations_count}} trích dẫn</b></span>
           </b-tooltip>
-          <span
-            class="tag is-warning is-small"
-            v-if="search_result.isInfluential"
-          >
-            <span><i class="fas fa-fire"></i> Ảnh hưởng lớn</span>
-          </span>
+
+<!--          <span-->
+<!--            class="tag is-warning is-small"-->
+<!--            v-if="search_result.isInfluential"-->
+<!--          >-->
+<!--            <span><i class="fas fa-fire"></i> Ảnh hưởng lớn</span>-->
+<!--          </span>-->
         </div>
       </div>
 </template>
@@ -101,7 +102,6 @@
 </script>
 
 <style scoped>
-  @import "assets/general_styling.scss";
   .tile{
     background-color: white;
     border-bottom: 1px solid #E2E3E4;

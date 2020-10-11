@@ -8,7 +8,7 @@
         :data="autocomplete_data"
         @typing="getAutocomplete"
         :loading="is_loading"
-        placeholder="Nhập từ khóa tìm kiếm: tên tác giả, tên văn bản, năm xuất bản,..."
+        :placeholder="placeholder"
         @select="option => this.selected = option"
       >
         <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
@@ -30,7 +30,7 @@
     </div>
     <div class="control">
       <p class="button is-warning" v-on:click="submitQuery">
-        <i class="fas fa-search"></i>Tìm kiếm
+        <i class="fas fa-search"></i> {{ $t('general_attribute.search') }}
       </p>
     </div>
   </div>
@@ -42,6 +42,7 @@ import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
+      props: ['placeholder'],
       data() {
         return {
           search_query: '',
@@ -85,9 +86,9 @@ export default {
             size: 10,
             top_author_size: 10,
             page: 1
-            }
+          }
           if(this.search_query!==""){
-            this.$router.push({name:'search', query: this.query_params})
+            this.$router.push({name: this.localeRoute('search').name, query: this.query_params})
           }
           else{
             this.$buefy.toast.open({
