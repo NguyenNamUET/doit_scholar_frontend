@@ -108,9 +108,9 @@
                           </div>
                         </div>
                       </div>
-                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>
-                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>
-                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>-->
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>-->
+<!--                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>-->
                     </div>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">

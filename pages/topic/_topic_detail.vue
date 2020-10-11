@@ -120,14 +120,11 @@
       async asyncData({route}) {
         let id_pattern = /[0-9]+$/g
         let topic_id = id_pattern.exec(route.params.topic_detail)
+        let query_params = {topics: Array(topic_id[0])}
+        let data = await paper_by_topic(query_params)
+        //let wiki_topic_summary = await wiki_summary({name: topic_name})
         let name_pattern = /.+(?=\-[0-9]+$)/g
         let topic_name = name_pattern.exec(route.params.topic_detail)
-        let query_params = {topics: Array(topic_name[0].replace(/-/g, ' ')),
-          source: ["title","abstract","year","authors","paperId"]
-        }
-        let data = await paper_by_topic(query_params)
-        console.log(data)
-        //let wiki_topic_summary = await wiki_summary({name: topic_name})
         if(Object.keys(data).length !== 0 ){
           return {
             topic_name: topic_name[0].replace(/-/g, ' '),
