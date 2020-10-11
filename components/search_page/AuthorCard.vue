@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-one-third">
+  <div>
     <article class="media">
       <div class="media-content">
         <div class="content">

@@ -162,7 +162,6 @@
         <div class="tile is-parent">
           <div class="tile is-child top_citation" v-if="citation_length > 0">
             <p>
-<!--              3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn-->
               <i18n
                 tag="span"
                 path="paper_detail_page.highlight_citation_box.title"
@@ -271,9 +270,8 @@
     <!---------------------------------------------- Topics ------------------------------------------------------->
     <div class="tile is-ancestor" id="topic_box">
       <div class="tile is-parent is-vertical " v-if="paper_detail.topics.length > 0" >
+        <p class="content_title">{{ $t('general_attribute.topic') }}</p>
         <article class="tile is-child content_box">
-          <p class="content_title">{{ $t('general_attribute.topic') }}</p>
-          <br>
           <div>
             <ul
               v-bind:style="{ maxHeight: paper_detail.topics.length*1.5 + 'vh' }"
@@ -300,7 +298,7 @@
     <div class="tile is-ancestor" id="citation_box" >
       <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
-          <article class="tile is-child content_box">
+          <article class="tile is-child">
             <p class="content_title">
               {{ $t('general_attribute.citation') }}
               <b-tooltip
@@ -311,8 +309,7 @@
                 <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
               </b-tooltip>
             </p>
-            <br>
-            <p class="text-class-3" style="margin-left: 10px;">
+            <p class="text-class-3">
               <i18n
                 tag="span"
                 path="general_attribute.list_label"
@@ -341,11 +338,11 @@
             </p>
             <div class="tile is-parent">
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
-                <PaperTable
+                <SearchResult
                   v-for="result in citation_data"
                   v-bind:search_result="result"
                 >
-                </PaperTable>
+                </SearchResult>
                 <Pagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
@@ -385,7 +382,7 @@
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
       <div class="tile is-parent" v-if="ref_data.length > 0">
-        <div class="tile is-child content_box">
+        <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.reference') }}
             <b-tooltip
@@ -396,8 +393,7 @@
               <span class="text-class-3"><i class="fas fa-exclamation-circle"></i></span>
             </b-tooltip>
           </p>
-          <br>
-          <p class="text-class-3" style="margin-left: 10px;">
+          <p class="text-class-3">
             <i18n
               tag="span"
               path="general_attribute.list_label"
@@ -425,12 +421,12 @@
             </i18n>
           </p>
           <div class="tile is-parent">
-            <div class="tile is-child">
-              <PaperTable
+            <div class="tile is-child is-8">
+              <SearchResult
                 v-for="result in ref_data"
                 v-bind:search_result="result"
               >
-              </PaperTable>
+              </SearchResult>
               <Pagination
                 v-model="current_ref_page"
                 :page-count="Math.ceil(ref_length / per_page)"
@@ -490,10 +486,11 @@
     import {formatTitle} from "assets/utils";
     import {formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
+    import SearchResult from "@/components/search_page/SearchResult";
 
     export default {
       name: "_paper_detail",
-      // components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
+      components: {SearchResult},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true

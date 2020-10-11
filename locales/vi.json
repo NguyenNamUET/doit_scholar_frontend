@@ -15,6 +15,7 @@
     "unavailable": "Chưa có thông tin",
     "show": "Xem",
     "hide": "Ẩn",
+    "copy": "Đã sao chép",
 
     "topic": "Chủ đề",
     "citation": "Trích dẫn",
@@ -85,6 +86,12 @@
       "citation": "Số lần được trích dẫn",
       "publication": "Số xuất bản",
       "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
+    }
+  },
+
+  "journal_detail_page": {
+    "publication_chart": {
+      "title": "Số xuất bản theo năm"
     }
   }
 }

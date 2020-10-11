@@ -181,7 +181,7 @@ a:hover {
 }
 
 .tile {
-  padding-top: 0.2rem; padding-bottom: 0.2rem; margin-top: 1.5rem;
+  padding-top: 0.2rem; padding-bottom: 0.2rem;
 }
 
 </style>

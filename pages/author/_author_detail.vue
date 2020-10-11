@@ -62,7 +62,34 @@
                 </div>
                 <div class="tab-content">
                   <div v-if="this.current_tab === 'publication'">
-                    <div id="sort_section">
+                    <p class="text-class-3">
+                      <i18n
+                        tag="span"
+                        path="general_attribute.list_label"
+                      >
+                        <template v-slot:start>
+                                <span>
+                                    {{ (current_paper_page-1)*per_page + 1}}
+                                </span>
+                        </template>
+                        <template
+                          v-slot:end
+                        >
+                                <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
+                                    {{ (current_paper_page-1)*per_page + per_page}}
+                                </span>
+                          <span v-else>
+                                  {{paper_length}}
+                                </span>
+                        </template>
+                        <template v-slot:total>
+                                <span>
+                                    {{paper_length | formatNumber}}
+                                </span>
+                        </template>
+                      </i18n>
+                    </p>
+                    <div class="filter_section content_box">
                       <div style="display: inline-block">
                         <div class="field has-addons">
                           <div class="control is-expanded">
@@ -85,53 +112,15 @@
                       <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>
                       <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>
                     </div>
-                    <br>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">
-                        <div class="tile is-child content_box">
-                          <p class="text-class-3">
-                            <i18n
-                              tag="span"
-                              path="general_attribute.list_label"
-                            >
-                              <template v-slot:start>
-                                <span>
-                                    {{ (current_paper_page-1)*per_page + 1}}
-                                </span>
-                              </template>
-                              <template
-                                v-slot:end
-                              >
-                                <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
-                                    {{ (current_paper_page-1)*per_page + per_page}}
-                                </span>
-                                <span v-else>
-                                  {{paper_length}}
-                                </span>
-                              </template>
-                              <template v-slot:total>
-                                <span>
-                                    {{paper_length | formatNumber}}
-                                </span>
-                              </template>
-                            </i18n>
-<!--                            Bạn đang xem-->
-<!--                            <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">-->
-<!--                      {{ (current_paper_page-1)*per_page + 1}}-{{ (current_paper_page-1)*per_page + per_page}}-->
-<!--                      trong {{paper_length}} xuất bản-->
-<!--                    </span>-->
-<!--                            <span v-else>-->
-<!--                      {{ (current_paper_page-1)*per_page + 1}}-{{paper_length}}-->
-<!--                      trong {{paper_length}} xuất bản-->
-<!--                    </span>-->
-                          </p>
-                          <PaperTable
+                        <div class="tile is-child">
+                          <SearchResult
                             v-for="result in paper_data"
                             v-bind:search_result="result"
                           >
-                          </PaperTable>
+                          </SearchResult>
                           <Pagination
-                            style="margin-top: 10px;"
                             v-model="current_paper_page"
                             :page-count="Math.ceil(paper_length / per_page)"
                             :click-handler="updatePaper"
@@ -267,10 +256,5 @@
   }
   .tab_title {
     color: #756c6c;
-  }
-  #sort_section {
-    padding: 0 10px 10px 10px;
-    border-bottom: 1px solid #d9dadb;
-    width: 100%;
   }
 </style>

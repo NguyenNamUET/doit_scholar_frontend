@@ -5,33 +5,44 @@
     id="page_container"
   >
     <div class="tile is-ancestor">
-      <div class="tile is-parent">
-        <div class="tile is-child">
-          <span class="subtitle">
-            <i18n
-              tag="strong"
-              path="search_page.result_stat"
+      <div class="tile is-parent is-8 is-vertical">
+        <p class="content_title">{{ $t('general_attribute.author') }}</p>
+        <div class="tile is-child" v-if="author_hidden">
+          <div class="columns is-multiline is-1">
+            <div
+              class="column"
+              v-for="author in author_info.slice(0,3)"
             >
-              <template v-slot:result_count>
-                <span>
-                    {{ total_count | formatNumber }}
-                </span>
-             </template>
-              <template v-slot:keyword>
-                <span>
-                    "{{ query_params.query }}"
-                </span>
-             </template>
-            </i18n>
-<!--            <strong> Tìm được {{ total_count | formatNumber }} kết quả cho "{{ query_params.query }}"</strong>-->
-          </span>
-          <!------------------------      DROPDOWN HERE   --------------------------->
-          <div id="sort_section">
-            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+              <AuthorCard
+                class="content_box author_card"
+                v-bind:author_info="author"
+              >
+              </AuthorCard>
+            </div>
+
+            <a class="column is-full link-class-3" v-on:click="author_hidden = false">
+              {{ $t('search_page.see_all_author') }}
+            </a>
           </div>
-          <!-------------------------------------------------------------------------->
+        </div>
+
+        <div class="tile is-child columns is-multiline" v-else>
+          <div class="columns is-multiline is-1">
+            <div
+              class="column"
+              v-for="author in author_info"
+            >
+              <AuthorCard
+                class="content_box"
+                v-bind:author_info="author"
+              >
+              </AuthorCard>
+            </div>
+
+            <a class="column is-full link-class-3" v-on:click="author_hidden = true">
+              {{ $t('search_page.see_fewer_author') }}
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -39,31 +50,38 @@
     <!------------------------      AUTHORS CARD HERE   --------------------------->
     <div class="tile is-ancestor">
       <div class="tile is-parent is-8 is-vertical">
-        <div class="tile is-child columns is-multiline" v-if="author_hidden">
-            <AuthorCard
-              v-for="author in author_info.slice(0,3)"
-              v-bind:author_info="author"
-            >
-            </AuthorCard>
-            <a class="column is-full link-class-3" v-on:click="author_hidden = false">
-              {{ $t('search_page.see_all_author') }}
-            </a>
-        </div>
-
-        <div class="tile is-child columns is-multiline" v-else>
-          <AuthorCard
-            v-for="author in this.author_info"
-            v-bind:author_info="author"
+        <div class="tile is-child">
+          <p class="content_title">
+            {{ $t('general_attribute.publication') }}
+          </p>
+          <i18n
+            tag="span"
+            path="search_page.result_stat"
           >
-          </AuthorCard>
-          <a class="column is-full link-class-3" v-on:click="author_hidden = true">
-            {{ $t('search_page.see_fewer_author') }}
-          </a>
+            <template v-slot:result_count>
+                <span>
+                    {{ total_count | formatNumber }}
+                </span>
+            </template>
+            <template v-slot:keyword>
+                <span>
+                    "{{ query_params.query }}"
+                </span>
+            </template>
+          </i18n>
+          <br>
+          <!------------------------      DROPDOWN HERE   --------------------------->
+          <div class="content_box filter_section">
+            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
+            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
+            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+          </div>
+          <!-------------------------------------------------------------------------->
         </div>
 
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results"
-                        v-bind:search_result="result"></SearchResult>
+                        v-bind:search_result="result._source"></SearchResult>
         </div>
       </div>
     </div>
@@ -370,11 +388,6 @@
 <style scoped>
   .container {
     padding: 40px 20px;
-  }
-  #sort_section {
-    border-top: 1px solid #d9dadb;
-    padding: 10px;
-    border-bottom: 1px solid #d9dadb;
   }
   p {
     color: black;

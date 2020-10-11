@@ -1,7 +1,7 @@
 {
   "general_attribute": {
     "paper": "Paper",
-    "author": "Author",
+    "author": "Authors",
     "venue": "Journal",
 
     "previous": "Previous",
@@ -15,6 +15,7 @@
     "unavailable": "Unavailable",
     "show": "Show",
     "hide": "Hide",
+    "copy": "Copied",
 
     "topic": "Topics",
     "citation": "Citations",
@@ -86,6 +87,12 @@
       "citation": "Citations",
       "publication": "Publications",
       "highlighted_citation": "Highly influenced citations"
+    }
+  },
+
+  "journal_detail_page": {
+    "publication_chart": {
+      "title": "Publications per year"
     }
   }
 }

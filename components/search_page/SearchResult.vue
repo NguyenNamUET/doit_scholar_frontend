@@ -4,31 +4,32 @@
       <div class="tile is-child content_box">
         <a
           class="text-class-1"
-          :href="'/paper/' + formatTitle(search_result._source.title) + '.p' + '-' + search_result._id"
+          :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
-          <b>{{ search_result._source.title }}</b>
+          <b>{{ search_result.title }}</b>
         </a>
         <!----------------------------------------------------------------------------------------------->
         <div class="has-text-weight-light">
           <!------------------------------------ Fields of study ---------------------------------------->
-          <p v-if="search_result._source.fieldsOfStudy">
+          <p v-if="search_result.fieldsOfStudy">
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
             <a
               class="link-class-3 secondary_description"
-              v-if="search_result._source.venue !== undefined && search_result._source.venue !== null && search_result._source.venue !== ''"
+              :href="'/journal/' + formatTitle(search_result.venue)"
+              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
             >
-              <b>{{search_result._source.venue}}</b>
+              <b>{{search_result.venue}}</b>
             </a>
             <span
-              v-if="search_result._source.venue !== undefined && search_result._source.venue !== null && search_result._source.venue !== ''"
+              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
             >&sdot;</span>
             <a
               v-if="!field_hidden"
               class="link-class-3"
-              v-for="(fos,index) in search_result._source.fieldsOfStudy"
+              v-for="(fos,index) in search_result.fieldsOfStudy"
             >
               {{ fos }}
-              <span v-if="index < search_result._source.fieldsOfStudy.length - 1">,</span>
+              <span v-if="index < search_result.fieldsOfStudy.length - 1">,</span>
             </a>
             <span
               class="less-more-button"
@@ -42,24 +43,24 @@
               v-if="field_hidden"
               class="link-class-3"
             >
-              {{ search_result._source.fieldsOfStudy[0] }}
+              {{ search_result.fieldsOfStudy[0] }}
             </a>
             <span
-              v-if="field_hidden && search_result._source.fieldsOfStudy.length - 1 > 0"
+              v-if="field_hidden && search_result.fieldsOfStudy.length - 1 > 0"
               class="link-class-3 less-more-button"
               v-on:click="field_hidden = false"
             >
-              + {{ search_result._source.fieldsOfStudy.length - 1 }} {{ $t('general_attribute.fos') }}
+              + {{ search_result.fieldsOfStudy.length - 1 }} {{ $t('general_attribute.fos') }}
             </span>
           </p>
           <!------------------------------------ Fields of study ---------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <p v-if="search_result._source.topics.length > 0">
+          <p v-if="search_result.topics.length > 0">
             <span class="small_icon"><i class="fas fa-sticky-note"></i></span>
             <span
               v-if="!topic_hidden"
-              v-for="(topic, index) in search_result._source.topics"
+              v-for="(topic, index) in search_result.topics"
               :key="topic.topicId"
 
             >
@@ -69,7 +70,7 @@
               >
                 {{ topic.topic }}
               </a>
-              <span v-if="index < search_result._source.topics.length - 1">,</span>
+              <span v-if="index < search_result.topics.length - 1">,</span>
             </span>
             <span
               class="less-more-button"
@@ -81,7 +82,7 @@
 
             <span
               v-if="topic_hidden"
-              v-for="(topic, index) in search_result._source.topics.slice(0,5)"
+              v-for="(topic, index) in search_result.topics.slice(0,5)"
             >
               <a
                 :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
@@ -89,39 +90,39 @@
               >
                 {{ topic.topic }}
               </a>
-              <span v-if="index < search_result._source.topics.slice(0,5).length - 1">,</span>
+              <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
           </span>
             <span
-              v-if="topic_hidden && search_result._source.topics.length > 5"
+              v-if="topic_hidden && search_result.topics.length > 5"
               class="less-more-button"
               v-on:click="topic_hidden = false"
             >
-            + {{ search_result._source.topics.length - 5 }} {{ $t('general_attribute.topic') }}
+            + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}
           </span>
           </p>
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <AuthorModal v-bind:authors="search_result._source.authors"></AuthorModal>
+          <AuthorModal v-bind:authors="search_result.authors"></AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
         <!------------------------------------------ Abstract ----------------------------------------->
         <p
-          v-if="!abstract_hidden && typeof search_result._source.abstract !== 'object'"
+          v-if="!abstract_hidden && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
-          {{ search_result._source.abstract }}
+          {{ search_result.abstract }}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
-          v-if="abstract_hidden && typeof search_result._source.abstract !== 'object'"
+          v-if="abstract_hidden && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
-          {{ search_result._source.abstract.slice(0, 400) }}
+          {{ search_result.abstract.slice(0, 400) }}
           <a
             class="text-class-3"
-            v-if="search_result._source.abstract.length > 400"
+            v-if="search_result.abstract.length > 400"
             v-on:click="abstract_hidden = false"
           >...{{ $t('general_attribute.more') }}</a>
         </p>
@@ -130,16 +131,16 @@
         <!-------------------------------------- Action Buttons --------------------------------------->
         <nav class="level is-mobile util_level">
           <div class="level-left is-small">
-            <a class="level-item" v-if="search_result._source.citations_count > 0">
+            <a class="level-item" v-if="search_result.citations_count > 0">
               <button
                 class="button is-info is-light is-outlined"
               >
-                {{ search_result._source.citations_count }} {{ $t('general_attribute.citation') }}
+                {{ search_result.citations_count }} {{ $t('general_attribute.citation') }}
               </button>
             </a>
             <a
-              v-if="search_result._source.doi !== undefined && search_result._source.doi !== null"
-              :href="'https://doi.org/' + search_result._source.doi"
+              v-if="search_result.doi !== undefined && search_result.doi !== null"
+              :href="'https://doi.org/' + search_result.doi"
               target="_blank"
               class="level-item"
             >
@@ -150,22 +151,23 @@
               </button>
             </a>
             <a
-              v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined && !search_result._source.pdf_url.endsWith('.pdf')"
-              :href="search_result._source.pdf_url"
+              v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && !search_result.pdf_url.endsWith('.pdf')"
+              :href="search_result.pdf_url"
               target="_blank"
               class="level-item"
             >
               <button
                 class="button is-info is-light is-outlined"
               >
-                <span>{{search_result._source.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
+                <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
             <span class="level-item">
               <span
                 class="tag is-success is-small"
-                v-if="search_result._source.pdf_url !== null && search_result._source.pdf_url !== undefined && search_result._source.pdf_url.endsWith('.pdf')"
+                v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && search_result.pdf_url.endsWith('.pdf')"
               >
+<!--                {{search_result.pdf_url}}-->
               <span>PDF <i class="fas fa-check"></i></span>
             </span>
             </span>
@@ -245,11 +247,11 @@ export default {
     },
     genBibtex() {
       let bibtex_data = {}
-      bibtex_data.doi = this.search_result._source?.doi || ''
-      bibtex_data.year = this.search_result._source?.year || ''
-      bibtex_data.author = this.search_result._source.authors
-      bibtex_data.title = this.search_result._source.title
-      bibtex_data.journal = this.search_result._source?.venue || ''
+      bibtex_data.doi = this.search_result?.doi || ''
+      bibtex_data.year = this.search_result?.year || ''
+      bibtex_data.author = this.search_result.authors
+      bibtex_data.title = this.search_result.title
+      bibtex_data.journal = this.search_result?.venue || ''
       this.bibtex = genBibtex(bibtex_data)
     },
     copyBibtex() {
@@ -258,7 +260,7 @@ export default {
       this.$copyText(bibtex_text)
       this.$buefy.toast.open({
         duration: 800,
-        message: `Đã sao chép!`,
+        message: this.$t('general_attribute.copy'),
         position: 'is-bottom',
         type: 'is-success'
       })
