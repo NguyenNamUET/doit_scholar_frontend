@@ -81,9 +81,9 @@
                           </div>
                         </div>
                       </div>
-                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>
+                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>
+                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>
                     </div>
                     <br>
                     <div class="tile is-ancestor">
@@ -228,7 +228,8 @@
           this.is_loading = false
         }
       },
-      async asyncData({route, $axios}) {
+      async asyncData({route
+                        , $axios}) {
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
         let data = await author_by_id(author_id)
