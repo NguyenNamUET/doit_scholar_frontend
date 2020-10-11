@@ -15,6 +15,7 @@
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
             <a
               class="link-class-3 secondary_description"
+              :href="'/journal/' + formatTitle(search_result.venue)"
               v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
             >
               <b>{{search_result.venue}}</b>
@@ -166,6 +167,7 @@
                 class="tag is-success is-small"
                 v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && search_result.pdf_url.endsWith('.pdf')"
               >
+<!--                {{search_result.pdf_url}}-->
               <span>PDF <i class="fas fa-check"></i></span>
             </span>
             </span>
@@ -258,7 +260,7 @@ export default {
       this.$copyText(bibtex_text)
       this.$buefy.toast.open({
         duration: 800,
-        message: `Đã sao chép!`,
+        message: this.$t('general_attribute.copy'),
         position: 'is-bottom',
         type: 'is-success'
       })

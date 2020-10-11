@@ -389,10 +389,6 @@
   .container {
     padding: 40px 20px;
   }
-  .filter_section {
-    margin-top: 10px;
-    padding: 10px;
-  }
   p {
     color: black;
   }

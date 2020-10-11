@@ -162,7 +162,6 @@
         <div class="tile is-parent">
           <div class="tile is-child top_citation" v-if="citation_length > 0">
             <p>
-<!--              3 văn bản nổi bật trong {{citation_length | formatNumber}} trích dẫn-->
               <i18n
                 tag="span"
                 path="paper_detail_page.highlight_citation_box.title"
@@ -492,7 +491,6 @@
     export default {
       name: "_paper_detail",
       components: {SearchResult},
-      // components: {PaperCard, PaperPDF, PaperTable, CitationBar, NuxtError, Pagination},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true

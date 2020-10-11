@@ -129,9 +129,9 @@ const paper_by_fos = async(query_params) => {
 
 const paper_by_venue = async(query_params) => {
   try {
-    // console.log("paper_by_fos query: ", query_params)
-    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_fos, {
-      venues: query_params.venue,
+    // console.log("paper_by_venue query: ", query_params)
+    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_venue, {
+      venues: query_params.venues,
       start: query_params.start,
       size: query_params.size
     })
