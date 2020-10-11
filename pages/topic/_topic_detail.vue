@@ -70,10 +70,10 @@
             <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
           </div>
           <!-------------------------------------------------------------------------->
-<!--          <SearchResult-->
-<!--            v-for="result in papers"-->
-<!--            v-bind:search_result="result._source"/>-->
-          {{papers}}
+          <SearchResult
+            v-for="result in papers"
+            v-bind:search_result="result._source"/>
+<!--          {{papers}}-->
           <Pagination
             v-model="current_page"
             :page-count="Math.ceil(total_paper / per_page)"
