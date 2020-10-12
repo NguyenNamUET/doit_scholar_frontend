@@ -51,16 +51,6 @@ export default {
           raw_data: [],
         }
       },
-      // computed: {
-      //   async filteredDataArray() {
-      //     return this.autocomplete_data.filter((option) => {
-      //       return option
-      //         .toString()
-      //         .toLowerCase()
-      //         .indexOf(this.search_query.toLowerCase()) >= 0
-      //     })
-      //   }
-      // },
       methods: {
         formatTitle(title) {
           return formatTitle(title)
@@ -80,9 +70,9 @@ export default {
         submitQuery() {
           this.query_params = {
             query: this.search_query,
+            top_author_size: 10,
             start: 0,
             size: 10,
-            top_author_size: 10,
             page: 1
           }
           if(this.search_query!==""){
