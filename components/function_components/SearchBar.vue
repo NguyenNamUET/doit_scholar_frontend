@@ -11,7 +11,7 @@
         :placeholder="placeholder"
         @select="option => this.selected = option"
       >
-        <template slot="empty">Không tìm thấy kết quả cho từ khóa {{search_query}}</template>
+        <template slot="empty">{{ $t('default_layout.header.search_bar_not_found') }} {{search_query}}</template>
         <template slot-scope="props">
           <a
             :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id"
@@ -22,16 +22,14 @@
             </span>
 
             <div class="text-class-3 color-class-3">
-              Số trích dẫn của văn bản: {{props.option._source.citations_count}}
+              {{props.option._source.citations_count}} {{ $t('general_attribute.citation') }}
             </div>
           </a>
         </template>
       </b-autocomplete>
     </div>
     <div class="control">
-      <p class="button is-warning" v-on:click="submitQuery">
-        <i class="fas fa-search"></i> {{ $t('general_attribute.search') }}
-      </p>
+      <span class="button is-warning" v-on:click="submitQuery"><i class="fas fa-search"></i> {{ $t('general_attribute.search') }}</span>
     </div>
   </div>
 </template>

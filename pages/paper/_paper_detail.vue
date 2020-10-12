@@ -1,5 +1,6 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
+<!--    {{this.gg_scholar_meta}}-->
     <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
       <div class="tile">
         <div class="tile is-parent is-7">
@@ -144,7 +145,7 @@
                   v-if="!show_pdf"
                   v-on:click="handlePDF(true)"
                 >
-                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.show') }} PDF</span>
+                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.show') }} PDF</span>
                 </a>
 
                 <a
@@ -152,7 +153,7 @@
                   v-if="show_pdf"
                   v-on:click="handlePDF(false)"
                 >
-                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.hide') }} PDF</span>
+                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.hide') }} PDF</span>
                 </a>
               </div>
             </nav>
@@ -353,7 +354,7 @@
                 </Pagination>
               </div>
               <div class="tile is-child is-4">
-                <div v-if="this.chart_data.length > 0">
+                <div v-if="this.chart_data.length > 0" class="content_box">
                   <CitationBar
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
@@ -482,13 +483,11 @@
 </template>
 
 <script>
-    import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
-    import {formatTitle} from "assets/utils";
-    import {formatNumber} from "assets/utils";
-    import {chartColors} from "assets/utils";
-    import SearchResult from "@/components/search_page/SearchResult";
+import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
+import SearchResult from "@/components/search_page/SearchResult";
 
-    export default {
+export default {
       name: "_paper_detail",
       components: {SearchResult},
       validate({route, redirect}) {
@@ -511,12 +510,198 @@
       // },
       head() {
         return {
-          title: this.paper_detail.title + ' | DoIT Scholar'
+          title: this.paper_detail.title + ' | DoIT Scholar',
+          meta: this.all_meta
+        }
+      },
+      jsonld() {
+        let json_schema = []
+        json_schema.push(this.breadcrumb_schema)
+        json_schema.push(this.article_schema)
+        return {
+          "@context": "https://schema.org",
+          "@graph" : json_schema
         }
       },
       computed: {
-        full_fos: function (){
+        full_fos: function () {
           return _.join(this.paper_detail.fieldsOfStudy, ', ')
+        },
+        all_meta: function () {
+          let local_meta = [
+            {
+              hid: 'description',
+              name: 'description',
+              content: this.paper_detail.abstract
+            }
+          ]
+          return local_meta.concat(this.twitter_meta, this.og_meta, this.gg_scholar_meta)
+        },
+        twitter_meta: function() {
+          return [
+            {
+              hid: 'twitter:title',
+              property: 'twitter:title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'twitter:image',
+              property: 'twitter:image',
+              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+            },
+            {
+              hid: 'twitter:image:alt',
+              property: 'twitter:image:alt',
+              content: 'DoIT Scholar'
+            },
+            {
+              hid: 'twitter:card',
+              property: 'twitter:card',
+              content: 'summary_large_image'
+            },
+            {
+              hid: 'twitter:url',
+              property: 'twitter:url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'twitter:description',
+              property: 'twitter:description',
+              content: this.paper_detail.abstract
+            }
+          ]
+        },
+        og_meta: function() {
+          return [
+            {
+              hid: 'og:title',
+              property: 'og:title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'og:image',
+              property: 'og:image',
+              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+            },
+            {
+              hid: 'og:type',
+              property: 'og:type',
+              content: 'website'
+            },
+            {
+              hid: 'og:site_name',
+              property: 'og:site_name',
+              content: 'DoIT Scholar'
+            },
+            {
+              hid: 'og:url',
+              property: 'og:url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'og:description',
+              property: 'og:description',
+              content: this.paper_detail.abstract
+            }
+          ]
+        },
+        gg_scholar_meta: function () {
+          let meta = [
+            {
+              hid: 'citation_title',
+              name: 'citation_title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'citation_abstract_html_url',
+              name: 'citation_abstract_html_url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'citation_fulltext_html_url',
+              name: 'citation_fulltext_html_url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'citation_publication_date',
+              name: 'citation_publication_date',
+              content: this.paper_detail.year
+            }
+          ]
+          this.paper_detail.authors.forEach(function (author) {
+            meta.push({
+                hid: 'citation_author',
+                name: 'citation_author',
+                content: author.name
+            })
+          })
+          if (this.paper_detail.doi !== undefined && this.paper_detail.doi !== null)
+            meta.push({
+              hid: 'citation_doi',
+              name: 'citation_doi',
+              content: this.paper_detail.doi
+            })
+          if (this.paper_detail.venue.length !== 0)
+            meta.push({
+              hid: 'citation_journal_title',
+              name: 'citation_journal_title',
+              content: this.paper_detail.venue
+            })
+          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
+            meta.push({
+              hid: 'citation_pdf_url',
+              name: 'citation_pdf_url',
+              content: this.paper_detail.pdf_url
+            })
+          return meta
+        },
+        breadcrumb_schema: function() {
+          return {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              {
+                "@type":"ListItem",
+                "position":1,
+                "item":{
+                  "@id": host,
+                  "name":"Home"
+                }
+              },
+              {
+                "@type":"ListItem",
+                "position": 2,
+                "item":{
+                  "@id": host + this.$route.path,
+                  "name": "Papers"
+                }
+              }
+            ]
+          }
+        },
+        article_schema: function () {
+          let schema = {
+            '@type': 'ScholarlyArticle',
+            'name': this.paper_detail.title,
+            'headline': this.paper_detail.title,
+            'mainEntityOfPage': host + this.$route.path,
+            'description': this.paper_detail.abstract,
+            'copyrightYear': this.paper_detail.year,
+            'datePublished': this.paper_detail.year,
+            'author': []
+          }
+          this.paper_detail.authors.forEach(function (author) {
+            schema['author'].push({
+              '@type': 'Person',
+              'name': author.name,
+              'mainEntityOfPage': host + '/author/' + formatTitle(author.name) + '-' + author.authorId
+            })
+          })
+          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
+            schema['about'] = Array({
+              '@type': 'DigitalDocument',
+              'url': this.paper_detail.pdf_url
+            })
+          return schema
         }
       },
       data() {
@@ -648,7 +833,7 @@
           if (data.references_count > 0) {
             is_ref_empty = false
           }
-          console.log(data)
+          // console.log(data)
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -752,11 +937,9 @@
   }
 
   .related_content {
-    height: 250px;
   }
 
   .top_citation {
-    max-height: 550px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;

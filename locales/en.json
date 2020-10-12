@@ -28,10 +28,11 @@
   "default_layout": {
     "header": {
       "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "search_bar_not_found": "Cannot find any result for keyword",
       "lang_switch": "Switch to"
     },
     "footer" : {
-      "address": "Address",
+      "address": "Address:",
       "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
     }
   },

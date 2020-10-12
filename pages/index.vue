@@ -273,7 +273,7 @@ export default {
   layout: 'home_layout',
   head() {
     return {
-      title: 'Trang chủ | DoIT Scholar - Hệ thống tra cứu văn bản học thuật',
+      title: 'DoIT Scholar - Your trusty academic search engine',
       meta: [
         {
           hid: 'info',

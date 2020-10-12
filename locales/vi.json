@@ -28,10 +28,11 @@
   "default_layout": {
     "header": {
       "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản",
+      "search_bar_not_found": "Không tìm thấy kết quả cho từ khóa",
       "lang_switch": "Chuyển sang"
     },
     "footer" : {
-      "address": "Địa chỉ",
+      "address": "Địa chỉ:",
       "address_value": "Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội"
     }
   },
