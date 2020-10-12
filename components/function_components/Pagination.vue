@@ -87,7 +87,8 @@ export default {
           }
           items[index] = page
         }
-      } else {
+      }
+      else {
         const halfPageRange = Math.floor(this.pageRange / 2)
         let setPageItem = index => {
           let page = {
