@@ -2,26 +2,25 @@
   <div class="tile">
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
-        <nuxt-link v-if="this.currentPage !== 1 && !hidePrevNext"
+        <nuxt-link v-if="this.currentPage > 1 && !hidePrevNext"
                    class="pagination-previous"
-                   :to="{ path: whichpage,
-                          query: { page: this.currentPage-1, start: this.currentPage*perPage, size: perPage}}"
                    @click.native="setPageNumbers"
+                   :to="{ path: whichpage,
+                          query: { page: this.currentPage-1, start: (this.currentPage-2)*perPage, size: perPage}}"
                    >
           {{ $t('general_attribute.previous') }}
         </nuxt-link>
-        <nuxt-link  v-if="this.currentPage !== pageCount && !hidePrevNext"
+        <nuxt-link  v-if="this.currentPage < pageCount && !hidePrevNext"
                     class="pagination-next"
+                    @click.native="setPageNumbers"
                     :to="{ path: whichpage,
                            query: { page: this.currentPage+1, start: this.currentPage*perPage, size: perPage}}"
-                    @click.native="setPageNumbers"
                     >
           {{ $t('general_attribute.next') }}
         </nuxt-link>
         <ul class="pagination-list">
           <li v-for="page in pages" >
             <span v-if="page.breakView" class="pagination-ellipsis">&hellip;</span>
-
             <nuxt-link v-else class="pagination-link is-text"
                        :class="[page.selected ? 'is-current' : '']"
                        :aria-label="'Goto page '+(page.index+1)"
@@ -145,7 +144,7 @@ export default {
       let currentPage_pattern = /(?<=page=)\d+/g
       let _currentPage = currentPage_pattern.exec(this.whichpage)
       if (_currentPage){
-        this.currentPage = _currentPage[0]
+        this.currentPage = parseInt(_currentPage[0])
       }
       else{
         this.currentPage = 1
