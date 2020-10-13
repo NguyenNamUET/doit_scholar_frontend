@@ -1,7 +1,5 @@
 <template>
   <div class="tile">
-    <div class="tile is-vertical">currentPage={{this.currentPage}}</div>
-    <div class="tile is-vertical">pages={{pages}}</div>
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
         <nuxt-link v-if="this.currentPage !== 1 && !hidePrevNext"
@@ -136,7 +134,7 @@ export default {
   },
   data () {
     return {
-      currentPage: null
+      currentPage: 1
     }
   },
   updated() {
