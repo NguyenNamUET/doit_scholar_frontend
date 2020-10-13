@@ -107,13 +107,14 @@
 <!--      :is-small="true"-->
 <!--    >-->
 <!--    </Pagination>-->
+
     <PaginationV2
       :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
       :page-range="3"
       :margin-pages="2"
       :per-page="this.per_page"
-      :whichpage="this.$route.fullPath">
+      :whichpage="current_route">
     </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
@@ -158,7 +159,8 @@
 
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
-          per_page: 10
+          per_page: 10,
+          current_route:null
         }
       },
       filters: {
@@ -214,9 +216,8 @@
           return result
         }
       },
-      async asyncData({query, store}) {
+      async asyncData({query, store, route}) {
         let query_params = query
-
         //Added for authors agg
         if("top_author_size" in query) {
           query_params["return_top_author"] = true
@@ -262,6 +263,7 @@
           return {
              query_params: query,
              current_page: parseInt(query['page']),
+             current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: store.state.search_result.total,
@@ -277,6 +279,7 @@
            return {
              query_params: query,
              current_page: parseInt(query['page']),
+             current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: 0,
