@@ -1,23 +1,25 @@
 <template>
   <div class="tile">
+    <div class="tile is-vertical">currentPage={{this.currentPage}}</div>
+    <div class="tile is-vertical">pages={{pages}}</div>
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
-<!--        <nuxt-link v-if="this.currentPage !== 1 && !hidePrevNext"-->
-<!--                   class="pagination-previous"-->
-<!--                   :to="{ path: whichpage,-->
-<!--                          query: { page: this.currentPage-1, start: this.currentPage*perPage, size: perPage}}"-->
-<!--                   @click.native="setPageNumbers"-->
-<!--                   >-->
-<!--          {{ $t('general_attribute.previous') }}-->
-<!--        </nuxt-link>-->
-<!--        <nuxt-link  v-if="this.currentPage !== pageCount && !hidePrevNext"-->
-<!--                    class="pagination-next"-->
-<!--                    :to="{ path: whichpage,-->
-<!--                           query: { page: this.currentPage+1, start: this.currentPage*perPage, size: perPage}}"-->
-<!--                    @click.native="setPageNumbers"-->
-<!--                    >-->
-<!--          {{ $t('general_attribute.next') }}-->
-<!--        </nuxt-link>-->
+        <nuxt-link v-if="this.currentPage !== 1 && !hidePrevNext"
+                   class="pagination-previous"
+                   :to="{ path: whichpage,
+                          query: { page: this.currentPage-1, start: this.currentPage*perPage, size: perPage}}"
+                   @click.native="setPageNumbers"
+                   >
+          {{ $t('general_attribute.previous') }}
+        </nuxt-link>
+        <nuxt-link  v-if="this.currentPage !== pageCount && !hidePrevNext"
+                    class="pagination-next"
+                    :to="{ path: whichpage,
+                           query: { page: this.currentPage+1, start: this.currentPage*perPage, size: perPage}}"
+                    @click.native="setPageNumbers"
+                    >
+          {{ $t('general_attribute.next') }}
+        </nuxt-link>
         <ul class="pagination-list">
           <li v-for="page in pages" >
             <span v-if="page.breakView" class="pagination-ellipsis">&hellip;</span>
@@ -137,7 +139,7 @@ export default {
       currentPage: null
     }
   },
-  beforeUpdate() {
+  updated() {
     this.setPageNumbers()
   },
   methods: {
