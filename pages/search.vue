@@ -114,7 +114,7 @@
       :page-range="3"
       :margin-pages="2"
       :per-page="this.per_page"
-      :whichpage="current_route">
+      :whichpage="current_route" :query="['page','start','size']">
     </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>

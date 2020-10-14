@@ -6,7 +6,7 @@
                    class="pagination-previous"
                    @click.native="setPageNumbers"
                    :to="{ path: whichpage,
-                          query: { page: this.currentPage-1, start: (this.currentPage-2)*perPage, size: perPage}}"
+                          query: { [query[0]]: this.currentPage-1, [query[1]]: (this.currentPage-2)*perPage, [query[2]]: perPage}}"
                    >
           {{ $t('general_attribute.previous') }}
         </nuxt-link>
@@ -14,7 +14,7 @@
                     class="pagination-next"
                     @click.native="setPageNumbers"
                     :to="{ path: whichpage,
-                           query: { page: this.currentPage+1, start: this.currentPage*perPage, size: perPage}}"
+                           query: { [query[0]]: this.currentPage+1, [query[1]]: this.currentPage*perPage, [query[2]]: perPage}}"
                     >
           {{ $t('general_attribute.next') }}
         </nuxt-link>
@@ -26,7 +26,7 @@
                        :aria-label="'Goto page '+(page.index+1)"
                        @click.native="setPageNumbers"
                        :to="{ path: whichpage,
-                               query: { page: page.index+1, start: page.index*perPage, size: perPage}}">
+                               query: { [query[0]]: page.index+1, [query[1]]: page.index*perPage, [query[2]]: perPage}}">
               {{page.content}}
             </nuxt-link>
 
@@ -62,6 +62,9 @@ export default {
     },
     whichpage: {
       type: String
+    },
+    query: {
+      type: Array
     },
     perPage: {
       type: Number,
@@ -141,13 +144,18 @@ export default {
   },
   methods: {
     setPageNumbers () {
-      let currentPage_pattern = /(?<=page=)\d+/g
-      let _currentPage = currentPage_pattern.exec(this.whichpage)
-      if (_currentPage){
-        this.currentPage = parseInt(_currentPage[0])
-      }
-      else{
-        this.currentPage = 1
+      let page_re = /\w(?=page=\d+)page/g.exec(this.whichpage)?.[0]
+      let start_re = /\w(?=start=\d+)start/g.exec(this.whichpage)?.[0]
+      let size_re = /\w(?=size=\d+)size/g.exec(this.whichpage)?.[0]
+
+      if(page_re===this.query[0] && start_re===this.query[1] && size_re===this.query[2]){
+        let _currentPage = /(?<=page=)\d+/g.exec(this.whichpage)
+        if (_currentPage){
+          this.currentPage = parseInt(_currentPage[0])
+        }
+        else{
+          this.currentPage = 1
+        }
       }
     }
   }

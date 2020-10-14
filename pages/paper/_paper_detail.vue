@@ -295,7 +295,8 @@
     <!---------------------------------------------- Topics ------------------------------------------------------->
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
-    <div class="tile is-ancestor" id="citation_box" >
+    <div class="tile is-ancestor" id="citation_box"
+         v-bind:class="{ 'loading-page': this.is_loading_citation }">
       <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
           <article class="tile is-child">
@@ -337,21 +338,34 @@
               </i18n>
             </p>
             <div class="tile is-parent">
+              <!------------------------- Citation Card -------------------------------->
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
                   v-for="result in citation_data"
                   v-bind:search_result="result"
                 >
                 </SearchResult>
-                <Pagination
-                  v-model="current_citation_page"
+<!--                <Pagination-->
+<!--                  v-model="current_citation_page"-->
+<!--                  :page-count="Math.ceil(citation_length / per_page)"-->
+<!--                  :click-handler="updateCitation"-->
+<!--                  :page-range="3"-->
+<!--                  :margin-pages="2"-->
+<!--                  :isSmall="true">-->
+<!--                </Pagination>-->
+                <PaginationV2
+                  :is-small="true"
                   :page-count="Math.ceil(citation_length / per_page)"
-                  :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
-                  :isSmall="true">
-                </Pagination>
+                  :per-page="this.per_page"
+                  :whichpage="current_route" :query="['cpage','cstart','csize']"
+                  @click.native="toCitationTop"
+                  >
+                </PaginationV2>
               </div>
+              <!------------------------- Citation Card -------------------------------->
+              <!------------------------- Citation Chart ------------------------------->
               <div class="tile is-child is-4">
                 <div v-if="this.chart_data.length > 0">
                   <CitationBar
@@ -372,6 +386,7 @@
                   </p>
                 </div>
               </div>
+              <!------------------------- Citation Chart ------------------------------->
             </div>
           </article>
         </div>
@@ -380,7 +395,8 @@
     <!------------------------------------------ Citations Table -------------------------------------------------->
 
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor is-vertical " id="reference_box">
+    <div class="tile is-ancestor is-vertical " id="reference_box"
+         v-bind:class="{ 'loading-page': this.is_loading_ref }">
       <div class="tile is-parent" v-if="ref_data.length > 0">
         <div class="tile is-child">
           <p class="content_title">
@@ -427,14 +443,24 @@
                 v-bind:search_result="result"
               >
               </SearchResult>
-              <Pagination
-                v-model="current_ref_page"
-                :page-count="Math.ceil(ref_length / per_page)"
-                :click-handler="updateReference"
-                :page-range="3"
-                :margin-pages="2"
-                :isSmall="true">
-              </Pagination>
+<!--              <Pagination-->
+<!--                v-model="current_ref_page"-->
+<!--                :page-count="Math.ceil(ref_length / per_page)"-->
+<!--                :click-handler="updateReference"-->
+<!--                :page-range="3"-->
+<!--                :margin-pages="2"-->
+<!--                :isSmall="true">-->
+<!--              </Pagination>-->
+              <PaginationV2
+                  :is-small="true"
+                  :page-count="Math.ceil(ref_length / per_page)"
+                  :page-range="3"
+                  :margin-pages="2"
+                  :per-page="this.per_page"
+                  :whichpage="current_route" :query="['rpage','rstart','rsize']"
+                  @click.native="toReferenceTop"
+                  >
+              </PaginationV2>
             </div>
           </div>
         </div>
@@ -487,10 +513,12 @@
     import {formatNumber} from "assets/utils";
     import {chartColors} from "assets/utils";
     import SearchResult from "@/components/search_page/SearchResult";
+    import PaginationV2 from "@/components/function_components/PaginationV2";
 
     export default {
       name: "_paper_detail",
-      components: {SearchResult},
+      watchQuery: true,
+      components: {SearchResult, PaginationV2},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -521,11 +549,12 @@
       },
       data() {
         return {
+          current_route: null,
           citation_length: null,
           ref_length: null,
           citation_data: null,
           ref_data: null,
-          per_page: 10,
+          per_page: 5,
           current_citation_page: 1,
           current_ref_page: 1,
 
@@ -569,32 +598,48 @@
             setTimeout(() => this.$nuxt.$loading.finish(), 3000)
           }
         },
-        async updateCitation(page_num) {
+        // async updateCitation(page_num) {
+        //   this.is_loading_citation = true
+        //   let result = await paper_citation({
+        //     paper_id: this.paper_id,
+        //     start: (page_num - 1) * this.per_page,
+        //     size: this.per_page
+        //   })
+        //   this.$refs.citation_box.click()
+        //   this.current_citation_page = page_num
+        //   this.citation_data = result
+        //   this.citation_height = document.getElementById('citation_box').offsetHeight
+        //   this.is_loading_citation = false
+        // },
+        toCitationTop(){
           this.is_loading_citation = true
-          let result = await paper_citation({
-            paper_id: this.paper_id,
-            start: (page_num - 1) * this.per_page,
-            size: this.per_page
-          })
+          console.log("is_loading_citation", this.is_loading_citation)
           this.$refs.citation_box.click()
-          this.current_citation_page = page_num
-          this.citation_data = result
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
+          console.log("is_loading_citation", this.is_loading_citation)
         },
-        async updateReference(page_num) {
+        toReferenceTop(){
           this.is_loading_ref = true
-          let result = await paper_references({
-            paper_id: this.paper_id,
-            start: (page_num - 1) * this.per_page,
-            size: this.per_page
-          })
+          console.log("is_loading_ref", this.is_loading_ref)
           this.$refs.reference_box.click()
-          this.current_ref_page = page_num
-          this.ref_data = result
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
+          console.log("is_loading_ref", this.is_loading_ref)
         },
+        // async updateReference(page_num) {
+        //   this.is_loading_ref = true
+        //   let result = await paper_references({
+        //     paper_id: this.paper_id,
+        //     start: (page_num - 1) * this.per_page,
+        //     size: this.per_page
+        //   })
+        //   this.$refs.reference_box.click()
+        //   this.current_ref_page = page_num
+        //   this.ref_data = result
+        //   this.reference_height = document.getElementById('reference_box').offsetHeight
+        //   this.is_loading_ref = false
+        // },
         formatTitle(title) {
           return formatTitle(title)
         },
@@ -623,14 +668,24 @@
         this.citation_height = heights[2]
         this.reference_height = heights[3]
       },
-      async asyncData({route, $axios}) {
+      async asyncData({route, query}) {
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
+        console.log("query", query)
+        let params = {
+          paper_id: /(?<=.p-)\w+$/g.exec(route.params.paper_detail),
+          cstart: query?.cstart ?? 0, //if null then 0
+          csize: query?.csize ?? 5, //if null then 5
+          rstart: query?.rstart ?? 0,
+          rsize: query?.rsize ?? 5
+        }
+        console.log("params", params)
+        let data = await paper_detail(params)
 
-        let data = await paper_detail(paper_id)
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
 
+        //Make suggestion data (at end of page)
         let suggestion_data = []
         if(data?.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
@@ -644,11 +699,9 @@
             data_dict = data.citations_chart
             is_citation_empty = false
           }
-          // console.log(data_dict)
           if (data.references_count > 0) {
             is_ref_empty = false
           }
-          console.log(data)
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -664,7 +717,8 @@
             citation_data: data.citations,
             ref_data: data.references,
             citation_length: data.citations_count,
-            ref_length: data.references_count
+            ref_length: data.references_count,
+            current_route: route.fullPath
           }
         }
         else {
@@ -674,7 +728,8 @@
             chart_labels: {},
             chart_data: {},
             paper_id: paper_id[0],
-            paper_detail: {}
+            paper_detail: {},
+            current_route: route.fullPath
           }
         }
       }
@@ -765,4 +820,9 @@
       font-size: 18px;
     }
   }
+
+  .loading-page {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.8);
+}
 </style>

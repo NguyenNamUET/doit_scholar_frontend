@@ -2,7 +2,7 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child content_box">
-        <a
+        <a v-if="search_result.title"
           class="text-class-1"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
@@ -56,13 +56,12 @@
           <!------------------------------------ Fields of study ---------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <p v-if="search_result.topics.length > 0">
+          <p v-if="search_result.topics && search_result.topics.length > 0">
             <span class="small_icon"><i class="fas fa-sticky-note"></i></span>
             <span
               v-if="!topic_hidden"
               v-for="(topic, index) in search_result.topics"
               :key="topic.topicId"
-
             >
               <a
                 :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
@@ -91,32 +90,32 @@
                 {{ topic.topic }}
               </a>
               <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
-          </span>
+            </span>
             <span
               v-if="topic_hidden && search_result.topics.length > 5"
               class="less-more-button"
               v-on:click="topic_hidden = false"
             >
             + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}
-          </span>
+            </span>
           </p>
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <AuthorModal v-bind:authors="search_result.authors"></AuthorModal>
+          <AuthorModal v-if="search_result.authors" v-bind:authors="search_result.authors"></AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
         <!------------------------------------------ Abstract ----------------------------------------->
         <p
-          v-if="!abstract_hidden && typeof search_result.abstract !== 'object'"
+          v-if="!abstract_hidden && search_result.abstract"
           class="text-class-2"
         >
           {{ search_result.abstract }}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
-          v-if="abstract_hidden && typeof search_result.abstract !== 'object'"
+          v-if="abstract_hidden && search_result.abstract"
           class="text-class-2"
         >
           {{ search_result.abstract.slice(0, 400) }}
@@ -289,5 +288,6 @@ export default {
   width: 20px;
   position: sticky;
 }
+
 
 </style>
