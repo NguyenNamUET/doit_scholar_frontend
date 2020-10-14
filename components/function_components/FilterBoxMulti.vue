@@ -29,21 +29,16 @@
           :is-row-checkable="(row) => true"
           checkable
         >
-          <template slot="bottom-left">
-              <div><p><b>Total checked</b>: {{ checkedRows.length }}</p></div>
-
-              <div><p><b>Query</b>: {{ this.query_params }}</p></div>
-          </template>
         </b-table>
       </div>
       <nav class="level">
         <div class="level-left">
-          <button class="level-item button is-danger" @click="clear">
-            {{ $t('general_attribute.clear') }}
-          </button>
+          <nuxt-link class="level-item button is-danger" :to="this.clear_path" tag="button">
+              {{ $t('general_attribute.clear') }}
+          </nuxt-link>
         </div>
         <div class="level-right">
-          <nuxt-link class="level-item button is-success" :to="this.query_params" tag="button" @click.native="doFilter">
+          <nuxt-link class="level-item button is-success" :to="this.apply_path" tag="button">
               {{ $t('general_attribute.apply') }}
           </nuxt-link>
         </div>
@@ -58,19 +53,22 @@ export default {
   name: "FilterBoxMulti",
   props: ['type','data', 'whichpage'],
   computed: {
-    query_params: function (){
+    apply_path: function (){
       let params = {path: this.whichpage,
                     query: {}}
 
       for(let i=0; i<this.checkedRows.length; i++){
         params.query[`${this.type}${i}`]=this.checkedRows[i][this.type]
       }
-
       return params
-    }
-  },
-  mounted() {
-    this.makeChecked()
+    },
+    clear_path: function (){
+      let params = {path: ""}
+      let re = new RegExp("[&|?]"+this.type+"\\d+=.+(?=&)", "g")
+      let current = this.whichpage+"&"
+      params['path'] = current.replace(re,"").slice(0, -1)
+      return params
+    },
   },
   data() {
     const name='general_attribute.'+this.type
@@ -90,33 +88,17 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.makeChecked()
+  },
   methods: {
-    doFilter(){
-      if(this.type==="fos"){
-        let checked = _.map(this.checkedRows, 'fos')
-        console.log("doFilter fos", checked)
-        this.$store.dispatch("dropdown_search/submit_fos_states", checked)
-      }
-      if(this.type==="venue"){
-        let checked = _.map(this.checkedRows, 'venue')
-        console.log("doFilter venue", checked)
-        this.$store.dispatch("dropdown_search/submit_venue_states", checked)
-      }
-      if(this.type==="author"){
-        let checked = _.map(this.checkedRows, 'author')
-        console.log("doFilter author", checked)
-        this.$store.dispatch("dropdown_search/submit_authors_states", checked)
-      }
-    },
-    clear(){
-      this.checkedRows=[]
-    },
     makeChecked(){
       this.data.forEach(item => {
         if (item.checked){
           this.checkedRows.push(item)
         }
       })
+      console.log("makeChecked", this.checkedRows)
     }
   }
 }

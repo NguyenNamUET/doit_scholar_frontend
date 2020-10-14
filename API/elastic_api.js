@@ -70,6 +70,7 @@ const paper_by_title = async (query_params) => {
       start:query_params.start, size:query_params.size, source:query_params.source, sort_by:query_params.sort_by,
       return_fos_aggs:query_params.return_fos_aggs,
       return_venue_aggs:query_params.return_venue_aggs,
+      from_year:query_params.from_year, end_year:query_params.end_year, return_year_aggs:query_params.return_year_aggs,
       deep_pagination:query_params.deep_pagination, last_paper_id:query_params.last_paper_id,
       return_top_author:query_params.return_top_author, top_author_size:query_params.top_author_size
     })

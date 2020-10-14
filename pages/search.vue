@@ -72,7 +72,6 @@
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-<!--            <FilterBox :type="'year'" :data="filter_year_data"></FilterBox>-->
             <FilterBoxMulti :type="'author'"
                             :data="this.authors_list"
                             :whichpage="current_route"
@@ -86,6 +85,10 @@
                             :data="this.fos_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
+            <FilterBoxChart :type="'year'"
+                            :data="this.year_list"
+                            :whichpage="current_route"
+            ></FilterBoxChart>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -125,13 +128,13 @@ import SearchResult from "../components/search_page/SearchResult";
 import NuxtError from "@/components/static_components/ErrorPage";
 import Pagination from "@/components/function_components/Pagination";
 import PaginationV2 from "@/components/function_components/PaginationV2";
-import FilterBox from "@/components/function_components/FilterBox";
 import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
+import FilterBoxChart from "@/components/function_components/FilterBoxChart";
 
 export default {
       name: "search",
       watchQuery: true,
-      components: {FilterBox, FilterBoxMulti, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
+      components: {FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
@@ -145,6 +148,7 @@ export default {
           author_info: null,
           venue_info: null,
           fos_info: null,
+          year_info: null,
 
           author_hidden: true,
           msg_hidden: false,
@@ -205,19 +209,64 @@ export default {
             }
           })
           return venue_res
+        },
+        year_list: function (){
+          let year_res = {label: [], data:[]}
+          this.year_info.forEach(item => {
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
+          })
+          return year_res
         }
       },
       async asyncData({query, store, route}) {
         let query_params = query
-
-        query_params["fields_of_study"]= store.state.dropdown_search.fos_checked
+        if("fromyear" in query) {
+          query_params["from_year"] = query["fromyear"]
+          query_params["end_year"] = query["endyear"]
+          store.dispatch('dropdown_search/submit_year_states', {start:query["fromyear"],
+                                                                            end:query["endyear"]})
+        }
+        query_params["return_year_aggs"]= true
+        if("fos0" in query) {
+          let fos_keys = filteredKeys(Object.assign({},query), /fos\d+/)
+          let fosChecked = []
+          for(let i=0; i<fos_keys.length; i++){
+            let key = fos_keys[i]
+            fosChecked.push(query[key])
+          }
+          query_params["fields_of_study"] = fosChecked
+          query_params["fos_is_should"]=false
+          //store.dispatch('dropdown_search/submit_fos_states', fosChecked)
+          //console.log("store.state.dropdown_search.fos_checked", store.state.dropdown_search.fos_checked)
+        }
         query_params["return_fos_aggs"]= true
-        query_params["venues"]= store.state.dropdown_search.venue_checked
-        console.log("store.state.dropdown_search.venue_checked", store.state.dropdown_search.venue_checked)
-        query_params["return_venue_aggs"]= true
-        query_params["authors"]= store.state.dropdown_search.authors_checked
+        if("author0" in query) {
+          let author_keys = filteredKeys(Object.assign({},query), /author\d+/)
+          let authorsChecked = []
+          for(let i=0; i<author_keys.length; i++){
+            let key = author_keys[i]
+            authorsChecked.push(query[key])
+          }
+          query_params["authors"] = authorsChecked
+          query_params["author_is_should"]=false
+          //store.dispatch('dropdown_search/submit_authors_states', authorsChecked)
+          //console.log("store.state.dropdown_search.authors_checked", store.state.dropdown_search.authors_checked)
+        }
         query_params["return_top_author"] = true
-
+        if("venue0" in query) {
+          let venues_keys = filteredKeys(Object.assign({},query), /venue\d+/)
+          let venuesChecked = []
+          for(let i=0; i<venues_keys.length; i++){
+            let key = venues_keys[i]
+            venuesChecked.push(query[key])
+          }
+          query_params["venues"] = venuesChecked
+          query_params["venues_is_should"]=true
+          //store.dispatch('dropdown_search/submit_venue_states', venuesChecked)
+          //console.log("store.state.dropdown_search.venue_checked", store.state.dropdown_search.venue_checked)
+        }
+        query_params["return_venue_aggs"]= true
         console.log("query_params", query_params)
         await store.dispatch('search_result/paper_by_title', query_params)
         if(store.state.search_result.search_results.length > 0) {
@@ -233,6 +282,7 @@ export default {
              author_info: store.state.search_result.aggregation.author_count.name.buckets,
              fos_info: store.state.search_result.aggregation.fos_count.buckets,
              venue_info: store.state.search_result.aggregation.venue_count.buckets,
+             year_info: store.state.search_result.aggregation.year_count.buckets,
              ////////////////////////////////////////////////////////////////////////////////
              last_paper_id: store.state.search_result.last_paper_id,
           }
