@@ -2,7 +2,7 @@ export const state = () => ({
   query: null,
   fos_checked: [],
   authors_checked: [],
-  venue_checked: null
+  venue_checked: []
 });
 
 export const mutations = {
@@ -25,11 +25,14 @@ export const mutations = {
 export const actions = {
   submit_fos_states(context, fieldsChecked){
     context.commit("submit_fos_checked", fieldsChecked)
+    console.log("submit_fos_states", fieldsChecked)
   },
   submit_authors_states(context, fieldsChecked){
     context.commit("submit_authors_checked", fieldsChecked)
+    console.log("submit_authors_states", fieldsChecked)
   },
   submit_venue_states(context, fieldsChecked){
     context.commit("submit_venue_checked", fieldsChecked)
+    console.log("submit_venue_states", fieldsChecked)
   },
 };

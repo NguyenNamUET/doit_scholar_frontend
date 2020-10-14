@@ -12,7 +12,7 @@
       </template>
       <b-icon icon="menu-down"></b-icon>
     </button>
-
+    <!------------------------------------- FOS DROPDOWN ------------------------------------------>
     <b-dropdown-item
       v-if="type === 'fos'"
       :focusable="false"
@@ -45,7 +45,9 @@
         </div>
       </nav>
     </b-dropdown-item>
+    <!------------------------------------- FOS DROPDOWN ------------------------------------------>
 
+    <!------------------------------------- VENUE DROPDOWN ------------------------------------------>
     <b-dropdown-item
       v-if="type === 'venue'"
       :focusable="false"
@@ -78,7 +80,9 @@
         </div>
       </nav>
     </b-dropdown-item>
+    <!------------------------------------- VENUE DROPDOWN ------------------------------------------>
 
+    <!------------------------------------- YEAR DROPDOWN ------------------------------------------>
     <b-dropdown-item
       v-if="type === 'year'"
       :focusable="false"
@@ -121,6 +125,8 @@
         </nav>
       </div>
     </b-dropdown-item>
+        <!------------------------------------- YEAR DROPDOWN ------------------------------------------>
+
   </b-dropdown>
 </template>
 
@@ -132,10 +138,10 @@ export default {
   props: ['type','data'],
   data() {
     return {
-      selected: null,
+      selected: [],
       fos_column: [
         {
-          field: 'venue', //change this to fos when has real data
+          field: 'fos', //change this to fos when has real data
           label: this.$t('general_attribute.fos')
         },
         {
