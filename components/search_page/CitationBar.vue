@@ -4,7 +4,7 @@
 
   export default {
     extends: Bar,
-    props: ['dataset','labels'],
+    props: ['dataset','labels','title'],
     data() {
       return {
         options: {
@@ -14,13 +14,13 @@
           },
           title: {
             display: true,
-            text: 'Trích dẫn theo năm'
+            text: this.title
           },
           scales: {
             yAxes: [
               {
                 ticks: {
-                  beginAtZero: true
+                  beginAtZero: false
                 }
               }
             ]
@@ -30,7 +30,7 @@
           labels: this.labels,
           datasets: [
             {
-              label: 'Trích dẫn theo năm',
+              label: this.title,
               backgroundColor: chartColors.yellow,
               data: this.dataset
             }

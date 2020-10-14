@@ -72,9 +72,12 @@
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>-->
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>-->
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>-->
+            <FilterBox :type="'fos'" :data="filter_data"></FilterBox>
+            <FilterBox :type="'venue'" :data="filter_data"></FilterBox>
+            <FilterBox :type="'year'" :data="filter_year_data"></FilterBox>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -135,11 +138,12 @@
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
     import PaginationV2 from "@/components/function_components/PaginationV2";
+    import FilterBox from "@/components/function_components/FilterBox";
 
     export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
+      components: {FilterBox, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
@@ -153,6 +157,32 @@
           author_info: null,
           venue_info: null,
           fos_info: null,
+          filter_data: [
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+          ],
+          filter_year_data: {
+            label: ['2010', '2011', '2012', '2013', '2014'],
+            data: [10000, 123123, 945609, 1923123, 1231235]
+          },
 
           author_hidden: true,
           msg_hidden: false,
