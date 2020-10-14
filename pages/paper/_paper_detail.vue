@@ -358,19 +358,36 @@
                   <CitationBar
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
-                    :width="250" :height="250"
+                    :width="250"
+                    :height="250"
+                    :title="$t('paper_detail_page.citation_chart_title')"
                   >
                   </CitationBar>
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
                   style="text-align: center"
+                  class="text-class-3 color-class-3"
                 >
-                  <p class="text-class-3 color-class-3">
-                    Trung bình được trích dẫn
-                    <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
-                    lần từ {{this.paper_detail.year}} đến nay
-                  </p>
+<!--                  <p class="text-class-3 color-class-3">-->
+<!--                    Trung bình được trích dẫn-->
+
+<!--                    lần từ {{this.paper_detail.year}} đến nay-->
+<!--                  </p>-->
+                  <i18n
+                    tag="p"
+                    path="paper_detail_page.citation_velocity"
+                  >
+                    <template v-slot:count>
+                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
+                    </template>
+                    <template v-slot:year>
+                      <span>
+                          {{paper_detail.year}}
+                      </span>
+                    </template>
+                  </i18n>
+
                 </div>
               </div>
             </div>

@@ -16,6 +16,10 @@
     "show": "Xem",
     "hide": "Ẩn",
     "copy": "Đã sao chép",
+    "year": "Năm",
+    "count": "Số lượng",
+    "clear": "Xóa tất cả",
+    "apply": "Áp dụng",
 
     "topic": "Chủ đề",
     "citation": "Trích dẫn",
@@ -73,6 +77,8 @@
     "related_paper": "Văn bản liên quan",
     "citation_tooltip": "Các văn bản nhắc tới văn bản này",
     "reference_tooltip": "Các văn bản được nhắc tới bởi văn bản này",
+    "citation_chart_title": "Trích dẫn theo năm",
+    "citation_velocity": "Trung bình được trích dẫn {count} lần từ {year} đến nay",
     "highlight_citation_box": {
       "title": "{number} trích dẫn nổi bật trong {total} văn bản"
     }

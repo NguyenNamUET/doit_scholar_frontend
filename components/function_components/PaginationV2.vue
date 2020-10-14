@@ -2,20 +2,35 @@
   <div class="tile">
       <nav class="pagination is-centered" role="navigation" aria-label="pagination"
            :class="{'is-small': isSmall}">
-        <a v-if="!(firstPageSelected() && hidePrevNext)" class="pagination-previous"
-           @click="prevPage()" @keyup.enter="prevPage()">{{ $t('general_attribute.previous') }}</a>
-        <a v-if="!(lastPageSelected() && hidePrevNext)" class="pagination-next"
-           @click="nextPage()" @keyup.enter="nextPage()">{{ $t('general_attribute.next') }}</a>
-
+        <nuxt-link v-if="this.currentPage !== 1 && !hidePrevNext"
+                   class="pagination-previous"
+                   :to="{ path: whichpage,
+                          query: { page: this.currentPage-1, start: this.currentPage*perPage, size: perPage}}"
+                   @click.native="setPageNumbers"
+                   >
+          {{ $t('general_attribute.previous') }}
+        </nuxt-link>
+        <nuxt-link  v-if="this.currentPage !== pageCount && !hidePrevNext"
+                    class="pagination-next"
+                    :to="{ path: whichpage,
+                           query: { page: this.currentPage+1, start: this.currentPage*perPage, size: perPage}}"
+                    @click.native="setPageNumbers"
+                    >
+          {{ $t('general_attribute.next') }}
+        </nuxt-link>
         <ul class="pagination-list">
-          <li v-for="page in pages">
+          <li v-for="page in pages" >
             <span v-if="page.breakView" class="pagination-ellipsis">&hellip;</span>
-            <a v-else-if="page.disabled" class="pagination-link is-text" :aria-label="'Goto page '+page.content">{{ page.content }}</a>
-            <a v-else class="pagination-link is-text" :aria-label="'Goto page '+page.content"
-               :class="[page.selected ? 'is-current' : '']"
-               @click="handlePageSelected(page.index + 1)" @keyup.enter="handlePageSelected(page.index + 1)">
-                  {{page.content}}
-            </a>
+
+            <nuxt-link v-else class="pagination-link is-text"
+                       :class="[page.selected ? 'is-current' : '']"
+                       :aria-label="'Goto page '+(page.index+1)"
+                       @click.native="setPageNumbers"
+                       :to="{ path: whichpage,
+                               query: { page: page.index+1, start: page.index*perPage, size: perPage}}">
+              {{page.content}}
+            </nuxt-link>
+
          </li>
         </ul>
       </nav>
@@ -25,24 +40,18 @@
 
 <script>
 export default {
-  name: "Pagination",
+  name: "PaginationV2",
   props: {
     isSmall:{
       type: Boolean
     },
-    value: {
-      type: Number
+    hidePrevNext: {
+      type: Boolean,
+      default: false
     },
     pageCount: {
       type: Number,
       required: true
-    },
-    forcePage: {
-      type: Number
-    },
-    clickHandler: {
-      type: Function,
-      default: () => { }
     },
     pageRange: {
       type: Number,
@@ -52,38 +61,23 @@ export default {
       type: Number,
       default: 1
     },
-    firstLastButton: {
-      type: Boolean,
-      default: false
+    whichpage: {
+      type: String
     },
-    hidePrevNext: {
-      type: Boolean,
-      default: false
+    perPage: {
+      type: Number,
+      default: 10
     }
   },
-  beforeUpdate() {
-    if (this.forcePage === undefined) return
-    if (this.forcePage !== this.selected) {
-      this.selected = this.forcePage
-    }
-  },
-  computed: {
-    selected: {
-      get: function() {
-        return this.value || this.innerValue
-      },
-      set: function(newValue) {
-        this.innerValue = newValue
-      }
-    },
-    pages: function () {
+  computed:{
+    pages: function ()  {
       let items = {}
       if (this.pageCount <= this.pageRange) {
         for (let index = 0; index < this.pageCount; index++) {
           let page = {
             index: index,
             content: index + 1,
-            selected: index === (this.selected - 1)
+            selected: index === (this.currentPage - 1)
           }
           items[index] = page
         }
@@ -94,7 +88,7 @@ export default {
           let page = {
             index: index,
             content: index + 1,
-            selected: index === (this.selected - 1)
+            selected: index === (this.currentPage - 1)
           }
           items[index] = page
         }
@@ -111,8 +105,8 @@ export default {
         }
         // 2nd - loop thru selected range
         let selectedRangeLow = 0;
-        if (this.selected - halfPageRange > 0) {
-          selectedRangeLow = this.selected - 1 - halfPageRange;
+        if (this.currentPage - halfPageRange > 0) {
+          selectedRangeLow = this.currentPage - 1 - halfPageRange;
         }
         let selectedRangeHigh = selectedRangeLow + this.pageRange - 1;
         if (selectedRangeHigh >= this.pageCount) {
@@ -138,39 +132,24 @@ export default {
       return items
     }
   },
-  data() {
+  data () {
     return {
-      innerValue: 1,
+      currentPage: 1
     }
   },
+  updated() {
+    this.setPageNumbers()
+  },
   methods: {
-    handlePageSelected(selected) {
-      if (this.selected === selected) return
-      this.innerValue = selected
-      this.$emit('input', selected)
-      this.clickHandler(selected)
-    },
-    prevPage() {
-      if (this.selected <= 1) return
-      this.handlePageSelected(this.selected - 1)
-    },
-    nextPage() {
-      if (this.selected >= this.pageCount) return
-      this.handlePageSelected(this.selected + 1)
-    },
-    firstPageSelected() {
-      return this.selected === 1
-    },
-    lastPageSelected() {
-      return (this.selected === this.pageCount) || (this.pageCount === 0)
-    },
-    selectFirstPage() {
-      if (this.selected <= 1) return
-      this.handlePageSelected(1)
-    },
-    selectLastPage() {
-      if (this.selected >= this.pageCount) return
-      this.handlePageSelected(this.pageCount)
+    setPageNumbers () {
+      let currentPage_pattern = /(?<=page=)\d+/g
+      let _currentPage = currentPage_pattern.exec(this.whichpage)
+      if (_currentPage){
+        this.currentPage = _currentPage[0]
+      }
+      else{
+        this.currentPage = 1
+      }
     }
   }
 }

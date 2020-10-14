@@ -16,6 +16,10 @@
     "show": "Show",
     "hide": "Hide",
     "copy": "Copied",
+    "year": "Year",
+    "count": "Count",
+    "clear": "Clear",
+    "apply": "Apply",
 
     "topic": "Topics",
     "citation": "Citations",
@@ -74,6 +78,8 @@
     "related_paper": "Related Papers",
     "citation_tooltip": "Other papers which mention this paper",
     "reference_tooltip": "Papers referenced by this paper",
+    "citation_chart_title": "Citations per year",
+    "citation_velocity": "Cited for {count} times on average since {year}",
     "highlight_citation_box": {
       "title": "{number} popular citations in {total} papers"
     }

@@ -72,9 +72,12 @@
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>-->
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>-->
+<!--            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>-->
+            <FilterBox :type="'fos'" :data="filter_data"></FilterBox>
+            <FilterBox :type="'venue'" :data="filter_data"></FilterBox>
+            <FilterBox :type="'year'" :data="filter_year_data"></FilterBox>
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -98,15 +101,24 @@
 
     <!--Took inspiration from this project
     https://github.com/lokyoung/vuejs-paginate/blob/master/src/components/Paginate.vue-->
-    <Pagination
+<!--    <Pagination-->
+<!--      :page-count="(Math.ceil(this.total_count/this.per_page))"-->
+<!--      v-model="current_page"-->
+<!--      :click-handler="updatePage"-->
+<!--      :page-range="3"-->
+<!--      :margin-pages="2"-->
+<!--      :is-small="true"-->
+<!--    >-->
+<!--    </Pagination>-->
+
+    <PaginationV2
+      :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
-      v-model="current_page"
-      :click-handler="updatePage"
       :page-range="3"
       :margin-pages="2"
-      :is-small="true"
-    >
-    </Pagination>
+      :per-page="this.per_page"
+      :whichpage="current_route">
+    </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
 
@@ -125,11 +137,13 @@
     import SearchResult from "../components/search_page/SearchResult";
     import NuxtError from "@/components/static_components/ErrorPage";
     import Pagination from "@/components/function_components/Pagination";
+    import PaginationV2 from "@/components/function_components/PaginationV2";
+    import FilterBox from "@/components/function_components/FilterBox";
 
     export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorCard, DropDown, Pagination, NuxtError},
+      components: {FilterBox, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
@@ -143,14 +157,40 @@
           author_info: null,
           venue_info: null,
           fos_info: null,
+          filter_data: [
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+            {'venue': '2010 Chinese Control and Decision Conference', 'count': 10000 },
+          ],
+          filter_year_data: {
+            label: ['2010', '2011', '2012', '2013', '2014'],
+            data: [10000, 123123, 945609, 1923123, 1231235]
+          },
 
           author_hidden: true,
           msg_hidden: false,
 
           //24/08/2020: Nam changed this for pagination
           total_count: 0,
-          current_page: 1,
-          per_page: 10
+          per_page: 10,
+          current_route:null
         }
       },
       filters: {
@@ -206,7 +246,7 @@
           return result
         }
       },
-      async asyncData({query, store}) {
+      async asyncData({query, store, route}) {
         let query_params = query
         //Added for authors agg
         if("top_author_size" in query) {
@@ -253,6 +293,7 @@
           return {
              query_params: query,
              current_page: parseInt(query['page']),
+             current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: store.state.search_result.total,
@@ -268,6 +309,7 @@
            return {
              query_params: query,
              current_page: parseInt(query['page']),
+             current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: 0,
@@ -279,20 +321,20 @@
       },
       methods: {
         //20/08/2020: Nam added this for pagination (view Pagination.vue for details)
-        updatePage(pageNum){
-          let router_query = Object.assign({},this.$route.query)
-          router_query["start"]=(pageNum - 1) * this.per_page
-          router_query["size"]=this.per_page
-          router_query["page"]=pageNum;
-          //Delete these to have consitent router
-          delete router_query["fields_of_study"]
-          delete router_query["fos_is_should"]
-          delete router_query["author_is_should"]
-
-          delete router_query["return_top_author"]
-          delete router_query["return_fos_aggs"]
-          this.$router.push({name: this.localeRoute('search').name, query: router_query})
-        },
+        // updatePage(pageNum){
+        //   let router_query = Object.assign({},this.$route.query)
+        //   router_query["start"]=(pageNum - 1) * this.per_page
+        //   router_query["size"]=this.per_page
+        //   router_query["page"]=pageNum;
+        //   //Delete these to have consitent router
+        //   delete router_query["fields_of_study"]
+        //   delete router_query["fos_is_should"]
+        //   delete router_query["author_is_should"]
+        //
+        //   delete router_query["return_top_author"]
+        //   delete router_query["return_fos_aggs"]
+        //   this.$router.push({name: this.localeRoute('search').name, query: router_query})
+        // },
         //28/08/2020: Nam fixed this for dropdown search
         updateFOSChecked(checkedCategories) {
           let fos_checked = checkedCategories
