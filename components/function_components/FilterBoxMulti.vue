@@ -88,7 +88,7 @@ export default {
       ]
     }
   },
-  mounted() {
+  beforeUpdate() {
     this.makeChecked()
   },
   methods: {
