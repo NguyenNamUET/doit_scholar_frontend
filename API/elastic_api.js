@@ -134,7 +134,8 @@ const paper_by_venue = async(query_params) => {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_venue, {
       venues: query_params.venues,
       start: query_params.start,
-      size: query_params.size
+      size: query_params.size,
+      sort_by: query_params.sort_by
     })
     return result.data
   } catch(e) {
@@ -166,9 +167,11 @@ const paper_by_fos_and_title = async(query_params) => {
 
 /***************************************** Search author function ******************************************/
 
-const author_by_id = async (author_id) => {
+const author_by_id = async (author_id, params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id)
+    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id, {
+      params: params
+    })
     return result.data
   } catch(e) {
     console.log(e)
@@ -255,8 +258,11 @@ const wiki_summary = async(query_params) => {
 /************** Autocomple search *************/
 const autocomplete = async(query_params) => {
   try {
+    console.log("autocomplete", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
       search_content: query_params.search_content,
+      authors: query_params.authors,
+      venues: query_params.venues,
       size: query_params.size
     })
     console.log(result.data)

@@ -9,6 +9,12 @@
     "search": "Tìm kiếm",
     "list_label": "Đang xem {start} - {end} trong {total} văn bản",
     "search_bar_placeholder": "Tìm kiếm văn bản",
+    "sort": {
+      "default": "Sắp xếp theo",
+      "by_score": "Sắp xếp theo Độ tương đồng",
+      "by_year": "Sắp xếp theo Năm",
+      "by_cit_count": "Sắp xếp theo Số lượng tham chiếu"
+    },
     "cite": "Trích dẫn",
     "more": "Xem thêm",
     "less": "Ẩn bớt",
@@ -33,7 +39,7 @@
     "header": {
       "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản",
       "search_bar_not_found": "Không tìm thấy kết quả cho từ khóa",
-      "lang_switch": "Chuyển sang"
+      "lang_switch": "Ngôn ngữ"
     },
     "footer" : {
       "address": "Địa chỉ:",

@@ -267,7 +267,6 @@
   import AuthorCard from "@/components/search_page/AuthorCard";
   import PaperCard from "@/components/static_components/PaperCard";
   import {formatTitle} from 'assets/utils';
-
 export default {
   components: {PaperCard, AuthorCard, DoughnutGraph},
   layout: 'home_layout',
@@ -299,7 +298,6 @@ export default {
     let author_count = await all_author()
     let paper_count = await all_paper()
     let fos_count = await all_field()
-
     let most_cited_author = await most_cited_authors()
     let most_cited_paper = await most_cited_papers()
     let most_cited_fos = await fos_graph_data({size: 3})
@@ -349,7 +347,6 @@ export default {
     background: rgb(252,244,244);
     background: linear-gradient(45deg, rgba(252,244,244,1) 55%, rgba(255,255,255,1) 100%);
   }
-
   .info_container {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -362,23 +359,19 @@ export default {
       padding: 20px;
     }
   }
-
   .author_name {
     font-size: 24px;
     font-weight: 600;
   }
-
   .carousel_container {
     margin-top: 40px;
     margin-bottom: 40px;
   }
-
   .author_stat {
     font-weight: 700;
     color: #dc710f;
     font-size: 14px;
   }
-
   #footer {
     a {
       color: white
@@ -394,13 +387,11 @@ export default {
   .column.has-text-centered.is-half.content_box {
     border-radius: 10px 10px 10px 10px;
   }
-
   .number_status {
     font-size: 3.5rem;
     font-weight: 600;
     color: #f0a500;
   }
-
   .status_description {
     font-size: 1.5rem;
     color: #2e414f;

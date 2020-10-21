@@ -9,6 +9,12 @@
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
     "search_bar_placeholder": "Search for paper",
+    "sort": {
+      "default": "Sort",
+      "by_score": "Sort by Relevant",
+      "by_year": "Sort by Year",
+      "by_cit_count": "Sort by Citations Count"
+    },
     "cite": "Cite",
     "more": "See more",
     "less": "See less",
@@ -33,7 +39,7 @@
     "header": {
       "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
       "search_bar_not_found": "Cannot find any result for keyword",
-      "lang_switch": "Switch to"
+      "lang_switch": "Language"
     },
     "footer" : {
       "address": "Address:",

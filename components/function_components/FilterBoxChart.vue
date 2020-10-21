@@ -34,8 +34,8 @@
           </div>
         </nav>
         <CitationBar
-          :dataset="data.data"
-          :labels="data.label"
+          :dataset="this.chartdata.data"
+          :labels="this.chartdata.label"
           :title="$t('general_attribute.publication')"
         >
         </CitationBar>
@@ -83,9 +83,13 @@ export default {
     const name='general_attribute.'+this.type
     return {
       name,
+      chartdata: [],
       fromyear: 0,
       endyear: 2020
     }
+  },
+  beforeUpdate() {
+    this.chartdata = this.data
   },
   i18n: {
     messages: {

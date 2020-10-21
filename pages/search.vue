@@ -54,21 +54,21 @@
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
           </p>
-          <i18n
-            tag="span"
-            path="search_page.result_stat"
-          >
-            <template v-slot:result_count>
-                <span>
-                    {{ total_count | formatNumber }}
-                </span>
-            </template>
-            <template v-slot:keyword>
-                <span>
-                    "{{ query_params.query }}"
-                </span>
-            </template>
-          </i18n>
+<!--          <i18n-->
+<!--            tag="span"-->
+<!--            path="search_page.result_stat"-->
+<!--          >-->
+<!--            <template v-slot:result_count>-->
+<!--                <span>-->
+<!--                    {{ total_count | formatNumber }}-->
+<!--                </span>-->
+<!--            </template>-->
+<!--            <template v-slot:keyword>-->
+<!--                <span>-->
+<!--                    "{{ query_params.query }}"-->
+<!--                </span>-->
+<!--            </template>-->
+<!--          </i18n>-->
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
@@ -89,6 +89,12 @@
                             :data="this.year_list"
                             :whichpage="current_route"
             ></FilterBoxChart>
+            <span>
+              <nuxt-link :to="{path: this.$route.path, query: {query: query_params.query,
+                               top_author_size: 10, start:0, size:this.per_page, page:1}}"
+                         class="button is-danger is-light">Clear</nuxt-link>
+            </span>
+
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -109,7 +115,8 @@
       :page-range="3"
       :margin-pages="2"
       :per-page="this.per_page"
-      :whichpage="current_route">
+      :whichpage="current_route"
+      :query="['page','start','size']">
     </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
@@ -169,7 +176,7 @@ export default {
           let fos_res = []
           let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
           this.fos_info.forEach(item => {
-            if (fos_checked.length>0 && fos_checked.includes(item.key)){
+            if (fos_checked.length>0 && fos_checked.includes(item.key.trim())){
               fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
                             count:item.doc_count, checked:true})
             }
@@ -184,7 +191,7 @@ export default {
           let author_res = []
           let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d+/)
           this.author_info.forEach(item => {
-            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
+            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key.trim())){
               author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
                                count:item.doc_count, checked:true})
             }
@@ -199,7 +206,7 @@ export default {
           let venue_res = []
           let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d+/)
           this.venue_info.forEach(item => {
-            if (!!venue_checked && venue_checked.includes(item.key)){
+            if (!!venue_checked && venue_checked.includes(item.key.trim())){
               venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
                               count:item.doc_count, checked:true})
             }
@@ -220,6 +227,7 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
+
         let query_params = query
         if("fromyear" in query) {
           query_params["from_year"] = query["fromyear"]
@@ -236,7 +244,7 @@ export default {
             fosChecked.push(query[key])
           }
           query_params["fields_of_study"] = fosChecked
-          query_params["fos_is_should"]=false
+          query_params["fos_is_should"]=true
           //store.dispatch('dropdown_search/submit_fos_states', fosChecked)
           //console.log("store.state.dropdown_search.fos_checked", store.state.dropdown_search.fos_checked)
         }
@@ -249,7 +257,7 @@ export default {
             authorsChecked.push(query[key])
           }
           query_params["authors"] = authorsChecked
-          query_params["author_is_should"]=false
+          query_params["author_is_should"]=true
           //store.dispatch('dropdown_search/submit_authors_states', authorsChecked)
           //console.log("store.state.dropdown_search.authors_checked", store.state.dropdown_search.authors_checked)
         }
