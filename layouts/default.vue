@@ -102,10 +102,12 @@ export default {
     return {
     }
   },
+  head() {
+    return this.$nuxtI18nSeo();
+  },
   data() {
     return {
-      showNav: false,
-      nowTime: moment().format('LLL')
+      showNav: false
     }
   },
   computed: {
