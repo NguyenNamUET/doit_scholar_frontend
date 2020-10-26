@@ -11,7 +11,7 @@
                       <b>{{author_detail.name}}</b>
                     </p>
                     <table style="width: 100%">
-                      <tr v-if="author_detail.papers.length !== undefined">
+                      <tr v-if="author_detail.papers !== undefined">
                         <td style="width: 90%">
                           <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.publication') }} </span>
                         </td>
@@ -68,46 +68,34 @@
                         path="general_attribute.list_label"
                       >
                         <template v-slot:start>
-                                <span>
-                                    {{ (current_paper_page-1)*per_page + 1}}
-                                </span>
+                          <span>
+                            {{ (current_paper_page-1)*per_page + 1}}
+                          </span>
                         </template>
-                        <template
-                          v-slot:end
-                        >
-                                <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
-                                    {{ (current_paper_page-1)*per_page + per_page}}
-                                </span>
+                        <template v-slot:end>
+                          <span v-if="(current_paper_page-1)*per_page + per_page < paper_length">
+                            {{ (current_paper_page-1)*per_page + per_page}}
+                          </span>
                           <span v-else>
-                                  {{paper_length}}
-                                </span>
+                            {{paper_length}}
+                          </span>
                         </template>
                         <template v-slot:total>
-                                <span>
-                                    {{paper_length | formatNumber}}
-                                </span>
+                          <span>
+                            {{paper_length | formatNumber}}
+                          </span>
                         </template>
                       </i18n>
                     </p>
                     <div class="filter_section content_box">
                       <div style="display: inline-block">
-                        <div class="field has-addons">
-                          <div class="control is-expanded">
-                            <input
-                              v-on:keyup.enter="submitQuery"
-                              v-model="search_query"
-                              class="input"
-                              type="text"
-                              :placeholder="$t('general_attribute.search_bar_placeholder')"
-                            >
-                          </div>
-                          <div class="control">
-                            <p class="button is-warning" v-on:click="submitQuery">
-                              <i class="fas fa-search"></i>{{ $t('general_attribute.search') }}
-                            </p>
-                          </div>
-                        </div>
+                        <SearchBar
+                          :placeholder="$t('general_attribute.search_bar_placeholder')"
+                          :authors="Array(this.author_id)"
+                          :venues="null"
+                        ></SearchBar>
                       </div>
+                      <SortButton :whichpage="current_route"></SortButton>
 <!--                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>-->
 <!--                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>-->
 <!--                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>-->
@@ -120,15 +108,16 @@
                             v-bind:search_result="result"
                           >
                           </SearchResult>
-                          <Pagination
-                            v-model="current_paper_page"
-                            :page-count="Math.ceil(paper_length / per_page)"
-                            :click-handler="updatePaper"
-                            :page-range="3"
-                            :margin-pages="1"
+
+                          <PaginationV2
                             :is-small="true"
-                          >
-                          </Pagination>
+                            :page-count="Math.ceil(paper_length / per_page)"
+                            :page-range="3"
+                            :margin-pages="2"
+                            :per-page="this.per_page"
+                            :whichpage="current_route"
+                            :query="['page','start','size']">
+                          </PaginationV2>
                         </div>
                       </div>
                     </div>
@@ -165,12 +154,14 @@
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
     import SearchResult from "@/components/search_page/SearchResult";
-    import Pagination from "@/components/function_components/Pagination";
+    import PaginationV2 from "@/components/function_components/PaginationV2";
     import SearchBar from "@/components/function_components/SearchBar";
+    import SortButton from "@/components/function_components/SortButton";
 
     export default {
       name: "_author_detail",
-      components: {SearchBar, Pagination, SearchResult, PaperTable, Influence_graph, NuxtError},
+      watchQuery: true,
+      components: {SearchBar, PaginationV2, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
           title: this.author_detail.name + ' | DoIT Scholar'
@@ -186,7 +177,9 @@
           paper_length: null,
           paper_data: null,
           is_loading: false,
-          search_query: ''
+          search_query: '',
+
+          current_route: null
         }
       },
       filters: {
@@ -198,42 +191,34 @@
         submitQuery() {
           console.log(this.search_query)
         },
-        goToPage() {
-          this.$refs.jumpPage.click()
-        },
         formatTitle(title) {
           return formatTitle(title)
         },
-        async updatePaper(page_num) {
-          this.is_loading = true
-          let result = await author_papers({
-            author_id: this.author_id,
-            start: (page_num - 1) * this.per_page,
-            size: this.per_page
-          })
-          this.goToPage()
-          this.current_paper_page = page_num
-          this.paper_data = result
-          this.is_loading = false
-        }
       },
-      async asyncData({route
-                        , $axios}) {
+      async asyncData({route}) {
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
-        let data = await author_by_id(author_id)
+        let params = {
+          start: route.query.start,
+          size: route.query.size,
+          sort_by: route.query?.sort ?? "score"
+        }
+        let data = await author_by_id(author_id, params)
         if (Object.keys(data).length !== 0){
           return {
             author_id: author_id,
             author_detail: data,
             paper_length: data.totalPapers,
-            paper_data: data.papers
+            paper_data: data.papers,
+            current_route: route.fullPath,
+            current_paper_page: route?.query?.page ?? 1
           }
         }
         else{
           return {
             author_id: author_id,
-            author_detail: {}
+            author_detail: {},
+            current_route: route.fullPath
           }
         }
       }

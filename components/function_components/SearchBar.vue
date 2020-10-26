@@ -40,7 +40,7 @@ import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
-      props: ['placeholder'],
+      props: ['placeholder', 'author', 'venue'],
       data() {
         return {
           search_query: '',
@@ -59,8 +59,11 @@ export default {
           // if (!this.search_query.length)
           //   this.autocomplete_data = []
           this.is_loading = true
+          console.log("getAutocomplete", this.author)
           this.raw_data = await autocomplete({
             search_content: name,
+            authors: this.authors,
+            venues: this.venues,
             size: 10
           })
           this.autocomplete_data = _.toArray(this.raw_data)
