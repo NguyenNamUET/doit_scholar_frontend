@@ -84,7 +84,6 @@
                   }
                 }"
                 class="button is-danger is-light"
-                v-on:click="this.store.dispatch('search_result/clear_sorting_params')"
               >
                 Clear
               </nuxt-link>

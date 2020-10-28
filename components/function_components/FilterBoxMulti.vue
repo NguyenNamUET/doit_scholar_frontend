@@ -60,7 +60,7 @@ export default {
         path: this.whichpage,
         query: {}
       }
-      console.log(this.checkedRows)
+      console.log('selected ',this.checkedRows)
       params.query[this.type] = []
       for(let i=0; i<this.checkedRows.length; i++){
         params.query[this.type].push(this.checkedRows[i][this.type])
@@ -131,9 +131,9 @@ export default {
       })
       return venue_res
     },
+
     checked_fos_list() {
       let fos_res = []
-      console.log(this.$store.state.search_result.filters.fos_checked)
       this.$store.state.search_result.filters.fos_checked.forEach(item => {
         fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
           count:item.doc_count, checked:false})
@@ -158,7 +158,6 @@ export default {
     }
   },
   mounted() {
-    this.checked_fos_list()
     if (this.type === 'author') {
       this.data = this.authors_list()
     }
