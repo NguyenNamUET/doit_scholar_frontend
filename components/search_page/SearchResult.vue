@@ -2,7 +2,7 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child content_box">
-        <a v-if="search_result.title"
+        <a
           class="text-class-1"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
@@ -10,18 +10,25 @@
         </a>
         <!----------------------------------------------------------------------------------------------->
         <div class="has-text-weight-light">
+          <!-------------- Year ------------------>
+          <p class="text-class-3"
+             v-if="search_result.year !== ''">
+            {{search_result.year}}
+          </p>
+          <!-------------- Year ------------------>
+
           <!------------------------------------ Fields of study ---------------------------------------->
-          <p v-if="search_result.fieldsOfStudy">
+          <p v-if="Object.keys(search_result).includes('fieldsOfStudy') && search_result.fieldsOfStudy">
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
             <a
               class="link-class-3 secondary_description"
               :href="'/journal/' + formatTitle(search_result.venue)"
-              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
+              v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >
               <b>{{search_result.venue}}</b>
             </a>
             <span
-              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
+              v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >&sdot;</span>
             <a
               v-if="!field_hidden"
@@ -56,7 +63,7 @@
           <!------------------------------------ Fields of study ---------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <p v-if="search_result.topics && search_result.topics.length > 0">
+          <p v-if="Object.keys(search_result).includes('topics') && search_result.topics && search_result.topics.length > 0">
             <span class="small_icon"><i class="fas fa-sticky-note"></i></span>
             <span
               v-if="!topic_hidden"
@@ -97,25 +104,27 @@
               v-on:click="topic_hidden = false"
             >
             + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}
-            </span>
+          </span>
           </p>
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <AuthorModal v-if="search_result.authors" v-bind:authors="search_result.authors"></AuthorModal>
+          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
+                        :authors="search_result.authors">
+          </AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
         <!------------------------------------------ Abstract ----------------------------------------->
         <p
-          v-if="!abstract_hidden && search_result.abstract"
+          v-if="!abstract_hidden && Object.keys(search_result).includes('abstract') && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
           {{ search_result.abstract }}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
-          v-if="abstract_hidden && search_result.abstract"
+          v-if="abstract_hidden && Object.keys(search_result).includes('abstract') && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
           {{ search_result.abstract.slice(0, 400) }}
@@ -127,10 +136,12 @@
         </p>
         <br>
         <!------------------------------------------ Abstract ----------------------------------------->
+
         <!-------------------------------------- Action Buttons --------------------------------------->
         <nav class="level is-mobile util_level">
           <div class="level-left is-small">
-            <a class="level-item" v-if="search_result.citations_count > 0">
+            <a class="level-item"
+               v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">
               <button
                 class="button is-info is-light is-outlined"
               >
@@ -138,7 +149,7 @@
               </button>
             </a>
             <a
-              v-if="search_result.doi !== undefined && search_result.doi !== null"
+              v-if="Object.keys(search_result).includes('doi') && search_result.doi"
               :href="'https://doi.org/' + search_result.doi"
               target="_blank"
               class="level-item"
@@ -150,21 +161,19 @@
               </button>
             </a>
             <a
-              v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && !search_result.pdf_url.endsWith('.pdf')"
+              v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && !search_result.pdf_url.endsWith('.pdf')"
               :href="search_result.pdf_url"
               target="_blank"
               class="level-item"
             >
-              <button
-                class="button is-info is-light is-outlined"
-              >
+              <button class="button is-info is-light is-outlined">
                 <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
             <span class="level-item">
               <span
                 class="tag is-success is-small"
-                v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && search_result.pdf_url.endsWith('.pdf')"
+                v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && search_result.pdf_url.endsWith('.pdf')"
               >
 <!--                {{search_result.pdf_url}}-->
               <span>PDF <i class="fas fa-check"></i></span>
@@ -288,6 +297,5 @@ export default {
   width: 20px;
   position: sticky;
 }
-
 
 </style>

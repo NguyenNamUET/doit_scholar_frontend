@@ -9,6 +9,12 @@
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
     "search_bar_placeholder": "Search for paper",
+    "sort": {
+      "default": "Sort",
+      "by_score": "Sort by Relevant",
+      "by_year": "Sort by Year",
+      "by_cit_count": "Sort by Citations Count"
+    },
     "cite": "Cite",
     "more": "See more",
     "less": "See less",
@@ -16,6 +22,10 @@
     "show": "Show",
     "hide": "Hide",
     "copy": "Copied",
+    "year": "Year",
+    "count": "Count",
+    "clear": "Clear",
+    "apply": "Apply",
 
     "topic": "Topics",
     "citation": "Citations",
@@ -28,10 +38,11 @@
   "default_layout": {
     "header": {
       "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
-      "lang_switch": "Switch to"
+      "search_bar_not_found": "Cannot find any result for keyword",
+      "lang_switch": "Language"
     },
     "footer" : {
-      "address": "Address",
+      "address": "Address:",
       "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
     }
   },
@@ -73,6 +84,8 @@
     "related_paper": "Related Papers",
     "citation_tooltip": "Other papers which mention this paper",
     "reference_tooltip": "Papers referenced by this paper",
+    "citation_chart_title": "Citations per year",
+    "citation_velocity": "Cited for {count} times on average since {year}",
     "highlight_citation_box": {
       "title": "{number} popular citations in {total} papers"
     }

@@ -54,27 +54,43 @@
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
           </p>
-          <i18n
-            tag="span"
-            path="search_page.result_stat"
-          >
-            <template v-slot:result_count>
-                <span>
-                    {{ total_count | formatNumber }}
-                </span>
-            </template>
-            <template v-slot:keyword>
-                <span>
-                    "{{ query_params.query }}"
-                </span>
-            </template>
-          </i18n>
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>
-            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>
+            <FilterBoxMulti :type="'author'"
+                            :data="authors_list"
+                            :whichpage="current_route"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'venue'"
+                            :data="venue_list"
+                            :whichpage="current_route"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'fos'"
+                            :data="fos_list"
+                            :whichpage="current_route"
+            ></FilterBoxMulti>
+            <FilterBoxChart :type="'year'"
+                            :chart_data="year_list"
+                            :whichpage="current_route"
+            ></FilterBoxChart>
+            <span>
+              <nuxt-link
+                :to="{
+                  path: this.$route.path,
+                  query: {
+                    query: query_params.query,
+                    start:0,
+                    size:this.per_page,
+                    page:1
+                  }
+                }"
+                class="button is-danger is-light"
+                v-on:click="this.store.dispatch('search_result/clear_sorting_params')"
+              >
+                Clear
+              </nuxt-link>
+            </span>
+
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -89,32 +105,14 @@
 
 
     <!-------------------------   PAGINATION HERE   ---------------------------->
-    <!--HOW TO USE-->
-    <!--page-count: number of pages-->
-    <!--click-handler: what happen when click on a page button-->
-    <!--page-range: number of page display at middle (ex:1 ... 4 5 6 ... 24)-->
-    <!--margin-pages: number of page at 2 end (ex above margin-pages=1)-->
-    <!--v-model="current_page" to track selected page (must have)-->
-
-    <!--Took inspiration from this project
-    https://github.com/lokyoung/vuejs-paginate/blob/master/src/components/Paginate.vue-->
-<!--    <Pagination-->
-<!--      :page-count="(Math.ceil(this.total_count/this.per_page))"-->
-<!--      v-model="current_page"-->
-<!--      :click-handler="updatePage"-->
-<!--      :page-range="3"-->
-<!--      :margin-pages="2"-->
-<!--      :is-small="true"-->
-<!--    >-->
-<!--    </Pagination>-->
-
     <PaginationV2
       :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
       :page-range="3"
       :margin-pages="2"
       :per-page="this.per_page"
-      :whichpage="current_route" :query="['page','start','size']">
+      :whichpage="current_route"
+      :query="['page','start','size']">
     </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
@@ -126,20 +124,20 @@
 </template>
 
 <script>
-    import {formatNumber} from "../assets/utils";
-    import {filteredKeys, filteredKeys_v2} from "../assets/utils";
-    import DropDown from "../components/function_components/DropDown";
-    import {publication_type} from "../assets/utils";
-    import AuthorCard from "../components/search_page/AuthorCard";
-    import SearchResult from "../components/search_page/SearchResult";
-    import NuxtError from "@/components/static_components/ErrorPage";
-    import Pagination from "@/components/function_components/Pagination";
-    import PaginationV2 from "@/components/function_components/PaginationV2";
+import {filteredKeys_v2, formatNumber, publication_type} from "../assets/utils";
+import DropDown from "../components/function_components/DropDown";
+import AuthorCard from "../components/search_page/AuthorCard";
+import SearchResult from "../components/search_page/SearchResult";
+import NuxtError from "@/components/static_components/ErrorPage";
+import Pagination from "@/components/function_components/Pagination";
+import PaginationV2 from "@/components/function_components/PaginationV2";
+import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
+import FilterBoxChart from "@/components/function_components/FilterBoxChart";
 
-    export default {
+export default {
       name: "search",
       watchQuery: true,
-      components: {SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
+      components: {FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
       head() {
         return {
           title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
@@ -153,6 +151,7 @@
           author_info: null,
           venue_info: null,
           fos_info: null,
+          year_info: null,
 
           author_hidden: true,
           msg_hidden: false,
@@ -170,94 +169,63 @@
       },
       computed: {
         fos_list: function (){
-          let result = []
-          let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d/)
-          // console.log("fos_checked: ", fos_checked)
-          // console.log("fos_info", this.fos_info)
+          let fos_res = []
+          let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
           this.fos_info.forEach(item => {
-            if (fos_checked.length>0 && fos_checked.includes(item.key)){
-              result.push({key:item.key, doc_count:item.doc_count, checked:true})
+            if (fos_checked.length>0 && fos_checked.includes(item.key.trim())){
+              fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+                            count:item.doc_count, checked:true})
             }
             else{
-              result.push({key:item.key, doc_count:item.doc_count, checked:false})
+              fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+                            count:item.doc_count, checked:false})
             }
           })
-          // console.log("fos_list: ", result)
-          return result
+          return fos_res
         },
         authors_list: function (){
-          let result = []
-          let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d/)
-          // console.log("authors_checked: ", authors_checked)
+          let author_res = []
+          let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d+/)
           this.author_info.forEach(item => {
-            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key)){
-              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:true})
+            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key.trim())){
+              author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+                               count:item.doc_count, checked:true})
             }
             else{
-              result.push({key:item.name.buckets[0].key, doc_count:item.doc_count, checked:false})
+              author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+                               count:item.doc_count, checked:false})
             }
           })
-          // console.log("authors_list: ", result)
-          return result
+          return author_res
         },
         venue_list: function (){
-          let result = []
-          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d/)
-          // console.log("venue_checked: ",venue_checked)
+          let venue_res = []
+          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d+/)
           this.venue_info.forEach(item => {
-            if (!!venue_checked && venue_checked.includes(item.key)){
-              result.push({key:item.key, doc_count:item.doc_count, checked:true})
+            if (!!venue_checked && venue_checked.includes(item.key.trim())){
+              venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+                              count:item.doc_count, checked:true})
             }
             else{
-              result.push({key:item.key, doc_count:item.doc_count, checked:false})
+              venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+                              count:item.doc_count, checked:false})
             }
           })
-          // console.log("venue_list: ", result)
-          return result
+          return venue_res
+        },
+        year_list: function (){
+          let year_res = {label: [], data:[]}
+          this.year_info.forEach(item => {
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
+          })
+          return year_res
         }
       },
       async asyncData({query, store, route}) {
-        let query_params = query
-        //Added for authors agg
-        if("top_author_size" in query) {
-          query_params["return_top_author"] = true
-        }
-        //Gather all fos<digit> to form Array of checked fields of study
-        if("fos0" in query) {
-          let fos_keys = filteredKeys(Object.assign({},query), /fos\d/)
-          query_params["fields_of_study"] = []
-          for(let i=0; i<fos_keys.length; i++){
-            let key = fos_keys[i]
-            query_params["fields_of_study"].push(query[key])
-          }
-          query_params["fos_is_should"]=true
-        }
-        //Gather all author<digit> to form Array of checked authors
-        if("author0" in query) {
-          let author_keys = filteredKeys(Object.assign({},query), /author\d/)
-          query_params["authors"] = []
-          for(let i=0; i<author_keys.length; i++){
-            let key = author_keys[i]
-            query_params["authors"].push(query[key])
-          }
-          query_params["author_is_should"]=true
-        }
-        //Gather venue param
-        if("venue0" in query) {
-          let venues_keys = filteredKeys(Object.assign({},query), /venue\d/)
-          query_params["venues"] = []
-          for(let i=0; i<venues_keys.length; i++){
-            let key = venues_keys[i]
-            query_params["venues"].push(query[key])
-          }
-          query_params["venues_is_should"]=true
-        }
-        //Added for fos agg
-        query_params["return_fos_aggs"]= true
-        //Added for venue agg
-        query_params["return_venue_aggs"]= true
+        // console.log('query here:', query_params)
 
-        await store.dispatch('search_result/paper_by_title', query_params)
+        await store.dispatch('search_result/paper_by_title', query)
         if(store.state.search_result.search_results.length > 0) {
           // console.log(store.state.search_result.search_results)
           return {
@@ -265,12 +233,14 @@
              current_page: parseInt(query['page']),
              current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
-             keyword: query['searchContent'],
+             keyword: query['query'],
              total_count: store.state.search_result.total,
+
              //maybe I will delete these three since computed for these are not necessary/////
              author_info: store.state.search_result.aggregation.author_count.name.buckets,
              fos_info: store.state.search_result.aggregation.fos_count.buckets,
              venue_info: store.state.search_result.aggregation.venue_count.buckets,
+             year_info: store.state.search_result.aggregation.year_count.buckets,
              ////////////////////////////////////////////////////////////////////////////////
              last_paper_id: store.state.search_result.last_paper_id,
           }
@@ -287,111 +257,6 @@
              venue_info: [],
              fos_info: [],
           }
-        }
-      },
-      methods: {
-        //20/08/2020: Nam added this for pagination (view Pagination.vue for details)
-        // updatePage(pageNum){
-        //   let router_query = Object.assign({},this.$route.query)
-        //   router_query["start"]=(pageNum - 1) * this.per_page
-        //   router_query["size"]=this.per_page
-        //   router_query["page"]=pageNum;
-        //   //Delete these to have consitent router
-        //   delete router_query["fields_of_study"]
-        //   delete router_query["fos_is_should"]
-        //   delete router_query["author_is_should"]
-        //
-        //   delete router_query["return_top_author"]
-        //   delete router_query["return_fos_aggs"]
-        //   this.$router.push({name: this.localeRoute('search').name, query: router_query})
-        // },
-        //28/08/2020: Nam fixed this for dropdown search
-        updateFOSChecked(checkedCategories) {
-          let fos_checked = checkedCategories
-          // console.log("updateFOSChecked: ", fos_checked)
-          let router_query = {query: this.$route.query.query,
-                              start: 0,
-                              size: this.$route.query.size,
-                              top_author_size: 10,
-                              page: 1
-          }
-          //Create fields of study params for example ?fos0=Medicine&fos1=Engineering
-          for(let i=0; i<fos_checked.length; i++){
-            router_query[`fos${i}`]=fos_checked[i]
-          }
-          //Add author params to query
-          if("author0" in this.$route.query){
-            let author_keys = filteredKeys(Object.assign({},this.$route.query), /author\d/)
-            for(let i=0; i<author_keys.length; i++){
-              router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
-            }
-          }
-          //Add venue param to query
-          if("venue0" in this.$route.query){
-            let venues_keys = filteredKeys(Object.assign({},this.$route.query), /venue\d/)
-            for(let i=0; i<venues_keys.length; i++){
-              router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
-            }
-          }
-          this.$router.push({name: this.localeRoute('search').name, query: router_query})
-        },
-        updateAuthorsChecked(checkedCategories) {
-          let authors_checked = checkedCategories
-          // console.log("updateAuthorsChecked: ", authors_checked)
-          let router_query = {query: this.$route.query.query,
-                              start: 0,
-                              size: this.$route.query.size,
-                              top_author_size: 10,
-                              page: this.current_page
-          }
-          //Create authors params for example ?author0=Medicine&author1=Engineering
-          for(let i=0; i<authors_checked.length; i++){
-            router_query[`author${i}`]=authors_checked[i]
-          }
-          //Add fos params to query
-          if("fos0" in this.$route.query){
-            let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)
-            for(let i=0; i<fos_keys.length; i++){
-              router_query[[fos_keys[i]]]=this.$route.query[fos_keys[i]]
-            }
-          }
-          //Add venue param to query
-          if("venue0" in this.$route.query){
-            let venues_keys = filteredKeys(Object.assign({},this.$route.query), /venue\d/)
-            for(let i=0; i<venues_keys.length; i++){
-              router_query[[venues_keys[i]]]=this.$route.query[venues_keys[i]]
-            }
-          }
-          this.$router.push({name: this.localeRoute('search').name, query: router_query})
-        },
-        updateVenuesChecked(checkedCategories){
-          let venues_checked = checkedCategories
-          // console.log("updateVenuesChecked: ", venues_checked)
-          let router_query = {query: this.$route.query.query,
-                              start: 0,
-                              size: this.$route.query.size,
-                              top_author_size: 10,
-                              page: 1
-          }
-          //Create venue params for example ?venue=VinAI
-          for(let i=0; i<venues_checked.length; i++){
-            router_query[`venue${i}`]=venues_checked[i]
-          }
-          //Add fos params to query
-          if("fos0" in this.$route.query){
-            let fos_keys = filteredKeys(Object.assign({},this.$route.query), /fos\d/)
-            for(let i=0; i<fos_keys.length; i++){
-              router_query[[fos_keys[i]]]=this.$route.query[fos_keys[i]]
-            }
-          }
-          //Add author params to query
-          if("author0" in this.$route.query){
-            let author_keys = filteredKeys(Object.assign({},this.$route.query), /author\d/)
-            for(let i=0; i<author_keys.length; i++){
-              router_query[[author_keys[i]]]=this.$route.query[author_keys[i]]
-            }
-          }
-          this.$router.push({name: this.localeRoute('search').name, query: router_query})
         }
       }
     }

@@ -1,5 +1,6 @@
 <template>
   <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
+<!--    {{this.gg_scholar_meta}}-->
     <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
       <div class="tile">
         <div class="tile is-parent is-7">
@@ -144,7 +145,7 @@
                   v-if="!show_pdf"
                   v-on:click="handlePDF(true)"
                 >
-                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.show') }} PDF</span>
+                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.show') }} PDF</span>
                 </a>
 
                 <a
@@ -152,7 +153,7 @@
                   v-if="show_pdf"
                   v-on:click="handlePDF(false)"
                 >
-                  <span><i class="fas fa-file-pdf"></i>{{ $t('general_attribute.hide') }} PDF</span>
+                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.hide') }} PDF</span>
                 </a>
               </div>
             </nav>
@@ -295,8 +296,7 @@
     <!---------------------------------------------- Topics ------------------------------------------------------->
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
-    <div class="tile is-ancestor" id="citation_box"
-         v-bind:class="{ 'loading-page': this.is_loading_citation }">
+    <div class="tile is-ancestor" id="citation_box" >
       <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
           <article class="tile is-child">
@@ -338,55 +338,60 @@
               </i18n>
             </p>
             <div class="tile is-parent">
-              <!------------------------- Citation Card -------------------------------->
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
                   v-for="result in citation_data"
                   v-bind:search_result="result"
                 >
                 </SearchResult>
-<!--                <Pagination-->
-<!--                  v-model="current_citation_page"-->
-<!--                  :page-count="Math.ceil(citation_length / per_page)"-->
-<!--                  :click-handler="updateCitation"-->
-<!--                  :page-range="3"-->
-<!--                  :margin-pages="2"-->
-<!--                  :isSmall="true">-->
-<!--                </Pagination>-->
-                <PaginationV2
-                  :is-small="true"
+                <Pagination
+                  v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
+                  :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
-                  :per-page="this.per_page"
-                  :whichpage="current_route" :query="['cpage','cstart','csize']"
-                  @click.native="toCitationTop"
-                  >
-                </PaginationV2>
+                  :isSmall="true">
+                </Pagination>
               </div>
-              <!------------------------- Citation Card -------------------------------->
-              <!------------------------- Citation Chart ------------------------------->
               <div class="tile is-child is-4">
-                <div v-if="this.chart_data.length > 0">
+                <div v-if="this.chart_data.length > 0" class="content_box">
                   <CitationBar
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
-                    :width="250" :height="250"
+                    :width="250"
+                    :height="250"
+                    :title="$t('paper_detail_page.citation_chart_title')"
                   >
                   </CitationBar>
+                  {{chart_labels}}
+                  {{chart_data}}
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
                   style="text-align: center"
+                  class="text-class-3 color-class-3"
                 >
-                  <p class="text-class-3 color-class-3">
-                    Trung bình được trích dẫn
-                    <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
-                    lần từ {{this.paper_detail.year}} đến nay
-                  </p>
+<!--                  <p class="text-class-3 color-class-3">-->
+<!--                    Trung bình được trích dẫn-->
+
+<!--                    lần từ {{this.paper_detail.year}} đến nay-->
+<!--                  </p>-->
+                  <i18n
+                    tag="p"
+                    path="paper_detail_page.citation_velocity"
+                  >
+                    <template v-slot:count>
+                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
+                    </template>
+                    <template v-slot:year>
+                      <span>
+                          {{paper_detail.year}}
+                      </span>
+                    </template>
+                  </i18n>
+
                 </div>
               </div>
-              <!------------------------- Citation Chart ------------------------------->
             </div>
           </article>
         </div>
@@ -395,8 +400,7 @@
     <!------------------------------------------ Citations Table -------------------------------------------------->
 
     <!----------------------------------------- References Table -------------------------------------------------->
-    <div class="tile is-ancestor is-vertical " id="reference_box"
-         v-bind:class="{ 'loading-page': this.is_loading_ref }">
+    <div class="tile is-ancestor is-vertical " id="reference_box">
       <div class="tile is-parent" v-if="ref_data.length > 0">
         <div class="tile is-child">
           <p class="content_title">
@@ -443,24 +447,14 @@
                 v-bind:search_result="result"
               >
               </SearchResult>
-<!--              <Pagination-->
-<!--                v-model="current_ref_page"-->
-<!--                :page-count="Math.ceil(ref_length / per_page)"-->
-<!--                :click-handler="updateReference"-->
-<!--                :page-range="3"-->
-<!--                :margin-pages="2"-->
-<!--                :isSmall="true">-->
-<!--              </Pagination>-->
-              <PaginationV2
-                  :is-small="true"
-                  :page-count="Math.ceil(ref_length / per_page)"
-                  :page-range="3"
-                  :margin-pages="2"
-                  :per-page="this.per_page"
-                  :whichpage="current_route" :query="['rpage','rstart','rsize']"
-                  @click.native="toReferenceTop"
-                  >
-              </PaginationV2>
+              <Pagination
+                v-model="current_ref_page"
+                :page-count="Math.ceil(ref_length / per_page)"
+                :click-handler="updateReference"
+                :page-range="3"
+                :margin-pages="2"
+                :isSmall="true">
+              </Pagination>
             </div>
           </div>
         </div>
@@ -508,17 +502,13 @@
 </template>
 
 <script>
-    import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
-    import {formatTitle} from "assets/utils";
-    import {formatNumber} from "assets/utils";
-    import {chartColors} from "assets/utils";
-    import SearchResult from "@/components/search_page/SearchResult";
-    import PaginationV2 from "@/components/function_components/PaginationV2";
+import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
+import SearchResult from "@/components/search_page/SearchResult";
 
-    export default {
-      name: "_paper_detail",
-      watchQuery: true,
-      components: {SearchResult, PaginationV2},
+export default {
+      name: "paper_detail",
+      components: {SearchResult},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -539,22 +529,207 @@
       // },
       head() {
         return {
-          title: this.paper_detail.title + ' | DoIT Scholar'
+          title: this.paper_detail.title + ' | DoIT Scholar',
+          meta: this.all_meta
+        }
+      },
+      jsonld() {
+        let json_schema = []
+        json_schema.push(this.breadcrumb_schema)
+        json_schema.push(this.article_schema)
+        return {
+          "@context": "https://schema.org",
+          "@graph" : json_schema
         }
       },
       computed: {
-        full_fos: function (){
+        full_fos: function () {
           return _.join(this.paper_detail.fieldsOfStudy, ', ')
+        },
+        all_meta: function () {
+          let local_meta = [
+            {
+              hid: 'description',
+              name: 'description',
+              content: this.paper_detail.abstract
+            }
+          ]
+          return local_meta.concat(this.twitter_meta, this.og_meta, this.gg_scholar_meta)
+        },
+        twitter_meta: function() {
+          return [
+            {
+              hid: 'twitter:title',
+              property: 'twitter:title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'twitter:image',
+              property: 'twitter:image',
+              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+            },
+            {
+              hid: 'twitter:image:alt',
+              property: 'twitter:image:alt',
+              content: 'DoIT Scholar'
+            },
+            {
+              hid: 'twitter:card',
+              property: 'twitter:card',
+              content: 'summary_large_image'
+            },
+            {
+              hid: 'twitter:url',
+              property: 'twitter:url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'twitter:description',
+              property: 'twitter:description',
+              content: this.paper_detail.abstract
+            }
+          ]
+        },
+        og_meta: function() {
+          return [
+            {
+              hid: 'og:title',
+              property: 'og:title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'og:image',
+              property: 'og:image',
+              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+            },
+            {
+              hid: 'og:type',
+              property: 'og:type',
+              content: 'website'
+            },
+            {
+              hid: 'og:site_name',
+              property: 'og:site_name',
+              content: 'DoIT Scholar'
+            },
+            {
+              hid: 'og:url',
+              property: 'og:url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'og:description',
+              property: 'og:description',
+              content: this.paper_detail.abstract
+            }
+          ]
+        },
+        gg_scholar_meta: function () {
+          let meta = [
+            {
+              hid: 'citation_title',
+              name: 'citation_title',
+              content: this.paper_detail.title
+            },
+            {
+              hid: 'citation_abstract_html_url',
+              name: 'citation_abstract_html_url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'citation_fulltext_html_url',
+              name: 'citation_fulltext_html_url',
+              content: host + this.$route.path
+            },
+            {
+              hid: 'citation_publication_date',
+              name: 'citation_publication_date',
+              content: this.paper_detail.year
+            }
+          ]
+          this.paper_detail.authors.forEach(function (author) {
+            meta.push({
+                hid: 'citation_author',
+                name: 'citation_author',
+                content: author.name
+            })
+          })
+          if (this.paper_detail.doi !== undefined && this.paper_detail.doi !== null)
+            meta.push({
+              hid: 'citation_doi',
+              name: 'citation_doi',
+              content: this.paper_detail.doi
+            })
+          if (this.paper_detail.venue.length !== 0)
+            meta.push({
+              hid: 'citation_journal_title',
+              name: 'citation_journal_title',
+              content: this.paper_detail.venue
+            })
+          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
+            meta.push({
+              hid: 'citation_pdf_url',
+              name: 'citation_pdf_url',
+              content: this.paper_detail.pdf_url
+            })
+          return meta
+        },
+        breadcrumb_schema: function() {
+          return {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              {
+                "@type":"ListItem",
+                "position":1,
+                "item":{
+                  "@id": host,
+                  "name":"Home"
+                }
+              },
+              {
+                "@type":"ListItem",
+                "position": 2,
+                "item":{
+                  "@id": host + this.$route.path,
+                  "name": "Papers"
+                }
+              }
+            ]
+          }
+        },
+        article_schema: function () {
+          let schema = {
+            '@type': 'ScholarlyArticle',
+            'name': this.paper_detail.title,
+            'headline': this.paper_detail.title,
+            'mainEntityOfPage': host + this.$route.path,
+            'description': this.paper_detail.abstract,
+            'copyrightYear': this.paper_detail.year,
+            'datePublished': this.paper_detail.year,
+            'author': []
+          }
+          this.paper_detail.authors.forEach(function (author) {
+            schema['author'].push({
+              '@type': 'Person',
+              'name': author.name,
+              'mainEntityOfPage': host + '/author/' + formatTitle(author.name) + '-' + author.authorId
+            })
+          })
+          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
+            schema['about'] = Array({
+              '@type': 'DigitalDocument',
+              'url': this.paper_detail.pdf_url
+            })
+          return schema
         }
       },
       data() {
         return {
-          current_route: null,
           citation_length: null,
           ref_length: null,
           citation_data: null,
           ref_data: null,
-          per_page: 5,
+          per_page: 10,
           current_citation_page: 1,
           current_ref_page: 1,
 
@@ -598,48 +773,32 @@
             setTimeout(() => this.$nuxt.$loading.finish(), 3000)
           }
         },
-        // async updateCitation(page_num) {
-        //   this.is_loading_citation = true
-        //   let result = await paper_citation({
-        //     paper_id: this.paper_id,
-        //     start: (page_num - 1) * this.per_page,
-        //     size: this.per_page
-        //   })
-        //   this.$refs.citation_box.click()
-        //   this.current_citation_page = page_num
-        //   this.citation_data = result
-        //   this.citation_height = document.getElementById('citation_box').offsetHeight
-        //   this.is_loading_citation = false
-        // },
-        toCitationTop(){
+        async updateCitation(page_num) {
           this.is_loading_citation = true
-          console.log("is_loading_citation", this.is_loading_citation)
+          let result = await paper_citation({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
           this.$refs.citation_box.click()
+          this.current_citation_page = page_num
+          this.citation_data = result
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
-          console.log("is_loading_citation", this.is_loading_citation)
         },
-        toReferenceTop(){
+        async updateReference(page_num) {
           this.is_loading_ref = true
-          console.log("is_loading_ref", this.is_loading_ref)
+          let result = await paper_references({
+            paper_id: this.paper_id,
+            start: (page_num - 1) * this.per_page,
+            size: this.per_page
+          })
           this.$refs.reference_box.click()
+          this.current_ref_page = page_num
+          this.ref_data = result
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
-          console.log("is_loading_ref", this.is_loading_ref)
         },
-        // async updateReference(page_num) {
-        //   this.is_loading_ref = true
-        //   let result = await paper_references({
-        //     paper_id: this.paper_id,
-        //     start: (page_num - 1) * this.per_page,
-        //     size: this.per_page
-        //   })
-        //   this.$refs.reference_box.click()
-        //   this.current_ref_page = page_num
-        //   this.ref_data = result
-        //   this.reference_height = document.getElementById('reference_box').offsetHeight
-        //   this.is_loading_ref = false
-        // },
         formatTitle(title) {
           return formatTitle(title)
         },
@@ -668,24 +827,14 @@
         this.citation_height = heights[2]
         this.reference_height = heights[3]
       },
-      async asyncData({route, query}) {
+      async asyncData({route, $axios}) {
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
-        console.log("query", query)
-        let params = {
-          paper_id: /(?<=.p-)\w+$/g.exec(route.params.paper_detail),
-          cstart: query?.cstart ?? 0, //if null then 0
-          csize: query?.csize ?? 5, //if null then 5
-          rstart: query?.rstart ?? 0,
-          rsize: query?.rsize ?? 5
-        }
-        console.log("params", params)
-        let data = await paper_detail(params)
 
+        let data = await paper_detail(paper_id)
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
 
-        //Make suggestion data (at end of page)
         let suggestion_data = []
         if(data?.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
@@ -699,9 +848,11 @@
             data_dict = data.citations_chart
             is_citation_empty = false
           }
+          // console.log(data_dict)
           if (data.references_count > 0) {
             is_ref_empty = false
           }
+          // console.log(data)
           //Sort topics alphabetically
           data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
@@ -717,8 +868,7 @@
             citation_data: data.citations,
             ref_data: data.references,
             citation_length: data.citations_count,
-            ref_length: data.references_count,
-            current_route: route.fullPath
+            ref_length: data.references_count
           }
         }
         else {
@@ -728,8 +878,7 @@
             chart_labels: {},
             chart_data: {},
             paper_id: paper_id[0],
-            paper_detail: {},
-            current_route: route.fullPath
+            paper_detail: {}
           }
         }
       }
@@ -807,11 +956,9 @@
   }
 
   .related_content {
-    height: 250px;
   }
 
   .top_citation {
-    max-height: 550px;
     border: 1px solid #d9dadb;
     background-color: #f9f9fa;
     padding: 10px;
@@ -820,9 +967,4 @@
       font-size: 18px;
     }
   }
-
-  .loading-page {
-  position: fixed;
-  background: rgba(255, 255, 255, 0.8);
-}
 </style>

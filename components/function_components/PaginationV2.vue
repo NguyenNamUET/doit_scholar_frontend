@@ -147,7 +147,6 @@ export default {
       let page_re = /\w(?=page=\d+)page/g.exec(this.whichpage)?.[0]
       let start_re = /\w(?=start=\d+)start/g.exec(this.whichpage)?.[0]
       let size_re = /\w(?=size=\d+)size/g.exec(this.whichpage)?.[0]
-
       if(page_re===this.query[0] && start_re===this.query[1] && size_re===this.query[2]){
         let _currentPage = /(?<=page=)\d+/g.exec(this.whichpage)
         if (_currentPage){
@@ -161,14 +160,11 @@ export default {
   }
 }
 </script>
-
 <style lang="css" scoped>
 a:hover {
  text-decoration: none;
 }
-
 .tile {
   padding-top: 0.2rem; padding-bottom: 0.2rem;
 }
-
 </style>

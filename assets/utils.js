@@ -55,6 +55,8 @@ const publication_type = [
   'Phân tích siêu dữ liệu'
 ]
 
+const host = 'http://51.210.251.250:3400'
+
 function formatNumber(number) {
   return number.toLocaleString('en-UK', {maximumFractionDigits: 0})
 }
@@ -153,5 +155,6 @@ export {
   fields_dict,
   isDictEmpty,
   doughnut_chart_prep,
-  genBibtex
+  genBibtex,
+  host
 }

@@ -3,7 +3,7 @@
     <span class="small_icon"><i class="fas fa-user-alt"></i></span>
     <span style="display: inline-block; vertical-align: top;">
       <p
-        v-if="author_hidden"
+        v-if="authors && author_hidden"
         v-for="(author, index) in authors.slice(0,3)"
         :key="author.authorId"
       >
@@ -16,7 +16,7 @@
       </p>
       <span
         class="less-more-button"
-        v-if="author_hidden && authors.length - 3 > 0"
+        v-if="authors && author_hidden && authors.length - 3 > 0"
         v-on:click="show_author_modal = true"
       >
         {{ $t('search_page.see_all_author') }}

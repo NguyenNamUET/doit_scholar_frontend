@@ -20,7 +20,7 @@
       <span v-if="paper_detail.authors !== undefined">
         <span
         v-for="(author, index) in paper_detail.authors.slice(0,1)"
-        :key="author.authorId"
+        v-bind:key="author.authorId"
         >
           <a
             :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
@@ -38,13 +38,11 @@
       </span>
       <span v-if="paper_detail.year !== undefined" class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
       <div>
-        <b-tooltip
-          :label="paper_detail.citations_count + ' ' + $t('general_attribute.citation')  + ' | ' + paper_detail.references_count + ' ' + $t('general_attribute.reference')"
-          position="is-right"
-          type="is-light"
+        <button
+          class="button is-info is-small is-light is-outlined"
         >
-          <span class="status_icon"><i class="fas fa-signal"></i> <b>{{paper_detail.citations_count}} {{ $t('general_attribute.citation') }}</b></span>
-        </b-tooltip>
+          {{ paper_detail.citations_count }} {{ $t('general_attribute.citation') }}
+        </button>
       </div>
     </div>
   </div>

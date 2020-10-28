@@ -17,7 +17,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'DoIT Scholar - Your trusty academic search engine',
     script: [
       {
         // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
@@ -27,13 +27,12 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: 'DoIT Scholar - A search engine for scientific literature' }
     ],
-    loading: {
-      continuous: true,
-    },
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'alternate', hreflang: 'x-default', href: '/'},
+      { rel: 'canonical', href: '/'}
     ]
   },
   /*
@@ -74,7 +73,8 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    'nuxt-lazy-load'
+    'nuxt-lazy-load',
+    ['@nuxtjs/pwa', { meta: false, icon: false, manifest: false }]
   ],
   // sentry: {
   //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
