@@ -363,6 +363,8 @@
                     :title="$t('paper_detail_page.citation_chart_title')"
                   >
                   </CitationBar>
+                  {{chart_labels}}
+                  {{chart_data}}
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
@@ -505,7 +507,7 @@ import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
 import SearchResult from "@/components/search_page/SearchResult";
 
 export default {
-      name: "_paper_detail",
+      name: "paper_detail",
       components: {SearchResult},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {

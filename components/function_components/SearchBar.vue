@@ -59,7 +59,7 @@ export default {
           // if (!this.search_query.length)
           //   this.autocomplete_data = []
           this.is_loading = true
-          console.log("getAutocomplete", this.author)
+          // console.log("getAutocomplete", this.author)
           this.raw_data = await autocomplete({
             search_content: name,
             authors: this.authors,
@@ -73,7 +73,6 @@ export default {
         submitQuery() {
           this.query_params = {
             query: this.search_query,
-            top_author_size: 10,
             start: 0,
             size: 10,
             page: 1

@@ -54,45 +54,41 @@
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
           </p>
-<!--          <i18n-->
-<!--            tag="span"-->
-<!--            path="search_page.result_stat"-->
-<!--          >-->
-<!--            <template v-slot:result_count>-->
-<!--                <span>-->
-<!--                    {{ total_count | formatNumber }}-->
-<!--                </span>-->
-<!--            </template>-->
-<!--            <template v-slot:keyword>-->
-<!--                <span>-->
-<!--                    "{{ query_params.query }}"-->
-<!--                </span>-->
-<!--            </template>-->
-<!--          </i18n>-->
           <br>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
             <FilterBoxMulti :type="'author'"
-                            :data="this.authors_list"
+                            :data="authors_list"
                             :whichpage="current_route"
-                            >
-            </FilterBoxMulti>
+            ></FilterBoxMulti>
             <FilterBoxMulti :type="'venue'"
-                            :data="this.venue_list"
+                            :data="venue_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
             <FilterBoxMulti :type="'fos'"
-                            :data="this.fos_list"
+                            :data="fos_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
             <FilterBoxChart :type="'year'"
-                            :data="this.year_list"
+                            :chart_data="year_list"
                             :whichpage="current_route"
             ></FilterBoxChart>
             <span>
-              <nuxt-link :to="{path: this.$route.path, query: {query: query_params.query,
-                               top_author_size: 10, start:0, size:this.per_page, page:1}}"
-                         class="button is-danger is-light">Clear</nuxt-link>
+              <nuxt-link
+                :to="{
+                  path: this.$route.path,
+                  query: {
+                    query: query_params.query,
+                    start:0,
+                    size:this.per_page,
+                    page:1
+                  }
+                }"
+                class="button is-danger is-light"
+                v-on:click="this.store.dispatch('search_result/clear_sorting_params')"
+              >
+                Clear
+              </nuxt-link>
             </span>
 
           </div>
@@ -128,7 +124,7 @@
 </template>
 
 <script>
-import {filteredKeys, filteredKeys_v2, formatNumber, publication_type} from "../assets/utils";
+import {filteredKeys_v2, formatNumber, publication_type} from "../assets/utils";
 import DropDown from "../components/function_components/DropDown";
 import AuthorCard from "../components/search_page/AuthorCard";
 import SearchResult from "../components/search_page/SearchResult";
@@ -227,56 +223,9 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
+        // console.log('query here:', query_params)
 
-        let query_params = query
-        if("fromyear" in query) {
-          query_params["from_year"] = query["fromyear"]
-          query_params["end_year"] = query["endyear"]
-          store.dispatch('dropdown_search/submit_year_states', {start:query["fromyear"],
-                                                                            end:query["endyear"]})
-        }
-        query_params["return_year_aggs"]= true
-        if("fos0" in query) {
-          let fos_keys = filteredKeys(Object.assign({},query), /fos\d+/)
-          let fosChecked = []
-          for(let i=0; i<fos_keys.length; i++){
-            let key = fos_keys[i]
-            fosChecked.push(query[key])
-          }
-          query_params["fields_of_study"] = fosChecked
-          query_params["fos_is_should"]=true
-          //store.dispatch('dropdown_search/submit_fos_states', fosChecked)
-          //console.log("store.state.dropdown_search.fos_checked", store.state.dropdown_search.fos_checked)
-        }
-        query_params["return_fos_aggs"]= true
-        if("author0" in query) {
-          let author_keys = filteredKeys(Object.assign({},query), /author\d+/)
-          let authorsChecked = []
-          for(let i=0; i<author_keys.length; i++){
-            let key = author_keys[i]
-            authorsChecked.push(query[key])
-          }
-          query_params["authors"] = authorsChecked
-          query_params["author_is_should"]=true
-          //store.dispatch('dropdown_search/submit_authors_states', authorsChecked)
-          //console.log("store.state.dropdown_search.authors_checked", store.state.dropdown_search.authors_checked)
-        }
-        query_params["return_top_author"] = true
-        if("venue0" in query) {
-          let venues_keys = filteredKeys(Object.assign({},query), /venue\d+/)
-          let venuesChecked = []
-          for(let i=0; i<venues_keys.length; i++){
-            let key = venues_keys[i]
-            venuesChecked.push(query[key])
-          }
-          query_params["venues"] = venuesChecked
-          query_params["venues_is_should"]=true
-          //store.dispatch('dropdown_search/submit_venue_states', venuesChecked)
-          //console.log("store.state.dropdown_search.venue_checked", store.state.dropdown_search.venue_checked)
-        }
-        query_params["return_venue_aggs"]= true
-        console.log("query_params", query_params)
-        await store.dispatch('search_result/paper_by_title', query_params)
+        await store.dispatch('search_result/paper_by_title', query)
         if(store.state.search_result.search_results.length > 0) {
           // console.log(store.state.search_result.search_results)
           return {
@@ -284,8 +233,9 @@ export default {
              current_page: parseInt(query['page']),
              current_route: route.fullPath,
              search_results: store.state.search_result.search_results,
-             keyword: query['searchContent'],
+             keyword: query['query'],
              total_count: store.state.search_result.total,
+
              //maybe I will delete these three since computed for these are not necessary/////
              author_info: store.state.search_result.aggregation.author_count.name.buckets,
              fos_info: store.state.search_result.aggregation.fos_count.buckets,

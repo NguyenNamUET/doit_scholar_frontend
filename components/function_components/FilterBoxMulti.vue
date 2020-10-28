@@ -54,12 +54,15 @@ export default {
   props: ['type','data', 'whichpage'],
   computed: {
     apply_path: function (){
-      let params = {path: this.whichpage,
-                    query: {}}
-
-      for(let i=0; i<this.checkedRows.length; i++){
-        params.query[`${this.type}${i}`]=this.checkedRows[i][this.type]
+      let params = {
+        path: this.whichpage,
+        query: {}
       }
+      params.query[this.type] = []
+      for(let i=0; i<this.checkedRows.length; i++){
+        params.query[this.type].push(this.checkedRows[i][this.type])
+      }
+      // console.log(params)
       return params
     },
     clear_path: function (){
@@ -98,7 +101,7 @@ export default {
           this.checkedRows.push(item)
         }
       })
-      console.log("makeChecked", this.checkedRows)
+      // console.log("makeChecked", this.checkedRows)
     }
   }
 }

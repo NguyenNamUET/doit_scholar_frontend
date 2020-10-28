@@ -14,6 +14,7 @@
 
                   <b-dropdown-item
                     v-for="locale in availableLocales"
+                    v-bind:key="locale.code"
                   >
                     <nuxt-link
                       :key="locale.code"
@@ -53,9 +54,10 @@
           <b-carousel
             :pause-hover="true"
             :pause-info="false"
-            :arrow="false"
+            :arrow="true"
             :indicator-mode="'hover'"
             :indicator-style="'is-lines'"
+            :autoplay="false"
           >
             <b-carousel-item>
               <p
@@ -67,6 +69,7 @@
                 <div
                   class="column is-one-third"
                   v-for="result in most_cited_authors"
+                  :key="result.authorId"
                 >
                   <div class="card_wrapper">
                     <div class="content_box">
@@ -134,6 +137,7 @@
                 <div
                   class="column is-one-third"
                   v-for="result in most_cited_papers"
+                  :key="result._source.paperId"
                 >
                   <PaperCard
                     :paper_detail="result._source"
@@ -153,6 +157,7 @@
                 <div
                   class="column is-one-third"
                   v-for="(value, key) in most_cited_fos"
+                  :key="value"
                 >
                   <div class="card_wrapper">
                     <div class="content_box">
@@ -173,36 +178,42 @@
           <div class="columns is-1">
             <div class="column has-text-centered is-half">
               <div>
-                <number
-                  class="number_status"
-                  ref="author_count"
-                  :from="0"
-                  :to=author_count
-                  :duration="1.5"
-                  :format="formatNumber"
-                />
+                <client-only>
+                  <number
+                    class="number_status"
+                    ref="author_count"
+                    :from="0"
+                    :to=author_count
+                    :duration="5"
+                    :format="formatNumber"
+                  />
+                </client-only>
                 <span class="status_description">{{$t('home_page.page_stat.author_count')}}</span>
               </div>
               <div>
-                <number
-                  class="number_status"
-                  ref="doc_count"
-                  :from="0"
-                  :to=paper_count
-                  :format="formatNumber"
-                  :duration="1.5"
-                />
+                <client-only>
+                  <number
+                    class="number_status"
+                    ref="doc_count"
+                    :from="0"
+                    :to=paper_count
+                    :format="formatNumber"
+                    :duration="5"
+                  />
+                </client-only>
                 <span class="status_description">{{$t('home_page.page_stat.paper_count')}}</span>
               </div>
               <div>
-                <number
-                  class="number_status"
-                  ref="field_count"
-                  :from="0"
-                  :to=fos_count
-                  :format="formatNumber"
-                  :duration="1.5"
-                />
+                <client-only>
+                  <number
+                    class="number_status"
+                    ref="field_count"
+                    :from="0"
+                    :to=fos_count
+                    :format="formatNumber"
+                    :duration="1.5"
+                  />
+                </client-only>
                 <span class="status_description">{{$t('home_page.page_stat.fos_count')}}</span>
               </div>
 
@@ -267,6 +278,7 @@
   import AuthorCard from "@/components/search_page/AuthorCard";
   import PaperCard from "@/components/static_components/PaperCard";
   import {formatTitle} from 'assets/utils';
+
 export default {
   components: {PaperCard, AuthorCard, DoughnutGraph},
   layout: 'home_layout',
@@ -295,26 +307,62 @@ export default {
     }
   },
   async asyncData() {
-    let author_count = await all_author()
-    let paper_count = await all_paper()
-    let fos_count = await all_field()
-    let most_cited_author = await most_cited_authors()
-    let most_cited_paper = await most_cited_papers()
-    let most_cited_fos = await fos_graph_data({size: 3})
-    let fos_data = await fos_graph_data({size: 1000})
-    let venue_data = await venue_graph_data()
-    let fosChartData = doughnut_chart_prep(fos_data)
-    let venueChartData = doughnut_chart_prep(venue_data)
+    let results = null
+    let fosChartData = null
+    let venueChartData = null
+    await Promise.all(
+      [
+        all_author(), all_paper(), all_field(),
+        most_cited_authors(), most_cited_papers(), fos_graph_data({size: 3}),
+        fos_graph_data({size: 1000}), venue_graph_data()
+      ]
+    ).then((res) => {
+      results = res
+      fosChartData = doughnut_chart_prep(results[6])
+      venueChartData = doughnut_chart_prep(results[7])
+
+      // let author_count = results[0]
+      // let paper_count = results[1]
+      // let fos_count = result[2]
+      // let most_cited_author = result[3]
+      // let most_cited_paper = result[4]
+      // let most_cited_fos = result[5]
+      // let fos_data = result[6]
+      // let venue_data = result[7]
+    })
     return {
+      author_count: results[0],
+      paper_count: results[1],
+      fos_count: results[2],
+
       fos_chart_data: fosChartData,
       venue_chart_data: venueChartData,
-      most_cited_fos: most_cited_fos,
-      most_cited_authors: most_cited_author,
-      most_cited_papers: most_cited_paper,
-      author_count: author_count,
-      paper_count: paper_count,
-      fos_count: fos_count
+
+      most_cited_authors: results[3],
+      most_cited_papers: results[4],
+      most_cited_fos: results[5]
     }
+    // let author_count = await all_author()
+    // let paper_count = await all_paper()
+    // let fos_count = await all_field()
+    // let most_cited_author = await most_cited_authors()
+    // let most_cited_paper = await most_cited_papers()
+    // let most_cited_fos = await fos_graph_data({size: 3})
+    // let fos_data = await fos_graph_data({size: 1000})
+    // let venue_data = await venue_graph_data()
+
+    // let fosChartData = doughnut_chart_prep(fos_data)
+    // let venueChartData = doughnut_chart_prep(venue_data)
+    // return {
+    //   fos_chart_data: fosChartData,
+    //   venue_chart_data: venueChartData,
+    //   most_cited_fos: most_cited_fos,
+    //   most_cited_authors: most_cited_author,
+    //   most_cited_papers: most_cited_paper,
+    //   author_count: author_count,
+    //   paper_count: paper_count,
+    //   fos_count: fos_count
+    // }
   },
   filters: {
     formatNumber(number) {

@@ -93,7 +93,7 @@ import PaginationV2 from "@/components/function_components/PaginationV2";
 import SortButton from "@/components/function_components/SortButton";
 
 export default {
-  name: "_journal_detail",
+  name: "journal_detail",
   watchQuery: true,
   components: {LineGraph, SearchResult, PaginationV2, SortButton},
   head() {

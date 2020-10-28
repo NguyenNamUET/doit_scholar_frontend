@@ -21,21 +21,21 @@
           <div class="level-left">
             <div class="level-item">
               <b-field :label="$t('from')" :label-position="'on-border'">
-                <b-input v-model="fromyear" size="is-small" style="width: 100px"></b-input>
+                <b-input v-model="start_year" size="is-small" style="width: 100px"></b-input>
               </b-field>
             </div>
           </div>
           <div class="level-right">
             <div class="level-item">
               <b-field :label="$t('to')" :label-position="'on-border'">
-                <b-input v-model="endyear" size="is-small" style="width: 100px"></b-input>
+                <b-input v-model="end_year" size="is-small" style="width: 100px"></b-input>
               </b-field>
             </div>
           </div>
         </nav>
         <CitationBar
-          :dataset="this.chartdata.data"
-          :labels="this.chartdata.label"
+          :dataset="chart_data.data"
+          :labels="chart_data.label"
           :title="$t('general_attribute.publication')"
         >
         </CitationBar>
@@ -49,7 +49,7 @@
           </div>
           <div class="level-right">
             <nuxt-link class="level-item button is-success"
-                       :to="{path:this.whichpage, query:{fromyear:this.fromyear, endyear:this.endyear}}"
+                       :to="{path:this.whichpage, query:{from_year:this.start_year, end_year:this.end_year}}"
                        tag="button">
               {{ $t('general_attribute.apply') }}
             </nuxt-link>
@@ -67,29 +67,23 @@ import CitationBar from "@/components/search_page/CitationBar";
 export default {
   name: "FilterBoxChart",
   components: {CitationBar},
-  props: ['type','data', 'whichpage'],
+  props: ['type','chart_data', 'whichpage'],
   computed: {
-    clear_path: function (){
+    clear_path: function () {
       let params = {path: ""}
       let re = new RegExp("[&|?](from|end)year=\\d+(?=&)", "g")
       let current = this.whichpage+"&"
-      console.log("clear_path", re)
       params['path'] = current.replace(re,"").slice(0, -1)
-      console.log("params", params['path'])
       return params
     },
   },
   data() {
-    const name='general_attribute.'+this.type
+    const name='general_attribute.'+ this.type
     return {
       name,
-      chartdata: [],
-      fromyear: 0,
-      endyear: 2020
+      start_year: 0,
+      end_year: new Date().getFullYear()
     }
-  },
-  beforeUpdate() {
-    this.chartdata = this.data
   },
   i18n: {
     messages: {
