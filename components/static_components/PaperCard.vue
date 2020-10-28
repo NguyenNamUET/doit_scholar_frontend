@@ -20,7 +20,7 @@
       <span v-if="paper_detail.authors !== undefined">
         <span
         v-for="(author, index) in paper_detail.authors.slice(0,1)"
-        :key="author.authorId"
+        v-bind:key="author.authorId"
         >
           <a
             :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"

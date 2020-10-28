@@ -159,7 +159,7 @@
     import SortButton from "@/components/function_components/SortButton";
 
     export default {
-      name: "_author_detail",
+      name: "author_detail",
       watchQuery: true,
       components: {SearchBar, PaginationV2, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {

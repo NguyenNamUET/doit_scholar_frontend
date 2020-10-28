@@ -101,7 +101,7 @@
     import SearchResult from "@/components/search_page/SearchResult";
     //import {wiki_summary} from "@/API/elastic_api";
     export default {
-      name: "_topic_detail",
+      name: "topic_detail",
       components: {SearchResult, TimelineItem},
       head() {
         return {
