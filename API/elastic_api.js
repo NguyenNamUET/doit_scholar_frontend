@@ -76,6 +76,7 @@ const paper_detail = async (params) => {
   }
 }
 const paper_by_title = async (query_params) => {
+  // console.log('api', query_params)
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
       search_content:query_params.query,
