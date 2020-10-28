@@ -13,8 +13,8 @@
                   </button>
 
                   <b-dropdown-item
-                    v-for="locale in availableLocales"
-                    v-bind:key="locale.code"
+                    v-for="(locale,index) in availableLocales"
+                    :key="index"
                   >
                     <nuxt-link
                       :key="locale.code"
@@ -50,6 +50,7 @@
             style="box-shadow: 0 5px 8px 1px #C5C8C9;"
           />
         </div>
+        <!---------------------------------------- CAROUSEL --------------------------------------------->
         <div class="container carousel_container">
           <b-carousel
             :pause-hover="true"
@@ -60,9 +61,7 @@
             :autoplay="false"
           >
             <b-carousel-item>
-              <p
-                class="content_title"
-              >
+              <p class="content_title">
                 {{$t('home_page.author_carousel.title')}}
               </p>
               <div class="columns is-1">
@@ -87,9 +86,7 @@
                             </span>
                           </td>
                           <td>
-                            <span
-                              class="author_stat"
-                            >
+                            <span class="author_stat">
                               {{result.citationsCount | formatNumber}}
                             </span>
                           </td>
@@ -101,9 +98,7 @@
                             </span>
                           </td>
                           <td>
-                            <span
-                              class="author_stat"
-                            >
+                            <span class="author_stat">
                             {{result.totalPapers | formatNumber}}
                             </span>
                           </td>
@@ -120,6 +115,18 @@
                             >{{result.influentialCitationCount | formatNumber}}</span>
                           </td>
                         </tr>
+                        <tr v-if="result.h_index !== undefined">
+                          <td>
+                            <span class="text-class-3 color-class-3">
+                              H_Index
+                            </span>
+                          </td>
+                          <td>
+                            <span class="author_stat">
+                              {{result.h_index | formatNumber}}
+                            </span>
+                          </td>
+                        </tr>
                       </table>
                     </div>
                   </div>
@@ -128,9 +135,7 @@
             </b-carousel-item>
 
             <b-carousel-item>
-              <p
-                class="content_title"
-              >
+              <p class="content_title">
                 {{$t('home_page.paper_carousel.title')}}
               </p>
               <div class="columns is-1">
@@ -148,22 +153,18 @@
             </b-carousel-item>
 
             <b-carousel-item>
-              <p
-                class="content_title"
-              >
+              <p class="content_title">
                 {{$t('home_page.fos_carousel.title')}}
               </p>
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
-                  v-for="(value, key) in most_cited_fos"
-                  :key="value"
+                  v-for="(value, key, index) in most_cited_fos"
+                  :key="index"
                 >
                   <div class="card_wrapper">
                     <div class="content_box">
-                      <a
-                        class="text-class-2 has-text-weight-medium"
-                      >
+                      <a class="text-class-2 has-text-weight-medium">
                         {{key}}
                       </a>
                       <p>{{$t('home_page.fos_carousel.count')}}: {{value}}</p>
@@ -174,6 +175,8 @@
             </b-carousel-item>
           </b-carousel>
         </div>
+        <!---------------------------------------- CAROUSEL --------------------------------------------->
+
         <div class="info_container container">
           <div class="columns is-1">
             <div class="column has-text-centered is-half">
@@ -320,15 +323,6 @@ export default {
       results = res
       fosChartData = doughnut_chart_prep(results[6])
       venueChartData = doughnut_chart_prep(results[7])
-
-      // let author_count = results[0]
-      // let paper_count = results[1]
-      // let fos_count = result[2]
-      // let most_cited_author = result[3]
-      // let most_cited_paper = result[4]
-      // let most_cited_fos = result[5]
-      // let fos_data = result[6]
-      // let venue_data = result[7]
     })
     return {
       author_count: results[0],
@@ -342,27 +336,6 @@ export default {
       most_cited_papers: results[4],
       most_cited_fos: results[5]
     }
-    // let author_count = await all_author()
-    // let paper_count = await all_paper()
-    // let fos_count = await all_field()
-    // let most_cited_author = await most_cited_authors()
-    // let most_cited_paper = await most_cited_papers()
-    // let most_cited_fos = await fos_graph_data({size: 3})
-    // let fos_data = await fos_graph_data({size: 1000})
-    // let venue_data = await venue_graph_data()
-
-    // let fosChartData = doughnut_chart_prep(fos_data)
-    // let venueChartData = doughnut_chart_prep(venue_data)
-    // return {
-    //   fos_chart_data: fosChartData,
-    //   venue_chart_data: venueChartData,
-    //   most_cited_fos: most_cited_fos,
-    //   most_cited_authors: most_cited_author,
-    //   most_cited_papers: most_cited_paper,
-    //   author_count: author_count,
-    //   paper_count: paper_count,
-    //   fos_count: fos_count
-    // }
   },
   filters: {
     formatNumber(number) {

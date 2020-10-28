@@ -44,7 +44,8 @@
                 </button>
 
                 <b-dropdown-item
-                  v-for="locale in availableLocales"
+                  v-for="(locale,index) in availableLocales"
+                  :key="index"
                 >
                   <nuxt-link
                     :key="locale.code"

@@ -61,7 +61,8 @@
           <!-------------------------------------------------------------------------->
           <SearchResult
             v-for="result in search_results"
-            v-bind:search_result="result._source">
+            :key="result._source.paperId"
+            :search_result="result._source">
           </SearchResult>
 
           <PaginationV2

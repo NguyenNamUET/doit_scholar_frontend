@@ -12,6 +12,7 @@
             <div
               class="column"
               v-for="author in author_info.slice(0,3)"
+              :key="author.authorId"
             >
               <AuthorCard
                 class="content_box author_card"
@@ -31,6 +32,7 @@
             <div
               class="column"
               v-for="author in author_info"
+              :key="author.authorId"
             >
               <AuthorCard
                 class="content_box"
@@ -58,15 +60,12 @@
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
             <FilterBoxMulti :type="'author'"
-                            :data="authors_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
             <FilterBoxMulti :type="'venue'"
-                            :data="venue_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
             <FilterBoxMulti :type="'fos'"
-                            :data="fos_list"
                             :whichpage="current_route"
             ></FilterBoxMulti>
             <FilterBoxChart :type="'year'"
@@ -85,7 +84,6 @@
                   }
                 }"
                 class="button is-danger is-light"
-                v-on:click="this.store.dispatch('search_result/clear_sorting_params')"
               >
                 Clear
               </nuxt-link>
@@ -97,7 +95,9 @@
 
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results"
-                        v-bind:search_result="result._source"></SearchResult>
+                        :key="result._source.paperId"
+                        :search_result="result._source">
+          </SearchResult>
         </div>
       </div>
     </div>
@@ -223,11 +223,8 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
-        // console.log('query here:', query_params)
-
         await store.dispatch('search_result/paper_by_title', query)
         if(store.state.search_result.search_results.length > 0) {
-          // console.log(store.state.search_result.search_results)
           return {
              query_params: query,
              current_page: parseInt(query['page']),

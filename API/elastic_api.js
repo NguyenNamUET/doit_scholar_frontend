@@ -52,7 +52,7 @@ const all_topics = async() => {
 /***************************************** Search paper function ******************************************/
 const paper_detail = async (paper_id) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' +paper_id)
     return result.data
   } catch(e) {
     console.log(e)
@@ -61,6 +61,7 @@ const paper_detail = async (paper_id) => {
 }
 
 const paper_by_title = async (query_params) => {
+  // console.log('api', query_params)
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
       search_content:query_params.query,

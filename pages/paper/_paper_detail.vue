@@ -186,6 +186,7 @@
             <PaperCard
               v-for="result in citation_data.slice(0,3)"
               :paper_detail="result"
+              :key="result.paperId"
             >
             </PaperCard>
           </div>
@@ -280,7 +281,7 @@
               <li
                 class="topic_list"
                 v-for="item in paper_detail.topics"
-
+                :key="item.topicId"
               >
                 <a
                   :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
@@ -297,7 +298,13 @@
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
     <div class="tile is-ancestor" id="citation_box" >
-      <div class="tile" v-if="citation_length > 0">
+      <div v-if="this.is_loading_citation" class="tile">
+        <div class="tile is-parent">
+          <i class="fas fa-spinner fa-pulse"></i>
+          <p>Loading</p>
+        </div>
+      </div>
+      <div class="tile" v-else-if="citation_length > 0 && !this.is_loading_citation">
         <div class="tile is-parent">
           <article class="tile is-child">
             <p class="content_title">
@@ -341,7 +348,8 @@
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
                   v-for="result in citation_data"
-                  v-bind:search_result="result"
+                  :key="result.paperId"
+                  :search_result="result"
                 >
                 </SearchResult>
                 <Pagination
@@ -401,7 +409,11 @@
 
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
-      <div class="tile is-parent" v-if="ref_data.length > 0">
+      <div v-if="this.is_loading_ref" class="tile is-parent">
+          <i class="fas fa-spinner fa-pulse"></i>
+          <p>Loading</p>
+      </div>
+      <div class="tile is-parent" v-else-if="ref_data.length > 0 && !this.is_loading_ref">
         <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.reference') }}
@@ -444,7 +456,8 @@
             <div class="tile is-child is-8">
               <SearchResult
                 v-for="result in ref_data"
-                v-bind:search_result="result"
+                :key="result.paperId"
+                :search_result="result"
               >
               </SearchResult>
               <Pagination
@@ -475,11 +488,13 @@
             <b-carousel-item
               style="margin-bottom: 10px;"
               v-for="page in Math.round(suggestion_data.length / 3)"
+              :key="page"
             >
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
                   v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
+                  :key="result._source.paperId"
                 >
                   <PaperCard
                     :paper_detail="result._source"
@@ -517,16 +532,6 @@ export default {
           redirect('/')
         }
       },
-      // watch: {
-      //   scroll_position: async function (old_value, new_value) {
-      //     if (new_value > (this.abstract_height + this.topic_height)) {
-      //       let data = await citation_chart_data(this.paper_id)
-      //       console.log(data)
-      //       this.chart_labels = Object.keys(data.citations_chart)
-      //       this.chart_data = Object.values(data.citations_chart)
-      //     }
-      //   }
-      // },
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar',
@@ -780,6 +785,7 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
+          this.$router.push({query: {cit_page:page_num}})
           this.$refs.citation_box.click()
           this.current_citation_page = page_num
           this.citation_data = result
@@ -793,6 +799,7 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
+          this.$router.push({query: {ref_page:page_num}})
           this.$refs.reference_box.click()
           this.current_ref_page = page_num
           this.ref_data = result
@@ -953,9 +960,6 @@ export default {
     top: 80px;
     right: 60px;
     z-index: 4;
-  }
-
-  .related_content {
   }
 
   .top_citation {
