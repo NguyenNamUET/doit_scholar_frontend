@@ -105,7 +105,8 @@
                         <div class="tile is-child">
                           <SearchResult
                             v-for="result in paper_data"
-                            v-bind:search_result="result"
+                            :key="result.paperId"
+                            :search_result="result"
                           >
                           </SearchResult>
 

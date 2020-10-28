@@ -186,6 +186,7 @@
             <PaperCard
               v-for="result in citation_data.slice(0,3)"
               :paper_detail="result"
+              :key="result.paperId"
             >
             </PaperCard>
           </div>
@@ -280,7 +281,7 @@
               <li
                 class="topic_list"
                 v-for="item in paper_detail.topics"
-
+                :key="item.topicId"
               >
                 <a
                   :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
@@ -341,7 +342,8 @@
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
                   v-for="result in citation_data"
-                  v-bind:search_result="result"
+                  :key="result.paperId"
+                  :search_result="result"
                 >
                 </SearchResult>
                 <Pagination
@@ -444,7 +446,8 @@
             <div class="tile is-child is-8">
               <SearchResult
                 v-for="result in ref_data"
-                v-bind:search_result="result"
+                :key="result.paperId"
+                :search_result="result"
               >
               </SearchResult>
               <Pagination
@@ -475,11 +478,13 @@
             <b-carousel-item
               style="margin-bottom: 10px;"
               v-for="page in Math.round(suggestion_data.length / 3)"
+              :key="page"
             >
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
                   v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
+                  :key="result._source.paperId"
                 >
                   <PaperCard
                     :paper_detail="result._source"

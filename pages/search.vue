@@ -12,6 +12,7 @@
             <div
               class="column"
               v-for="author in author_info.slice(0,3)"
+              :key="author.authorId"
             >
               <AuthorCard
                 class="content_box author_card"
@@ -31,6 +32,7 @@
             <div
               class="column"
               v-for="author in author_info"
+              :key="author.authorId"
             >
               <AuthorCard
                 class="content_box"
@@ -97,7 +99,9 @@
 
         <div class="tile is-child">
           <SearchResult v-for="result in this.search_results"
-                        v-bind:search_result="result._source"></SearchResult>
+                        :key="result._source.paperId"
+                        :search_result="result._source">
+          </SearchResult>
         </div>
       </div>
     </div>
