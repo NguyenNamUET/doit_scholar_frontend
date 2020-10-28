@@ -50,15 +50,9 @@ const all_topics = async() => {
 /***************************************** Counting function ******************************************/
 
 /***************************************** Search paper function ******************************************/
-const paper_detail = async (params) => {
+const paper_detail = async (paper_id) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + params.paper_id,
-      {params: {cstart:params.cstart,
-                      csize:params.csize,
-                      rstart:params.rstart,
-                      rsize:params.rsize}
-      })
-    console.log("paper_detail", params)
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' +paper_id)
     return result.data
   } catch(e) {
     console.log(e)
