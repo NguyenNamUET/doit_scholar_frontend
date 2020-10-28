@@ -17,7 +17,7 @@ export const state = () => ({
 
 export const mutations = {
   submit_search(state, params) {
-    console.log('store here', params)
+    // console.log('store here', params)
     if (params.payload.query !== state.query) {
       //New query, refresh all parameters
       console.log('new query')
@@ -42,7 +42,7 @@ export const mutations = {
       state.filters.venue_checked = params.payload?.venue
       state.filters.fos_checked = params.payload?.fos
       state.filters.authors_checked = params.payload?.author
-
+      console.log(state.filters)
       //Update search result, but not query
       state.search_results = params.result.hits.hits
 
