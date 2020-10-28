@@ -2,7 +2,7 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child content_box">
-        <a
+        <a v-if="Object.keys(search_result).includes('title')"
           class="text-class-1"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >

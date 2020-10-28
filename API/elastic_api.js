@@ -50,16 +50,31 @@ const all_topics = async() => {
 /***************************************** Counting function ******************************************/
 
 /***************************************** Search paper function ******************************************/
-const paper_detail = async (paper_id) => {
+// const paper_detail = async (paper_id) => {
+//   try {
+//     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
+//     console.log("paper_detail", paper_id)
+//     return result.data
+//   } catch(e) {
+//     console.log(e)
+//     return null
+//   }
+// }
+const paper_detail = async (params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' +paper_id)
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + params.paper_id,
+      {params: {cstart:params.cstart,
+                      csize:params.csize,
+                      rstart:params.rstart,
+                      rsize:params.rsize}
+      })
+    console.log("paper_detail", params)
     return result.data
   } catch(e) {
     console.log(e)
     return null
   }
 }
-
 const paper_by_title = async (query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {

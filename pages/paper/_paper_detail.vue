@@ -327,9 +327,7 @@
                       {{ (current_citation_page-1)*per_page + 1}}
                   </span>
                 </template>
-                <template
-                  v-slot:end
-                >
+                <template v-slot:end>
                   <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
                       {{ (current_citation_page-1)*per_page + per_page}}
                   </span>
@@ -371,8 +369,6 @@
                     :title="$t('paper_detail_page.citation_chart_title')"
                   >
                   </CitationBar>
-                  {{chart_labels}}
-                  {{chart_data}}
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
@@ -409,11 +405,13 @@
 
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
-      <div v-if="this.is_loading_ref" class="tile is-parent">
+      <div v-if="this.is_loading_ref" class="tile">
+        <div class="tile is-parent">
           <i class="fas fa-spinner fa-pulse"></i>
           <p>Loading</p>
+        </div>
       </div>
-      <div class="tile is-parent" v-else-if="ref_data.length > 0 && !this.is_loading_ref">
+      <div class="tile is-parent" v-else-if="ref_length > 0 && !this.is_loading_ref">
         <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.reference') }}
@@ -435,9 +433,7 @@
                       {{ (current_ref_page-1)*per_page + 1}}
                   </span>
               </template>
-              <template
-                v-slot:end
-              >
+              <template v-slot:end>
                   <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
                       {{ (current_ref_page-1)*per_page + per_page}}
                   </span>
@@ -474,6 +470,8 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
+
+    <!----------------------------------------- Suggestion  -------------------------------------------------->
     <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">
       <div class="tile is-parent">
         <div class="tile is-child">
@@ -507,6 +505,7 @@
         </div>
       </div>
     </div>
+    <!----------------------------------------- Suggestion  -------------------------------------------------->
   </div>
 
   <!--Error page-->
@@ -785,9 +784,10 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({query: {cit_page:page_num}})
+          this.$router.push({path: this.$route.path+"#citation_box",
+                            query: {cit_page:page_num, ref_page:this.current_ref_page}})
           this.$refs.citation_box.click()
-          this.current_citation_page = page_num
+          this.current_citation_page = this.$route.query?.cit_page ?? 1
           this.citation_data = result
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
@@ -799,9 +799,10 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({query: {ref_page:page_num}})
+          this.$router.push({path: this.$route.path+"#reference_box",
+                            query: {cit_page:this.current_citation_page, ref_page:page_num}})
           this.$refs.reference_box.click()
-          this.current_ref_page = page_num
+          this.current_ref_page = this.$route.query?.ref_page ?? 1
           this.ref_data = result
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
@@ -819,7 +820,7 @@ export default {
               document.getElementById('topic_box').offsetHeight,
               document.getElementById('citation_box').offsetHeight,
               document.getElementById('reference_box').offsetHeight
-          ]
+            ]
           }
           else{
             return [0,0,0,0]
@@ -836,8 +837,12 @@ export default {
       },
       async asyncData({route, $axios}) {
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
-
-        let data = await paper_detail(paper_id)
+        let params = {paper_id:paper_id,
+                      cstart:0, csize:10,
+                      rstart:0, rsize:10}
+        if(Object.keys(route.query).includes('cit_page')){params.cstart = route.query?.cit_page ?? 1}
+        if(Object.keys(route.query).includes('ref_page')){params.rstart = route.query?.ref_page ?? 1}
+        let data = await paper_detail(params)
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
