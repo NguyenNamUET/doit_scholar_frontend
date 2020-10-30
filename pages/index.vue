@@ -61,7 +61,9 @@
             :autoplay="false"
           >
             <b-carousel-item>
-              <p class="content_title">
+              <p
+                class="content_title"
+              >
                 {{$t('home_page.author_carousel.title')}}
               </p>
               <div class="columns is-1">
@@ -86,7 +88,9 @@
                             </span>
                           </td>
                           <td>
-                            <span class="author_stat">
+                            <span
+                              class="author_stat"
+                            >
                               {{result.citationsCount | formatNumber}}
                             </span>
                           </td>
@@ -98,7 +102,9 @@
                             </span>
                           </td>
                           <td>
-                            <span class="author_stat">
+                            <span
+                              class="author_stat"
+                            >
                             {{result.totalPapers | formatNumber}}
                             </span>
                           </td>
@@ -122,9 +128,9 @@
                             </span>
                           </td>
                           <td>
-                            <span class="author_stat">
-                              {{result.h_index | formatNumber}}
-                            </span>
+                            <span
+                              class="author_stat"
+                            >{{result.h_index | formatNumber}}</span>
                           </td>
                         </tr>
                       </table>
@@ -135,7 +141,9 @@
             </b-carousel-item>
 
             <b-carousel-item>
-              <p class="content_title">
+              <p
+                class="content_title"
+              >
                 {{$t('home_page.paper_carousel.title')}}
               </p>
               <div class="columns is-1">
@@ -153,7 +161,9 @@
             </b-carousel-item>
 
             <b-carousel-item>
-              <p class="content_title">
+              <p
+                class="content_title"
+              >
                 {{$t('home_page.fos_carousel.title')}}
               </p>
               <div class="columns is-1">
@@ -164,7 +174,9 @@
                 >
                   <div class="card_wrapper">
                     <div class="content_box">
-                      <a class="text-class-2 has-text-weight-medium">
+                      <a
+                        class="text-class-2 has-text-weight-medium"
+                      >
                         {{key}}
                       </a>
                       <p>{{$t('home_page.fos_carousel.count')}}: {{value}}</p>

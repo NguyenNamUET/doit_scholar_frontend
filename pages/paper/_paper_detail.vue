@@ -298,13 +298,7 @@
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
     <div class="tile is-ancestor" id="citation_box" >
-      <div v-if="this.is_loading_citation" class="tile">
-        <div class="tile is-parent">
-          <i class="fas fa-spinner fa-pulse"></i>
-          <p>Loading</p>
-        </div>
-      </div>
-      <div class="tile" v-else-if="citation_length > 0 && !this.is_loading_citation">
+      <div class="tile" v-if="citation_length > 0">
         <div class="tile is-parent">
           <article class="tile is-child">
             <p class="content_title">
@@ -409,11 +403,7 @@
 
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
-      <div v-if="this.is_loading_ref" class="tile is-parent">
-          <i class="fas fa-spinner fa-pulse"></i>
-          <p>Loading</p>
-      </div>
-      <div class="tile is-parent" v-else-if="ref_data.length > 0 && !this.is_loading_ref">
+      <div class="tile is-parent" v-if="ref_data.length > 0">
         <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.reference') }}
@@ -532,6 +522,16 @@ export default {
           redirect('/')
         }
       },
+      // watch: {
+      //   scroll_position: async function (old_value, new_value) {
+      //     if (new_value > (this.abstract_height + this.topic_height)) {
+      //       let data = await citation_chart_data(this.paper_id)
+      //       console.log(data)
+      //       this.chart_labels = Object.keys(data.citations_chart)
+      //       this.chart_data = Object.values(data.citations_chart)
+      //     }
+      //   }
+      // },
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar',
@@ -785,7 +785,6 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({query: {cit_page:page_num}})
           this.$refs.citation_box.click()
           this.current_citation_page = page_num
           this.citation_data = result
@@ -799,7 +798,6 @@ export default {
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({query: {ref_page:page_num}})
           this.$refs.reference_box.click()
           this.current_ref_page = page_num
           this.ref_data = result
@@ -960,6 +958,9 @@ export default {
     top: 80px;
     right: 60px;
     z-index: 4;
+  }
+
+  .related_content {
   }
 
   .top_citation {
