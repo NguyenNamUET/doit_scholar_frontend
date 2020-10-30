@@ -21,6 +21,7 @@
           </b-input>
         </b-field>
       </div>
+      {{checkedRows}}
       <div class="option_container">
         <b-table
           :data="data"
@@ -99,14 +100,6 @@ export default {
   //   this.makeChecked()
   // },
   methods: {
-    // makeChecked() {
-    //   this.data.forEach(item => {
-    //     if (item.checked){
-    //       this.checkedRows.push(item)
-    //     }
-    //   })
-    //   console.log("makeChecked", this.checkedRows)
-    // },
     fos_list: function () {
       let fos_res = []
       this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
@@ -135,8 +128,7 @@ export default {
     checked_fos_list() {
       let fos_res = []
       this.$store.state.search_result.filters.fos_checked.forEach(item => {
-        fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          count:item.doc_count, checked:false})
+        fos_res.push(item)
       })
       return fos_res
     },
@@ -157,7 +149,8 @@ export default {
       return venue_res
     }
   },
-  mounted() {
+  beforeUpdate() {
+    console.log('beforeupdate')
     if (this.type === 'author') {
       this.data = this.authors_list()
     }
@@ -166,6 +159,20 @@ export default {
     }
     else if (this.type === 'fos') {
       this.data = this.fos_list()
+      this.checkedRows = this.checked_fos_list()
+    }
+  },
+  mounted() {
+    console.log('mounted')
+    if (this.type === 'author') {
+      this.data = this.authors_list()
+    }
+    else if (this.type === 'venue') {
+      this.data = this.venue_list()
+    }
+    else if (this.type === 'fos') {
+      this.data = this.fos_list()
+      this.checkedRows = this.checked_fos_list()
     }
   }
 }
