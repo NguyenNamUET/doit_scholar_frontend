@@ -60,14 +60,21 @@
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
             <FilterBoxMulti :type="'author'"
+                            :data="authors_list"
                             :whichpage="current_route"
+                            :checked="checked_authors_list"
             ></FilterBoxMulti>
             <FilterBoxMulti :type="'venue'"
+                            :data="venue_list"
                             :whichpage="current_route"
+                            :checked="checked_venue_list"
             ></FilterBoxMulti>
             <FilterBoxMulti :type="'fos'"
+                            :data="fos_list"
                             :whichpage="current_route"
+                            :checked="checked_fos_list"
             ></FilterBoxMulti>
+            {{this.$store.state.search_result.filters.fos_checked}}
             <FilterBoxChart :type="'year'"
                             :chart_data="year_list"
                             :whichpage="current_route"
@@ -170,48 +177,96 @@ export default {
       computed: {
         fos_list: function (){
           let fos_res = []
-          let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
-          this.fos_info.forEach(item => {
-            if (fos_checked.length>0 && fos_checked.includes(item.key.trim())){
-              fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-                            count:item.doc_count, checked:true})
-            }
-            else{
-              fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-                            count:item.doc_count, checked:false})
-            }
+          // let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
+          // this.fos_info.forEach(item => {
+          //   if (fos_checked.length>0 && fos_checked.includes(item.key.trim())){
+          //     fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+          //                   count:item.doc_count, checked:true})
+          //   }
+          //   else{
+          //     fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+          //                   count:item.doc_count, checked:false})
+          //   }
+          // })
+          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+            fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+              count:item.doc_count, checked:false})
           })
           return fos_res
         },
         authors_list: function (){
           let author_res = []
-          let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d+/)
-          this.author_info.forEach(item => {
-            if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key.trim())){
-              author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-                               count:item.doc_count, checked:true})
-            }
-            else{
-              author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-                               count:item.doc_count, checked:false})
-            }
+          // let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d+/)
+          // this.author_info.forEach(item => {
+          //   if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key.trim())){
+          //     author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+          //                      count:item.doc_count, checked:true})
+          //   }
+          //   else{
+          //     author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+          //                      count:item.doc_count, checked:false})
+          //   }
+          // })
+          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
+            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              count:item.doc_count, checked:false})
           })
           return author_res
         },
         venue_list: function (){
           let venue_res = []
-          let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d+/)
-          this.venue_info.forEach(item => {
-            if (!!venue_checked && venue_checked.includes(item.key.trim())){
-              venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-                              count:item.doc_count, checked:true})
-            }
-            else{
-              venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-                              count:item.doc_count, checked:false})
-            }
+          // let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d+/)
+          // this.venue_info.forEach(item => {
+          //   if (!!venue_checked && venue_checked.includes(item.key.trim())){
+          //     venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+          //                     count:item.doc_count, checked:true})
+          //   }
+          //   else{
+          //     venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+          //                     count:item.doc_count, checked:false})
+          //   }
+          // })
+          this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
+            venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+              count:item.doc_count, checked:false})
           })
           return venue_res
+        },
+        checked_fos_list: function() {
+          let checked_fos_list = []
+          this.$store.state.search_result.filters.fos_checked.forEach(selected => {
+            for (let item of this.fos_list) {
+              if (selected === item.fos) {
+                checked_fos_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_fos_list
+        },
+        checked_authors_list: function() {
+          let checked_authors_list = []
+          this.$store.state.search_result.filters.authors_checked.forEach(selected => {
+            for (let item of this.authors_list) {
+              if (selected === item.author) {
+                checked_authors_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_authors_list
+        },
+        checked_venue_list: function() {
+          let checked_venue_list = []
+          this.$store.state.search_result.filters.venue_checked.forEach(selected => {
+            for (let item of this.venue_list) {
+              if (selected === item.venue) {
+                checked_venue_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_venue_list
         },
         year_list: function (){
           let year_res = {label: [], data:[]}
