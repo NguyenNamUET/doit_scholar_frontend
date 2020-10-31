@@ -4,50 +4,50 @@
     class="container"
     id="page_container"
   >
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-8 is-vertical">
-        <p class="content_title">{{ $t('general_attribute.author') }}</p>
-        <div class="tile is-child" v-if="author_hidden">
-          <div class="columns is-multiline is-1">
-            <div
-              class="column"
-              v-for="author in author_info.slice(0,3)"
-              :key="author.authorId"
-            >
-              <AuthorCard
-                class="content_box author_card"
-                v-bind:author_info="author"
-              >
-              </AuthorCard>
-            </div>
+<!--    <div class="tile is-ancestor">-->
+<!--      <div class="tile is-parent is-8 is-vertical">-->
+<!--        <p class="content_title">{{ $t('general_attribute.author') }}</p>-->
+<!--        <div class="tile is-child" v-if="author_hidden">-->
+<!--          <div class="columns is-multiline is-1">-->
+<!--            <div-->
+<!--              class="column"-->
+<!--              v-for="author in author_info.slice(0,3)"-->
+<!--              :key="author.authorId"-->
+<!--            >-->
+<!--              <AuthorCard-->
+<!--                class="content_box author_card"-->
+<!--                v-bind:author_info="author"-->
+<!--              >-->
+<!--              </AuthorCard>-->
+<!--            </div>-->
 
-            <a class="column is-full link-class-3" v-on:click="author_hidden = false">
-              {{ $t('search_page.see_all_author') }}
-            </a>
-          </div>
-        </div>
+<!--            <a class="column is-full link-class-3" v-on:click="author_hidden = false">-->
+<!--              {{ $t('search_page.see_all_author') }}-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div class="tile is-child columns is-multiline" v-else>
-          <div class="columns is-multiline is-1">
-            <div
-              class="column"
-              v-for="author in author_info"
-              :key="author.authorId"
-            >
-              <AuthorCard
-                class="content_box"
-                v-bind:author_info="author"
-              >
-              </AuthorCard>
-            </div>
+<!--        <div class="tile is-child columns is-multiline" v-else>-->
+<!--          <div class="columns is-multiline is-1">-->
+<!--            <div-->
+<!--              class="column"-->
+<!--              v-for="author in author_info"-->
+<!--              :key="author.authorId"-->
+<!--            >-->
+<!--              <AuthorCard-->
+<!--                class="content_box"-->
+<!--                v-bind:author_info="author"-->
+<!--              >-->
+<!--              </AuthorCard>-->
+<!--            </div>-->
 
-            <a class="column is-full link-class-3" v-on:click="author_hidden = true">
-              {{ $t('search_page.see_fewer_author') }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--            <a class="column is-full link-class-3" v-on:click="author_hidden = true">-->
+<!--              {{ $t('search_page.see_fewer_author') }}-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!------------------------      AUTHORS CARD HERE   --------------------------->
     <div class="tile is-ancestor">
@@ -74,7 +74,6 @@
                             :whichpage="current_route"
                             :checked="checked_fos_list"
             ></FilterBoxMulti>
-            {{this.$store.state.search_result.filters.fos_checked}}
             <FilterBoxChart :type="'year'"
                             :chart_data="year_list"
                             :whichpage="current_route"
@@ -175,6 +174,7 @@ export default {
         }
       },
       computed: {
+        // all of the following 7 variables are needed in order for the dropdowns filters to work properly
         fos_list: function (){
           let fos_res = []
           // let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
@@ -234,7 +234,7 @@ export default {
         },
         checked_fos_list: function() {
           let checked_fos_list = []
-          this.$store.state.search_result.filters.fos_checked.forEach(selected => {
+          this.$store.state.search_result.filters.fos_checked?.forEach(selected => {
             for (let item of this.fos_list) {
               if (selected === item.fos) {
                 checked_fos_list.push(item)
@@ -246,7 +246,7 @@ export default {
         },
         checked_authors_list: function() {
           let checked_authors_list = []
-          this.$store.state.search_result.filters.authors_checked.forEach(selected => {
+          this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
             for (let item of this.authors_list) {
               if (selected === item.author) {
                 checked_authors_list.push(item)
@@ -258,7 +258,7 @@ export default {
         },
         checked_venue_list: function() {
           let checked_venue_list = []
-          this.$store.state.search_result.filters.venue_checked.forEach(selected => {
+          this.$store.state.search_result.filters.venue_checked?.forEach(selected => {
             for (let item of this.venue_list) {
               if (selected === item.venue) {
                 checked_venue_list.push(item)
@@ -270,9 +270,14 @@ export default {
         },
         year_list: function (){
           let year_res = {label: [], data:[]}
+          // console.log('year', this.$store.state.search_result.filters.year_check)
           this.year_info.forEach(item => {
-            year_res.label.push(item.key)
-            year_res.data.push(item.doc_count)
+            if (item.key >= this.$store.state.search_result.filters.year_check.start
+              && item.key <= this.$store.state.search_result.filters.year_check.end
+            ) {
+              year_res.label.push(item.key)
+              year_res.data.push(item.doc_count)
+            }
           })
           return year_res
         }
@@ -289,9 +294,9 @@ export default {
              total_count: store.state.search_result.total,
 
              //maybe I will delete these three since computed for these are not necessary/////
-             author_info: store.state.search_result.aggregation.author_count.name.buckets,
-             fos_info: store.state.search_result.aggregation.fos_count.buckets,
-             venue_info: store.state.search_result.aggregation.venue_count.buckets,
+             // author_info: store.state.search_result.aggregation.author_count.name.buckets,
+             // fos_info: store.state.search_result.aggregation.fos_count.buckets,
+             // venue_info: store.state.search_result.aggregation.venue_count.buckets,
              year_info: store.state.search_result.aggregation.year_count.buckets,
              ////////////////////////////////////////////////////////////////////////////////
              last_paper_id: store.state.search_result.last_paper_id,
@@ -305,9 +310,9 @@ export default {
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: 0,
-             author_info: [],
-             venue_info: [],
-             fos_info: [],
+             // author_info: [],
+             // venue_info: [],
+             // fos_info: [],
           }
         }
       }

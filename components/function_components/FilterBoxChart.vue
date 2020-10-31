@@ -34,8 +34,8 @@
           </div>
         </nav>
         <CitationBar
-          :dataset="chart_data.data"
-          :labels="chart_data.label"
+          :dataset="chart_data_values"
+          :labels="chart_data_labels"
           :title="$t('general_attribute.publication')"
         >
         </CitationBar>
@@ -68,6 +68,13 @@ export default {
   name: "FilterBoxChart",
   components: {CitationBar},
   props: ['type','chart_data', 'whichpage'],
+  watch: {
+    chart_data() {
+      console.log('changing', this.chart_data.label)
+      this.chart_data_labels = this.chart_data.label
+      this.chart_data_values = this.chart_data.data
+    }
+  },
   computed: {
     clear_path: function () {
       let params = {path: ""}
@@ -82,7 +89,9 @@ export default {
     return {
       name,
       start_year: 0,
-      end_year: new Date().getFullYear()
+      end_year: new Date().getFullYear(),
+      chart_data_labels: this.chart_data.label,
+      chart_data_values: this.chart_data.data,
     }
   },
   i18n: {

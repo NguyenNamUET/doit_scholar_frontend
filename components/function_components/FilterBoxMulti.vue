@@ -21,7 +21,7 @@
           </b-input>
         </b-field>
       </div>
-      {{checked_rows}}
+<!--      {{checked_rows}}-->
       <div class="option_container">
         <b-table
           :data="data"

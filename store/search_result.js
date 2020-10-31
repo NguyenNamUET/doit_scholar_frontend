@@ -20,7 +20,7 @@ export const mutations = {
     // console.log('store here', params)
     if (params.payload.query !== state.query) {
       //New query, refresh all parameters
-      console.log('new query')
+      // console.log('new query')
       if(Object.keys(params.result).length !== 0) {
         state.query = params.payload.query
         state.search_results = params.result.hits.hits
@@ -33,11 +33,11 @@ export const mutations = {
           year_check: {start: 0, end: 2020}
         }
       }
-      console.log(state.filters)
+      // console.log(state.filters)
     }
     else {
       //Same query, just update the filtering parameter
-      console.log('sorting')
+      // console.log('sorting')
       state.filters.year_check.start = params.payload?.from_year | 0
       state.filters.year_check.end = params.payload?.end_year | new Date().getFullYear()
       state.filters.venue_checked = params.payload?.venue
