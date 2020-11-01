@@ -75,6 +75,7 @@
                             :checked="checked_fos_list"
             ></FilterBoxMulti>
             <FilterBoxChart :type="'year'"
+                            :checked="checked_year_range"
                             :chart_data="year_list"
                             :whichpage="current_route"
             ></FilterBoxChart>
@@ -177,17 +178,6 @@ export default {
         // all of the following 7 variables are needed in order for the dropdowns filters to work properly
         fos_list: function (){
           let fos_res = []
-          // let fos_checked = filteredKeys_v2(Object.assign({},this.$route.query), /fos\d+/)
-          // this.fos_info.forEach(item => {
-          //   if (fos_checked.length>0 && fos_checked.includes(item.key.trim())){
-          //     fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          //                   count:item.doc_count, checked:true})
-          //   }
-          //   else{
-          //     fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          //                   count:item.doc_count, checked:false})
-          //   }
-          // })
           this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
             fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
               count:item.doc_count, checked:false})
@@ -196,17 +186,6 @@ export default {
         },
         authors_list: function (){
           let author_res = []
-          // let authors_checked = filteredKeys_v2(Object.assign({},this.$route.query), /author\d+/)
-          // this.author_info.forEach(item => {
-          //   if (authors_checked.length>0 && authors_checked.includes(item.name.buckets[0].key.trim())){
-          //     author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          //                      count:item.doc_count, checked:true})
-          //   }
-          //   else{
-          //     author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          //                      count:item.doc_count, checked:false})
-          //   }
-          // })
           this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
             author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
               count:item.doc_count, checked:false})
@@ -215,17 +194,6 @@ export default {
         },
         venue_list: function (){
           let venue_res = []
-          // let venue_checked = filteredKeys_v2(Object.assign({},this.$route.query), /venue\d+/)
-          // this.venue_info.forEach(item => {
-          //   if (!!venue_checked && venue_checked.includes(item.key.trim())){
-          //     venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          //                     count:item.doc_count, checked:true})
-          //   }
-          //   else{
-          //     venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          //                     count:item.doc_count, checked:false})
-          //   }
-          // })
           this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
             venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
               count:item.doc_count, checked:false})
@@ -268,16 +236,17 @@ export default {
           })
           return checked_venue_list
         },
+        checked_year_range: function () {
+          let checked_year_range = []
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.start)
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.end)
+          return checked_year_range
+        },
         year_list: function (){
           let year_res = {label: [], data:[]}
-          // console.log('year', this.$store.state.search_result.filters.year_check)
           this.year_info.forEach(item => {
-            if (item.key >= this.$store.state.search_result.filters.year_check.start
-              && item.key <= this.$store.state.search_result.filters.year_check.end
-            ) {
-              year_res.label.push(item.key)
-              year_res.data.push(item.doc_count)
-            }
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
           })
           return year_res
         }
@@ -293,10 +262,6 @@ export default {
              keyword: query['query'],
              total_count: store.state.search_result.total,
 
-             //maybe I will delete these three since computed for these are not necessary/////
-             // author_info: store.state.search_result.aggregation.author_count.name.buckets,
-             // fos_info: store.state.search_result.aggregation.fos_count.buckets,
-             // venue_info: store.state.search_result.aggregation.venue_count.buckets,
              year_info: store.state.search_result.aggregation.year_count.buckets,
              ////////////////////////////////////////////////////////////////////////////////
              last_paper_id: store.state.search_result.last_paper_id,
@@ -310,9 +275,6 @@ export default {
              search_results: store.state.search_result.search_results,
              keyword: query['searchContent'],
              total_count: 0,
-             // author_info: [],
-             // venue_info: [],
-             // fos_info: [],
           }
         }
       }

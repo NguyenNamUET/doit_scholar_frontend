@@ -11,7 +11,7 @@ export const state = () => ({
     fos_checked: [],
     authors_checked: [],
     venue_checked: [],
-    year_check: {start: 0, end: 2020}
+    year_check: {start: 1930, end: new Date().getFullYear()}
   }
 });
 
@@ -20,7 +20,7 @@ export const mutations = {
     // console.log('store here', params)
     if (params.payload.query !== state.query) {
       //New query, refresh all parameters
-      // console.log('new query')
+      console.log('new query')
       if(Object.keys(params.result).length !== 0) {
         state.query = params.payload.query
         state.search_results = params.result.hits.hits
@@ -30,7 +30,7 @@ export const mutations = {
           fos_checked: [],
           authors_checked: [],
           venue_checked: [],
-          year_check: {start: 0, end: 2020}
+          year_check: {start: 1930, end: new Date().getFullYear()}
         }
       }
       // console.log(state.filters)
@@ -56,7 +56,7 @@ export const mutations = {
       fos_checked: [],
       authors_checked: [],
       venue_checked: [],
-      year_check: {start: 0, end: 2020}
+      year_check: {start: 1930, end: 2020}
     }
   }
 };

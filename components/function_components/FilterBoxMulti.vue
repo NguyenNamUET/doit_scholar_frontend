@@ -2,7 +2,8 @@
   <b-dropdown aria-role="list">
     <button class="button is-light" type="button" slot="trigger">
       <template>
-        <span>{{ $t(this.name) }}</span>
+        <span v-if="checked.length === 0">{{ $t(this.name) }}</span>
+        <span v-else class="has-text-info">{{checked.length}} {{$t(this.name)}}</span>
       </template>
       <b-icon icon="menu-down"></b-icon>
     </button>
@@ -84,7 +85,7 @@ export default {
     }
   },
   data() {
-    const name='general_attribute.'+this.type
+    const name='general_attribute.' + this.type
     return {
       name,
       checked_rows: this.checked,
