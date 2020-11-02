@@ -20,7 +20,7 @@ export const mutations = {
     // console.log('store here', params)
     if (params.payload.query !== state.query) {
       //New query, refresh all parameters
-      // console.log('new query')
+      console.log('new query')
       if(Object.keys(params.result).length !== 0) {
         state.query = params.payload.query
         state.search_results = params.result.hits.hits
