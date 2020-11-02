@@ -80,7 +80,7 @@ const paper_by_title = async (query_params) => {
       return_year_aggs: true,
       return_top_author: true,
       from_year:query_params.from_year, end_year:query_params.end_year,
-      top_author_size: 10
+      top_author_size: 30
     })
     return result.data
   } catch(e) {

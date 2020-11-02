@@ -188,6 +188,7 @@ export default {
           let author_res = []
           this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
             author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              author_id: item.key,
               count:item.doc_count, checked:false})
           })
           return author_res
@@ -214,14 +215,17 @@ export default {
         },
         checked_authors_list: function() {
           let checked_authors_list = []
+          console.log("authors_checked", this.$store.state.search_result.filters.authors_checked)
+          console.log("this.authors_list", this.authors_list)
           this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
             for (let item of this.authors_list) {
-              if (selected === item.author) {
+              if (selected === item.author_id) {
                 checked_authors_list.push(item)
                 break
               }
             }
           })
+          console.log("checked_authors_list", checked_authors_list)
           return checked_authors_list
         },
         checked_venue_list: function() {
@@ -252,6 +256,16 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
+        console.log("query", query)
+        if(query.author){
+         query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+        }
+        if(query.venue){
+          query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+        }
+        if(query.fos){
+          query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+        }
         await store.dispatch('search_result/paper_by_title', query)
         if(store.state.search_result.search_results.length > 0) {
           return {

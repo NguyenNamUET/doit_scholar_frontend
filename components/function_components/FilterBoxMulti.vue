@@ -58,7 +58,6 @@ export default {
   props: ['type', 'whichpage', 'data', 'checked'],
   watch: {
     checked() {
-      // console.log('update checked', this.checked)
       this.checked_rows = this.checked
     }
   },
@@ -71,9 +70,15 @@ export default {
       // console.log('selected ',this.checked_rows)
       params.query[this.type] = []
       for(let i=0; i<this.checked_rows.length; i++){
-        params.query[this.type].push(this.checked_rows[i][this.type])
+        let field_name = this.checked_rows[i][this.type].replace(/ /g, '-')
+        if(Object.keys(this.checked_rows[i]).includes(this.type+'_id')){
+          params.query[this.type].push(field_name+'-'+this.checked_rows[i][this.type+'_id'])
+        }
+        else{
+          params.query[this.type].push(field_name)
+        }
       }
-      // console.log(params)
+      console.log("params", params)
       return params
     },
     clear_path: function (){
