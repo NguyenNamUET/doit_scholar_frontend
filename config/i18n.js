@@ -22,6 +22,7 @@ export const i18n = {
   langDir: 'locales/',
   vueI18n: {
     fallbackLocale: 'en',
+    silentFallbackWarn: true,
     messages: { en, vi }
   }
 }
