@@ -50,9 +50,15 @@ const all_topics = async() => {
 /***************************************** Counting function ******************************************/
 
 /***************************************** Search paper function ******************************************/
-const paper_detail = async (paper_id) => {
+const paper_detail = async (params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' +paper_id)
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + params.paper_id,
+      {params: {cstart:params.cstart,
+                      csize:params.csize,
+                      rstart:params.rstart,
+                      rsize:params.rsize}
+      })
+    console.log("paper_detail", params)
     return result.data
   } catch(e) {
     console.log(e)
@@ -260,14 +266,14 @@ const wiki_summary = async(query_params) => {
 /************** Autocomple search *************/
 const autocomplete = async(query_params) => {
   try {
-    console.log("autocomplete", query_params)
+    // console.log("autocomplete", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
       search_content: query_params.search_content,
       authors: query_params.authors,
       venues: query_params.venues,
       size: query_params.size
     })
-    console.log(result.data)
+    // console.log(result.data)
     return result.data
   } catch(e) {
       console.log(e)

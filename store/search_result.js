@@ -11,7 +11,7 @@ export const state = () => ({
     fos_checked: [],
     authors_checked: [],
     venue_checked: [],
-    year_check: {start: 0, end: 2020}
+    year_check: {start: 1930, end: new Date().getFullYear()}
   }
 });
 
@@ -30,9 +30,10 @@ export const mutations = {
           fos_checked: [],
           authors_checked: [],
           venue_checked: [],
-          year_check: {start: 0, end: 2020}
+          year_check: {start: 1930, end: new Date().getFullYear()}
         }
       }
+      // console.log(state.filters)
     }
     else {
       //Same query, just update the filtering parameter
@@ -55,7 +56,7 @@ export const mutations = {
       fos_checked: [],
       authors_checked: [],
       venue_checked: [],
-      year_check: {start: 0, end: 2020}
+      year_check: {start: 1930, end: 2020}
     }
   }
 };

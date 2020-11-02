@@ -38,11 +38,11 @@
       </span>
       <span v-if="paper_detail.year !== undefined" class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
       <div>
-        <nuxt-link :to="'/paper/' + formatTitle(paper_detail.title) + '.p' + '-' + paper_detail.paperId"
+        <button
           class="button is-info is-small is-light is-outlined"
         >
           {{ paper_detail.citations_count }} {{ $t('general_attribute.citation') }}
-        </nuxt-link>
+        </button>
       </div>
     </div>
   </div>

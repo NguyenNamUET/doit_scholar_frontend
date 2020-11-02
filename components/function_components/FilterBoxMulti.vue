@@ -2,7 +2,8 @@
   <b-dropdown aria-role="list">
     <button class="button is-light" type="button" slot="trigger">
       <template>
-        <span>{{ $t(this.name) }}</span>
+        <span v-if="checked.length === 0">{{ $t(this.name) }}</span>
+        <span v-else class="has-text-info">{{checked.length}} {{$t(this.name)}}</span>
       </template>
       <b-icon icon="menu-down"></b-icon>
     </button>
@@ -21,11 +22,12 @@
           </b-input>
         </b-field>
       </div>
+<!--      {{checked_rows}}-->
       <div class="option_container">
         <b-table
           :data="data"
           :columns="columns"
-          :checked-rows.sync="checkedRows"
+          :checked-rows.sync="checked_rows"
           :is-row-checkable="(row) => true"
           checkable
         >
@@ -53,17 +55,23 @@ import {filteredKeys_v2} from "assets/utils";
 
 export default {
   name: "FilterBoxMulti",
-  props: ['type', 'whichpage'],
+  props: ['type', 'whichpage', 'data', 'checked'],
+  watch: {
+    checked() {
+      // console.log('update checked', this.checked)
+      this.checked_rows = this.checked
+    }
+  },
   computed: {
     apply_path: function (){
       let params = {
         path: this.whichpage,
         query: {}
       }
-      console.log('selected ',this.checkedRows)
+      // console.log('selected ',this.checked_rows)
       params.query[this.type] = []
-      for(let i=0; i<this.checkedRows.length; i++){
-        params.query[this.type].push(this.checkedRows[i][this.type])
+      for(let i=0; i<this.checked_rows.length; i++){
+        params.query[this.type].push(this.checked_rows[i][this.type])
       }
       // console.log(params)
       return params
@@ -77,12 +85,11 @@ export default {
     }
   },
   data() {
-    const name='general_attribute.'+this.type
+    const name='general_attribute.' + this.type
     return {
       name,
-      data: [],
-      checkedRows: [],
-      columns:[
+      checked_rows: this.checked,
+      columns: [
         {
           field: this.type,
           label: this.$t(name)
@@ -93,79 +100,6 @@ export default {
           numeric: true
         }
       ]
-    }
-  },
-  // created() {
-  //   this.makeChecked()
-  // },
-  methods: {
-    // makeChecked() {
-    //   this.data.forEach(item => {
-    //     if (item.checked){
-    //       this.checkedRows.push(item)
-    //     }
-    //   })
-    //   console.log("makeChecked", this.checkedRows)
-    // },
-    fos_list: function () {
-      let fos_res = []
-      this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
-        fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          count:item.doc_count, checked:false})
-      })
-      return fos_res
-    },
-    authors_list: function () {
-      let author_res = []
-      this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
-        author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          count:item.doc_count, checked:false})
-      })
-      return author_res
-    },
-    venue_list: function () {
-      let venue_res = []
-      this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
-        venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          count:item.doc_count, checked:false})
-      })
-      return venue_res
-    },
-
-    checked_fos_list() {
-      let fos_res = []
-      this.$store.state.search_result.filters.fos_checked.forEach(item => {
-        fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          count:item.doc_count, checked:false})
-      })
-      return fos_res
-    },
-    checked_authors_list() {
-      let author_res = []
-      this.$store.state.search_result.filters.authors_checked.forEach(item => {
-        author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          count:item.doc_count, checked:false})
-      })
-      return author_res
-    },
-    checked_venue_list() {
-      let venue_res = []
-      this.$store.state.search_result.filters.venue_checked.forEach(item => {
-        venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          count:item.doc_count, checked:false})
-      })
-      return venue_res
-    }
-  },
-  mounted() {
-    if (this.type === 'author') {
-      this.data = this.authors_list()
-    }
-    else if (this.type === 'venue') {
-      this.data = this.venue_list()
-    }
-    else if (this.type === 'fos') {
-      this.data = this.fos_list()
     }
   }
 }
