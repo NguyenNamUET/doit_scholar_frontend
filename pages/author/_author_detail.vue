@@ -95,10 +95,22 @@
                           :venues="null"
                         ></SearchBar>
                       </div>
+                      <FilterBoxMulti :type="'author'"
+                            :data="authors_list"
+                            :whichpage="current_route"
+                            :checked="checked_authors_list"
+                      ></FilterBoxMulti>
+                      <FilterBoxMulti :type="'venue'"
+                                      :data="venue_list"
+                                      :whichpage="current_route"
+                                      :checked="checked_venue_list"
+                      ></FilterBoxMulti>
+                      <FilterBoxMulti :type="'fos'"
+                                      :data="fos_list"
+                                      :whichpage="current_route"
+                                      :checked="checked_fos_list"
+                      ></FilterBoxMulti>
                       <SortButton :whichpage="current_route"></SortButton>
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>-->
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>-->
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>-->
                     </div>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">
@@ -157,6 +169,7 @@
     import SearchResult from "@/components/search_page/SearchResult";
     import PaginationV2 from "@/components/function_components/PaginationV2";
     import SearchBar from "@/components/function_components/SearchBar";
+    import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
     import SortButton from "@/components/function_components/SortButton";
 
     export default {
@@ -166,6 +179,87 @@
       head() {
         return {
           title: this.author_detail.name + ' | DoIT Scholar'
+        }
+      },
+      computed: {
+        // all of the following 7 variables are needed in order for the dropdowns filters to work properly
+        fos_list: function (){
+          let fos_res = []
+          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+            fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+              count:item.doc_count, checked:false})
+          })
+          return fos_res
+        },
+        authors_list: function (){
+          let author_res = []
+          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
+            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              author_id: item.key,
+              count:item.doc_count, checked:false})
+          })
+          return author_res
+        },
+        venue_list: function (){
+          let venue_res = []
+          this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
+            venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+              count:item.doc_count, checked:false})
+          })
+          return venue_res
+        },
+        checked_fos_list: function() {
+          let checked_fos_list = []
+          this.$store.state.search_result.filters.fos_checked?.forEach(selected => {
+            for (let item of this.fos_list) {
+              if (selected === item.fos) {
+                checked_fos_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_fos_list
+        },
+        checked_authors_list: function() {
+          let checked_authors_list = []
+          console.log("authors_checked", this.$store.state.search_result.filters.authors_checked)
+          console.log("this.authors_list", this.authors_list)
+          this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
+            for (let item of this.authors_list) {
+              if (selected === item.author_id) {
+                checked_authors_list.push(item)
+                break
+              }
+            }
+          })
+          console.log("checked_authors_list", checked_authors_list)
+          return checked_authors_list
+        },
+        checked_venue_list: function() {
+          let checked_venue_list = []
+          this.$store.state.search_result.filters.venue_checked?.forEach(selected => {
+            for (let item of this.venue_list) {
+              if (selected === item.venue) {
+                checked_venue_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_venue_list
+        },
+        checked_year_range: function () {
+          let checked_year_range = []
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.start)
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.end)
+          return checked_year_range
+        },
+        year_list: function (){
+          let year_res = {label: [], data:[]}
+          this.year_info.forEach(item => {
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
+          })
+          return year_res
         }
       },
       data() {

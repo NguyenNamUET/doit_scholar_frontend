@@ -97,7 +97,7 @@ export default {
   computed: {
     clear_path: function () {
       let params = {path: ""}
-      let re = new RegExp("[&|?](from|end)year=\\d+(?=&)", "g")
+      let re = new RegExp("[&|?](from|end)_year=\\d+(?=&)", "g")
       let current = this.whichpage+"&"
       params['path'] = current.replace(re,"").slice(0, -1)
       return params

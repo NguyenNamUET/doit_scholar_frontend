@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import {filteredKeys_v2, formatNumber, publication_type} from "../assets/utils";
+import {formatNumber, publication_type} from "../assets/utils";
 import DropDown from "../components/function_components/DropDown";
 import AuthorCard from "../components/search_page/AuthorCard";
 import SearchResult from "../components/search_page/SearchResult";
@@ -256,7 +256,7 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
-        console.log("query", query)
+        console.log("query before", query)
         if(query.author){
          query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
         }
@@ -266,6 +266,7 @@ export default {
         if(query.fos){
           query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
         }
+        console.log("query after", query)
         await store.dispatch('search_result/paper_by_title', query)
         if(store.state.search_result.search_results.length > 0) {
           return {

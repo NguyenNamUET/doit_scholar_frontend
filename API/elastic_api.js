@@ -175,10 +175,15 @@ const paper_by_fos_and_title = async(query_params) => {
 
 /***************************************** Search author function ******************************************/
 
-const author_by_id = async (author_id, params) => {
+const author_by_id = async (author_id, query_params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id, {
-      params: params
+    let result = await axios.post(SEARCH_DOCUMENTS.author_by_id + '/' + author_id, {
+      start: query_params.start, size: query_params.size,
+      shorted: False, sort_by: query_params.sort_by,
+      authors: query_params.authors, author_is_should: true, return_top_author: true, top_author_size: 10,
+      fields_of_study: query_params.fos, fos_is_should: true, return_fos_aggs: true,
+      venues: query_params.venue, venues_is_should:true, return_venue_aggs: true,
+      from_year: query_params.from_year, end_year: query_params.end_year, return_year_aggs: true
     })
     return result.data
   } catch(e) {

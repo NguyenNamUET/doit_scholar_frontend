@@ -8,7 +8,11 @@
     "next": "Next",
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
-    "search_bar_placeholder": "Search for paper",
+    "search_bar__filter": {
+      "author": "Search author...",
+      "venue": "Search venue...",
+      "fos": "Search field of study..."
+    },
     "sort": {
       "default": "Sort",
       "by_score": "Sort by Relevant",
@@ -37,7 +41,7 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "search_bar_placeholder": "Search papers by title or keywords",
       "search_bar_not_found": "Cannot find any result for keyword",
       "lang_switch": "Language"
     },
