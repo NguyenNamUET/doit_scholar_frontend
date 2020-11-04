@@ -9,6 +9,7 @@
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
     "search_bar__filter": {
+      "paper": "Search paper...",
       "author": "Search author...",
       "venue": "Search venue...",
       "fos": "Search field of study..."
@@ -48,7 +49,8 @@
     "footer" : {
       "address": "Address:",
       "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
-    }
+    },
+    "warning": "Please enter <b> at least one character </b> in search bar"
   },
 
   "home_page": {

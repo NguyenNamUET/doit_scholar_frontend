@@ -49,14 +49,32 @@
           <div class="content_box filter_section">
             <div style="display: inline-block">
               <SearchBar
-               :placeholder="$t('general_attribute.search_bar_placeholder')"
+               :placeholder="$t('general_attribute.search_bar__filter.venue')"
                :authors="null"
                :venues="Array(journal_name)"></SearchBar>
+              <FilterBoxMulti :type="'author'"
+                              :data="authors_list"
+                              :whichpage="current_route"
+                              :checked="checked_authors_list"
+              ></FilterBoxMulti>
+              <FilterBoxMulti :type="'fos'"
+                              :data="fos_list"
+                              :whichpage="current_route"
+                              :checked="checked_fos_list"
+              ></FilterBoxMulti>
+              <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+              <span>
+                <nuxt-link class="button is-danger is-light"
+                           :to="{path: this.$route.path,
+                                 query: {start:0, size:this.per_page, page:1}}">
+                  Clear
+                </nuxt-link>
+              </span>
+              <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+              <!--------------------- SORT BUTTON ------------------------->
+              <SortButton :whichpage="current_route"></SortButton>
+              <!--------------------- SORT BUTTON ------------------------->
             </div>
-            <SortButton :whichpage="current_route"></SortButton>
-<!--            <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list}" @update-fos-checked="updateFOSChecked"/>-->
-<!--            <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list}" @update-authors-checked="updateAuthorsChecked"/>-->
-<!--            <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list}" @update-venues-checked="updateVenuesChecked"/>-->
           </div>
           <!-------------------------------------------------------------------------->
           <SearchResult
@@ -71,7 +89,8 @@
             :page-range="3"
             :margin-pages="2"
             :per-page="this.per_page"
-            :whichpage="current_route">
+            :whichpage="current_route"
+            :query="['page','start','size']">
           </PaginationV2>
         </div>
 <!--        <div class="tile is-child is-4">-->
@@ -86,17 +105,17 @@
 </template>
 
 <script>
-import {paper_by_venue} from "@/API/elastic_api";
-import {formatNumber, formatTitle, isDictEmpty} from "assets/utils";
+import {formatNumber, formatTitle} from "assets/utils";
 import SearchResult from "@/components/search_page/SearchResult";
 import LineGraph from "@/components/static_components/LineGraph";
 import PaginationV2 from "@/components/function_components/PaginationV2";
 import SortButton from "@/components/function_components/SortButton";
+import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
 
 export default {
   name: "journal_detail",
   watchQuery: true,
-  components: {LineGraph, SearchResult, PaginationV2, SortButton},
+  components: {LineGraph, SearchResult, PaginationV2, FilterBoxMulti, SortButton},
   head() {
     return {
       title: this.journal_name + ' | ' + 'DoIT Scholar'
@@ -107,6 +126,64 @@ export default {
       return formatNumber(num)
     }
   },
+  computed: {
+        // all of the following 7 variables are needed in order for the dropdowns filters to work properly
+        fos_list: function (){
+          let fos_res = []
+          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+            fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+              count:item.doc_count, checked:false})
+          })
+          return fos_res
+        },
+        authors_list: function (){
+          let author_res = []
+          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
+            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              author_id: item.key,
+              count:item.doc_count, checked:false})
+          })
+          return author_res
+        },
+        checked_fos_list: function() {
+          let checked_fos_list = []
+          this.$store.state.search_result.filters.fos_checked?.forEach(selected => {
+            for (let item of this.fos_list) {
+              if (selected === item.fos) {
+                checked_fos_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_fos_list
+        },
+        checked_authors_list: function() {
+          let checked_authors_list = []
+          this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
+            for (let item of this.authors_list) {
+              if (selected === item.author_id) {
+                checked_authors_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_authors_list
+        },
+        checked_year_range: function () {
+          let checked_year_range = []
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.start)
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.end)
+          return checked_year_range
+        },
+        year_list: function (){
+          let year_res = {label: [], data:[]}
+          this.year_info.forEach(item => {
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
+          })
+          return year_res
+        },
+      },
   data() {
     return {
       journal_name: null,
@@ -123,21 +200,28 @@ export default {
       return formatTitle(title)
     }
   },
-  async asyncData({query, route}) {
+  async asyncData({store, query, route}) {
     let journal_name = route.params.journal_detail.replace(/-/g, ' ')
-    let data = await paper_by_venue({
-        venues: Array(journal_name),
-        start: route.query.start,
-        size: route.query.size,
-        sort_by: route.query?.sort ?? "score"
-    })
-    return {
-      journal_name: journal_name,
-      search_results: data.hits.hits,
-      total_paper: data.hits.total.value,
-      current_route: route.fullPath,
-      current_page: route?.query?.page ?? 1
+    query["venue"] = Array(journal_name)
+    if(query.author){
+      query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
     }
+    if(query.fos){
+      query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+    }
+
+    console.log("venues query", query)
+    await store.dispatch('search_result/paper_by_venue', query)
+    if (store.state.search_result.search_results.hits.hits.length > 0){
+      return {
+        journal_name: journal_name,
+        search_results: store.state.search_result.search_results.hits.hits,
+        total_paper: store.state.search_result.total,
+        current_route: route.fullPath,
+        current_page: route?.query?.page ?? 1
+      }
+    }
+
   }
 }
 </script>

@@ -779,30 +779,30 @@ export default {
         },
         async updateCitation(page_num) {
           this.is_loading_citation = true
+          this.$refs.citation_box.click()
+          this.$router.push({path: this.$route.path+"#citation_box",
+                            query: {cit_page:page_num, ref_page:this.current_ref_page}})
+          this.current_citation_page = page_num
           let result = await paper_citation({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({path: this.$route.path+"#citation_box",
-                            query: {cit_page:page_num, ref_page:this.current_ref_page}})
-          this.$refs.citation_box.click()
-          this.current_citation_page = this.$route.query?.cit_page ?? 1
           this.citation_data = result
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
         },
         async updateReference(page_num) {
           this.is_loading_ref = true
+          this.$refs.reference_box.click()
+          this.$router.push({path: this.$route.path+"#reference_box",
+                            query: {cit_page:this.current_citation_page, ref_page:page_num}})
+          this.current_ref_page = page_num
           let result = await paper_references({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$router.push({path: this.$route.path+"#reference_box",
-                            query: {cit_page:this.current_citation_page, ref_page:page_num}})
-          this.$refs.reference_box.click()
-          this.current_ref_page = this.$route.query?.ref_page ?? 1
           this.ref_data = result
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
@@ -840,8 +840,14 @@ export default {
         let params = {paper_id:paper_id,
                       cstart:0, csize:10,
                       rstart:0, rsize:10}
-        if(Object.keys(route.query).includes('cit_page')){params.cstart = route.query?.cit_page ?? 1}
-        if(Object.keys(route.query).includes('ref_page')){params.rstart = route.query?.ref_page ?? 1}
+        if(Object.keys(route.query).includes('cit_page')){
+          params.cstart = route.query?.cit_page-1 ?? 0
+          this.current_citation_page = this.$route.query?.cit_page ?? 1
+        }
+        if(Object.keys(route.query).includes('ref_page')){
+          params.rstart = route.query?.ref_page-1 ?? 0
+          this.current_ref_page = this.$route.query?.ref_page ?? 1
+        }
         let data = await paper_detail(params)
         let data_dict = {}
         let is_citation_empty = true

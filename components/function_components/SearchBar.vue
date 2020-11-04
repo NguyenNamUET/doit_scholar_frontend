@@ -40,7 +40,7 @@ import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
-      props: ['placeholder', 'author', 'venue'],
+      props: ['placeholder', 'current_page', 'authors', 'venues'],
       data() {
         return {
           search_query: '',
@@ -56,19 +56,15 @@ export default {
           return formatTitle(title)
         },
         getAutocomplete: _.debounce(async function(name) {
-          // if (!this.search_query.length)
-          //   this.autocomplete_data = []
           this.is_loading = true
-          // console.log("getAutocomplete", this.author)
           this.raw_data = await autocomplete({
-            search_content: name,
+            query: name,
             authors: this.authors,
             venues: this.venues,
             size: 10
           })
           this.autocomplete_data = _.toArray(this.raw_data)
           this.is_loading = false
-          // console.log(this.autocomplete_data)
         }),
         submitQuery() {
           this.query_params = {
@@ -78,12 +74,12 @@ export default {
             page: 1
           }
           if(this.search_query!==""){
-            this.$router.push({name: this.localeRoute('search').name, query: this.query_params})
+            this.$router.push({path: this.current_page, query: this.query_params})
           }
           else{
             this.$buefy.toast.open({
               duration: 3000,
-              message: `Thanh tìm kiếm <b>không thể để trống</b>`,
+              message: this.$t('default_layout.warning'),
               position: 'is-bottom',
               type: 'is-danger'
             })

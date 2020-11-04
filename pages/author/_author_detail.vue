@@ -1,5 +1,7 @@
+<!-- 150080110 -->
 <template>
-    <div v-if="Object.keys(author_detail).length !== 0" class="container" ref="top" id="top">
+    <div v-if="paper_detail.length !== 0" class="container" ref="top" id="top">
+
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child is-vertical">
@@ -8,10 +10,10 @@
                 <div class="card_wrapper">
                   <div class="content_box">
                     <p class="author_name">
-                      <b>{{author_detail.name}}</b>
+                      <b>{{name}}</b>
                     </p>
                     <table style="width: 100%">
-                      <tr v-if="author_detail.papers !== undefined">
+                      <tr v-if="paper_detail.length > 0">
                         <td style="width: 90%">
                           <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.publication') }} </span>
                         </td>
@@ -19,18 +21,18 @@
                       <span
                         class="author_stat"
                       >
-                      {{author_detail.papers.length | formatNumber}}
+                      {{paper_detail.length | formatNumber}}
                       </span>
                         </td>
                       </tr>
-                      <tr v-if="author_agg.influentialCitationCount !== undefined">
+                      <tr v-if="paper_agg.influentialCitationCount !== undefined">
                         <td>
                           <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.highlighted_citation') }}</span>
                         </td>
                         <td>
                       <span
                         class="author_stat"
-                      >{{author_agg.influentialCitationCount | formatNumber}}</span>
+                      >{{paper_agg.influentialCitationCount.value | formatNumber}}</span>
                         </td>
                       </tr>
                     </table>
@@ -89,12 +91,17 @@
                     </p>
                     <div class="filter_section content_box">
                       <div style="display: inline-block">
+                        <!--------------------------- SEARCH BAR ------------------------->
                         <SearchBar
-                          :placeholder="$t('general_attribute.search_bar_placeholder')"
-                          :authors="Array(this.author_id)"
-                          :venues="null"
+                          :placeholder="$t('general_attribute.search_bar__filter.paper')"
+                          :current_page="this.$route.path"
+                          :authors="this.author_id"
                         ></SearchBar>
+
+                        <!--------------------------- SEARCH BAR ------------------------->
                       </div>
+
+                      <!------------------------ FILTER DROPDOWNS ------------------------>
                       <FilterBoxMulti :type="'author'"
                             :data="authors_list"
                             :whichpage="current_route"
@@ -110,15 +117,28 @@
                                       :whichpage="current_route"
                                       :checked="checked_fos_list"
                       ></FilterBoxMulti>
+                      <!------------------------ FILTER DROPDOWNS ------------------------>
+
+                      <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+                      <span>
+                        <nuxt-link class="button is-danger is-light"
+                          :to="{path: this.$route.path,
+                                query: {start:0, size:this.per_page, page:1}}">
+                          Clear
+                        </nuxt-link>
+                      </span>
+                      <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+                      <!--------------------- SORT BUTTON ------------------------->
                       <SortButton :whichpage="current_route"></SortButton>
+                      <!--------------------- SORT BUTTON ------------------------->
                     </div>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">
                         <div class="tile is-child">
                           <SearchResult
-                            v-for="result in paper_data"
+                            v-for="result in paper_detail"
                             :key="result.paperId"
-                            :search_result="result"
+                            :search_result="result._source"
                           >
                           </SearchResult>
 
@@ -177,7 +197,7 @@
       components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
-          title: this.author_detail.name + ' | DoIT Scholar'
+          title: this.name + ' | DoIT Scholar'
         }
       },
       computed: {
@@ -261,21 +281,22 @@
           return year_res
         },
         paper_length: function (){
-          return this.author_agg?.totalPapers ?? this.author_detail.totalPapers
+          return this.paper_agg?.totalPapers ?? this.paper_detail.totalPapers
         },
 
       },
       data() {
         return {
           author_id: null,
-          author_detail: null,
-          author_agg: null,
+          name: null,
+          h_index: null,
+          paper_detail: null,
+          paper_agg: null,
           current_tab: 'publication',
           current_paper_page: 1,
           per_page: 5,
           is_loading: false,
           search_query: '',
-
           current_route: null
         }
       },
@@ -294,8 +315,7 @@
       },
       async asyncData({store, query, route}) {
         console.log("query before", query)
-        let id_pattern = /[0-9]+$/g
-        let author_id = id_pattern.exec(route.params.author_detail)
+        let author_id = /[0-9]+$/g.exec(route.params.author_detail)
         query["author_id"] = author_id
         if(query.author){
          query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
@@ -309,11 +329,13 @@
         console.log("query after", query)
         await store.dispatch('search_result/author_filter', query)
 
-        if (store.state.search_result.search_results.length > 0){
+        if (store.state.search_result.search_results.hits.hits.length > 0){
           return {
             author_id: author_id,
-            author_detail: store.state.search_result.search_results,
-            author_agg: store.state.search_result.aggregation,
+            h_index: store.state.search_result.search_results.h_index,
+            name: store.state.search_result.search_results.name,
+            paper_detail: store.state.search_result.search_results.hits.hits,
+            paper_agg: store.state.search_result.aggregation,
             current_route: route.fullPath,
             current_paper_page: route?.query?.page ?? 1
           }
@@ -321,7 +343,7 @@
         else{
           return {
             author_id: author_id,
-            author_detail: {},
+            paper_detail: {},
             current_route: route.fullPath
           }
         }
@@ -345,5 +367,11 @@
   }
   .tab_title {
     color: #756c6c;
+  }
+  button:hover {
+    cursor: pointer;
+  }
+  a:hover {
+    text-decoration: none;
   }
 </style>

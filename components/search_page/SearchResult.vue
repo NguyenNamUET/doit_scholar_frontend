@@ -2,13 +2,14 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child content_box">
+        <!---------------------------------------Title------------------------------------------->
         <a v-if="Object.keys(search_result).includes('title')"
           class="text-class-1"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
           <b>{{ search_result.title }}</b>
         </a>
-        <!----------------------------------------------------------------------------------------------->
+        <!---------------------------------------Title------------------------------------------->
         <div class="has-text-weight-light">
           <!-------------- Year ------------------>
           <p class="text-class-3"
@@ -19,17 +20,18 @@
 
           <!------------------------------------ Fields of study ---------------------------------------->
           <p v-if="Object.keys(search_result).includes('fieldsOfStudy') && search_result.fieldsOfStudy">
+            <!------------------------------- Venues/Journals --------------------------------->
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
-            <a
-              class="link-class-3 secondary_description"
-              :href="'/journal/' + formatTitle(search_result.venue)"
-              v-if="Object.keys(search_result).includes('venue') && search_result.venue"
-            >
+            <nuxt-link  v-if="Object.keys(search_result).includes('venue') && search_result.venue"
+                        class="link-class-3 secondary_description"
+                        :to="{path:'/journal/' + search_result.venue.replace(' ','-'),
+                              query:{start:0, size:10, page:1}}">
               <b>{{search_result.venue}}</b>
-            </a>
+            </nuxt-link>
             <span
               v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >&sdot;</span>
+            <!------------------------------- Venues/Journals --------------------------------->
             <a
               v-if="!field_hidden"
               class="link-class-3"
