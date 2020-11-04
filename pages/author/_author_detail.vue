@@ -23,14 +23,14 @@
                       </span>
                         </td>
                       </tr>
-                      <tr v-if="author_detail.influentialCitationCount !== undefined">
+                      <tr v-if="author_agg.influentialCitationCount !== undefined">
                         <td>
                           <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.highlighted_citation') }}</span>
                         </td>
                         <td>
                       <span
                         class="author_stat"
-                      >{{author_detail.influentialCitationCount | formatNumber}}</span>
+                      >{{author_agg.influentialCitationCount | formatNumber}}</span>
                         </td>
                       </tr>
                     </table>
@@ -124,7 +124,7 @@
 
                           <PaginationV2
                             :is-small="true"
-                            :page-count="Math.ceil(paper_length / per_page)"
+                            :page-count="Math.ceil(this.paper_length / per_page)"
                             :page-range="3"
                             :margin-pages="2"
                             :per-page="this.per_page"
@@ -162,7 +162,6 @@
 
 <script>
     import {formatNumber, formatTitle} from "assets/utils";
-    import {author_by_id, author_papers, paper_citation} from "@/API/elastic_api";
     import Influence_graph from "@/components/influence_graph/influence_graph";
     import PaperTable from "@/components/function_components/PaperTable";
     import NuxtError from "@/components/static_components/ErrorPage";
@@ -175,7 +174,7 @@
     export default {
       name: "author_detail",
       watchQuery: true,
-      components: {SearchBar, PaginationV2, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
+      components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
           title: this.author_detail.name + ' | DoIT Scholar'
@@ -260,17 +259,20 @@
             year_res.data.push(item.doc_count)
           })
           return year_res
-        }
+        },
+        paper_length: function (){
+          return this.author_agg?.totalPapers ?? this.author_detail.totalPapers
+        },
+
       },
       data() {
         return {
           author_id: null,
           author_detail: null,
+          author_agg: null,
           current_tab: 'publication',
           current_paper_page: 1,
           per_page: 5,
-          paper_length: null,
-          paper_data: null,
           is_loading: false,
           search_query: '',
 
@@ -290,21 +292,28 @@
           return formatTitle(title)
         },
       },
-      async asyncData({route}) {
+      async asyncData({store, query, route}) {
+        console.log("query before", query)
         let id_pattern = /[0-9]+$/g
         let author_id = id_pattern.exec(route.params.author_detail)
-        let params = {
-          start: route.query.start,
-          size: route.query.size,
-          sort_by: route.query?.sort ?? "score"
+        query["author_id"] = author_id
+        if(query.author){
+         query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
         }
-        let data = await author_by_id(author_id, params)
-        if (Object.keys(data).length !== 0){
+        if(query.venue){
+          query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+        }
+        if(query.fos){
+          query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+        }
+        console.log("query after", query)
+        await store.dispatch('search_result/author_filter', query)
+
+        if (store.state.search_result.search_results.length > 0){
           return {
             author_id: author_id,
-            author_detail: data,
-            paper_length: data.totalPapers,
-            paper_data: data.papers,
+            author_detail: store.state.search_result.search_results,
+            author_agg: store.state.search_result.aggregation,
             current_route: route.fullPath,
             current_paper_page: route?.query?.page ?? 1
           }
