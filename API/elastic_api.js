@@ -297,7 +297,11 @@ const fos_graph_data = async(queryParams) => {
 
 const venue_graph_data = async() => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.venue_graph)
+    let result = await axios.get(SEARCH_DOCUMENTS.venue_graph, {
+      params: {
+        size: 30
+      }
+    })
     return result.data
   } catch (e) {
     console.log(e)

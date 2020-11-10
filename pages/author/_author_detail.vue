@@ -1,44 +1,55 @@
 <!-- 150080110 -->
 <template>
     <div v-if="paper_detail.length !== 0" class="container" ref="top" id="top">
-
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child is-vertical">
             <div class="columns is-5">
+              <!--------------------------------------------- AUTHOR INFO ------------------------------------------------>
               <div class="column is-one-quarter">
-                <div class="card_wrapper">
-                  <div class="content_box">
-                    <p class="author_name">
-                      <b>{{name}}</b>
-                    </p>
+                <div class="tile is-vertical">
+                  <AuthorInfoCard :name="name"
+                                  :influential-citation-count="paper_agg.influentialCitationCount!== undefined ? paper_agg.influentialCitationCount.value : 0"
+                                  :paper_length="paper_length"
+                                  :h-index="h_index">
+                  </AuthorInfoCard>
+                  <div class="tile" style="background-color: white">
+                    <CitationBar
+                      :dataset="this.chart_data"
+                      :labels="this.chart_labels"
+                      :width="250"
+                      :height="250"
+                      :title="$t('paper_detail_page.citation_chart_title')">
+                    </CitationBar>
+                  </div>
+                  <div class="tile is-vertical" style="background-color: white; margin-top: 20px">
+                    <div class="content" style="padding-left: 5px; padding-top: 5px">
+                      <b>{{ $t('author_detail_page.co_author') }}</b>
+                    </div>
                     <table style="width: 100%">
-                      <tr v-if="paper_detail.length > 0">
-                        <td style="width: 90%">
-                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.publication') }} </span>
+                      <tr v-for="coauthor in authors_list" :key="coauthor.author_id"
+                      v-if="coauthor.author_id !== author_id">
+                        <td style="width: 90%; padding-left: 5px">
+                          <a class="text-class-3 color-class-3"
+                          :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
+                            {{coauthor.author}}
+                          </a>
                         </td>
                         <td>
-                      <span
-                        class="author_stat"
-                      >
-                      {{paper_detail.length | formatNumber}}
-                      </span>
-                        </td>
-                      </tr>
-                      <tr v-if="paper_agg.influentialCitationCount !== undefined">
-                        <td>
-                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.highlighted_citation') }}</span>
-                        </td>
-                        <td>
-                      <span
-                        class="author_stat"
-                      >{{paper_agg.influentialCitationCount.value | formatNumber}}</span>
+                          <span class="icon">
+                            <a :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
+                              <i class="fas fa-angle-right"></i>
+                            </a>
+                          </span>
                         </td>
                       </tr>
                     </table>
                   </div>
                 </div>
               </div>
+              <!--------------------------------------------- AUTHOR INFO ------------------------------------------------>
+
+              <!--------------------------------------------- NAV BAR ---------------------------------------------------->
               <div class="column">
                 <div class="tabs">
                   <ul>
@@ -62,13 +73,11 @@
                     </li>
                   </ul>
                 </div>
+
                 <div class="tab-content">
                   <div v-if="this.current_tab === 'publication'">
                     <p class="text-class-3">
-                      <i18n
-                        tag="span"
-                        path="general_attribute.list_label"
-                      >
+                      <i18n tag="span" path="general_attribute.list_label">
                         <template v-slot:start>
                           <span>
                             {{ (current_paper_page-1)*per_page + 1}}
@@ -160,6 +169,7 @@
                   </div>
                 </div>
               </div>
+              <!--------------------------------------------- NAV BAR ------------------------------------------------>
             </div>
           </div>
         </div>
@@ -190,11 +200,13 @@
     import SearchBar from "@/components/function_components/SearchBar";
     import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
     import SortButton from "@/components/function_components/SortButton";
+    import AuthorInfoCard from "@/components/author_components/AuthorInfoCard.vue"
 
     export default {
       name: "author_detail",
       watchQuery: true,
-      components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
+      components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton,
+                   SearchResult, PaperTable, AuthorInfoCard, Influence_graph, NuxtError},
       head() {
         return {
           title: this.name + ' | DoIT Scholar'
@@ -241,8 +253,6 @@
         },
         checked_authors_list: function() {
           let checked_authors_list = []
-          console.log("authors_checked", this.$store.state.search_result.filters.authors_checked)
-          console.log("this.authors_list", this.authors_list)
           this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
             for (let item of this.authors_list) {
               if (selected === item.author_id) {
@@ -251,7 +261,6 @@
               }
             }
           })
-          console.log("checked_authors_list", checked_authors_list)
           return checked_authors_list
         },
         checked_venue_list: function() {
@@ -292,6 +301,8 @@
           h_index: null,
           paper_detail: null,
           paper_agg: null,
+          chart_data: null,
+          chart_labels: null,
           current_tab: 'publication',
           current_paper_page: 1,
           per_page: 5,
@@ -317,6 +328,7 @@
         console.log("query before", query)
         let author_id = /[0-9]+$/g.exec(route.params.author_detail)
         query["author_id"] = author_id
+        query['author'] = Array(author_id)
         if(query.author){
          query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
         }
@@ -327,23 +339,28 @@
           query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
         }
         console.log("query after", query)
+
         await store.dispatch('search_result/author_filter', query)
 
         if (store.state.search_result.search_results.hits.hits.length > 0){
           return {
-            author_id: author_id,
+            author_id: author_id[0],
             h_index: store.state.search_result.search_results.h_index,
             name: store.state.search_result.search_results.name,
             paper_detail: store.state.search_result.search_results.hits.hits,
             paper_agg: store.state.search_result.aggregation,
+
+            chart_labels: Object.keys(store.state.search_result.aggregation.citations_chart),
+            chart_data: Object.values(store.state.search_result.aggregation.citations_chart),
             current_route: route.fullPath,
             current_paper_page: route?.query?.page ?? 1
           }
         }
         else{
           return {
-            author_id: author_id,
+            author_id: author_id[0],
             paper_detail: {},
+            h_index: 0,
             current_route: route.fullPath
           }
         }
@@ -355,15 +372,6 @@
   .container {
     padding: 40px 20px;
     min-height: 100vh;
-  }
-  .author_name {
-    font-size: 24px;
-    font-weight: 600;
-  }
-  .author_stat {
-    font-weight: 700;
-    color: #dc710f;
-    font-size: 14px;
   }
   .tab_title {
     color: #756c6c;

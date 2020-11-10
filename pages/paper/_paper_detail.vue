@@ -848,31 +848,30 @@ export default {
           params.rstart = route.query?.ref_page-1 ?? 0
           this.current_ref_page = this.$route.query?.ref_page ?? 1
         }
-        let data = await paper_detail(params)
+        let paper_data = await paper_detail(params)
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
 
         let suggestion_data = []
-        if(data?.fieldsOfStudy){
+        if(paper_data?.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
-            fields_of_study: data.fieldsOfStudy,
+            fields_of_study: paper_data.fieldsOfStudy,
             size: 15
           })
         }
-        if (Object.keys(data).length !== 0) {
-          if (data.citations_count > 0) {
-            let data = await citation_chart_data(paper_id)
-            data_dict = data.citations_chart
+        if (Object.keys(paper_data).length !== 0) {
+          if (paper_data.citations_count > 0){
+            data_dict = paper_data.citations_chart
             is_citation_empty = false
           }
           // console.log(data_dict)
-          if (data.references_count > 0) {
+          if (paper_data.references_count > 0) {
             is_ref_empty = false
           }
           // console.log(data)
           //Sort topics alphabetically
-          data.topics.sort(function(a,b){
+          paper_data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
           return {
@@ -882,11 +881,11 @@ export default {
             chart_labels: Object.keys(data_dict),
             chart_data: Object.values(data_dict),
             paper_id: paper_id[0],
-            paper_detail: data,
-            citation_data: data.citations,
-            ref_data: data.references,
-            citation_length: data.citations_count,
-            ref_length: data.references_count
+            paper_detail: paper_data,
+            citation_data: paper_data.citations,
+            ref_data: paper_data.references,
+            citation_length: paper_data.citations_count,
+            ref_length: paper_data.references_count
           }
         }
         else {
