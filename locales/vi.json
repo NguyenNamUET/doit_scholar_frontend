@@ -8,7 +8,12 @@
     "next": "Sau",
     "search": "Tìm kiếm",
     "list_label": "Đang xem {start} - {end} trong {total} văn bản",
-    "search_bar_placeholder": "Tìm kiếm văn bản",
+    "search_bar__filter": {
+      "paper": "Tìm kiếm văn bản...",
+      "author": "Tìm kiếm tác giả...",
+      "venue": "Tìm kiếm hội nghị...",
+      "fos": "Tìm kiếm lĩnh vực..."
+    },
     "sort": {
       "default": "Sắp xếp theo",
       "by_score": "Sắp xếp theo Độ tương đồng",
@@ -37,14 +42,15 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản",
+      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề hoặc từ khóa văn bản",
       "search_bar_not_found": "Không tìm thấy kết quả cho từ khóa",
       "lang_switch": "Ngôn ngữ"
     },
     "footer" : {
       "address": "Địa chỉ:",
       "address_value": "Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội"
-    }
+    },
+    "warning" : "Thanh tìm kiếm <b>không thể để trống</b>"
   },
 
   "home_page": {

@@ -8,7 +8,6 @@
       <b-icon icon="menu-down"></b-icon>
     </button>
 
-    <!------------------------------------- VENUE DROPDOWN ------------------------------------------>
     <b-dropdown-item
       :focusable="false"
       custom
@@ -22,15 +21,30 @@
           </b-input>
         </b-field>
       </div>
-<!--      {{checked_rows}}-->
       <div class="option_container">
         <b-table
           :data="data"
-          :columns="columns"
           :checked-rows.sync="checked_rows"
           :is-row-checkable="(row) => true"
           checkable
         >
+          <template slot-scope="props">
+            <template v-for="column in columns">
+              <b-table-column :key="column.id" v-bind="column">
+                <template
+                  v-if="column.searchable "
+                  slot="searchable"
+                  slot-scope="props">
+                  <b-input
+                    v-model="props.filters[props.column.field]"
+                    :placeholder="placeholder"
+                    icon="magnify"
+                    size="is-small" />
+                </template>
+                {{ props.row[column.field] }}
+              </b-table-column>
+            </template>
+          </template>
         </b-table>
       </div>
       <nav class="level">
@@ -51,14 +65,11 @@
 </template>
 
 <script>
-import {filteredKeys_v2} from "assets/utils";
-
 export default {
   name: "FilterBoxMulti",
   props: ['type', 'whichpage', 'data', 'checked'],
   watch: {
     checked() {
-      // console.log('update checked', this.checked)
       this.checked_rows = this.checked
     }
   },
@@ -71,28 +82,35 @@ export default {
       // console.log('selected ',this.checked_rows)
       params.query[this.type] = []
       for(let i=0; i<this.checked_rows.length; i++){
-        params.query[this.type].push(this.checked_rows[i][this.type])
+        let field_name = this.checked_rows[i][this.type].replace(/ /g, '-')
+        if(Object.keys(this.checked_rows[i]).includes(this.type+'_id')){
+          params.query[this.type].push(field_name+'-'+this.checked_rows[i][this.type+'_id'])
+        }
+        else{
+          params.query[this.type].push(field_name)
+        }
       }
-      // console.log(params)
       return params
     },
     clear_path: function (){
       let params = {path: ""}
-      let re = new RegExp("[&|?]"+this.type+"\\d+=.+(?=&)", "g")
+      let re = new RegExp("[&|?]"+this.type+"=.+(?=&)", "g")
       let current = this.whichpage+"&"
       params['path'] = current.replace(re,"").slice(0, -1)
       return params
     }
   },
   data() {
-    const name='general_attribute.' + this.type
+    const name='general_attribute.'+this.type
     return {
       name,
+      placeholder:this.$t('general_attribute.search_bar__filter.'+this.type),
       checked_rows: this.checked,
       columns: [
         {
           field: this.type,
-          label: this.$t(name)
+          label: this.$t(name),
+          searchable: true,
         },
         {
           field: 'count',

@@ -47,6 +47,7 @@
           </div>
           <SearchBar
             :placeholder="$t('default_layout.header.search_bar_placeholder')"
+            :current_page="this.localeRoute('search').path"
             style="box-shadow: 0 5px 8px 1px #C5C8C9;"
           />
         </div>
@@ -81,7 +82,7 @@
                         <b>{{result.name}}</b>
                       </a>
                       <table style="width: 100%">
-                        <tr v-if="result.citationsCount !== undefined">
+                        <tr v-if="result.aggregations.citationsCount.value !== undefined">
                           <td style="width: 90%">
                             <span class="text-class-3 color-class-3">
                               {{$t('home_page.author_carousel.citation')}}
@@ -91,11 +92,11 @@
                             <span
                               class="author_stat"
                             >
-                              {{result.citationsCount | formatNumber}}
+                              {{result.aggregations.citationsCount.value | formatNumber}}
                             </span>
                           </td>
                         </tr>
-                        <tr v-if="result.totalPapers !== undefined">
+                        <tr v-if="result.aggregations.totalPapers.value !== undefined">
                           <td style="width: 90%">
                             <span class="text-class-3 color-class-3">
                               {{$t('home_page.author_carousel.publication')}}
@@ -105,11 +106,11 @@
                             <span
                               class="author_stat"
                             >
-                            {{result.totalPapers | formatNumber}}
+                            {{result.aggregations.totalPapers | formatNumber}}
                             </span>
                           </td>
                         </tr>
-                        <tr v-if="result.influentialCitationCount !== undefined">
+                        <tr v-if="result.aggregations.influentialCitationCount.value !== undefined">
                           <td>
                             <span class="text-class-3 color-class-3">
                               {{$t('home_page.author_carousel.highlighted_citation')}}
@@ -118,7 +119,7 @@
                           <td>
                             <span
                               class="author_stat"
-                            >{{result.influentialCitationCount | formatNumber}}</span>
+                            >{{result.aggregations.influentialCitationCount.value | formatNumber}}</span>
                           </td>
                         </tr>
                         <tr v-if="result.h_index !== undefined">

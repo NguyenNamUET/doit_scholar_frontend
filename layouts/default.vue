@@ -30,7 +30,10 @@
           <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
-                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')" style="min-width: 50vw"></SearchBar>
+                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')"
+                           :current_page="this.localeRoute('search').path"
+                           style="min-width: 50vw">
+                </SearchBar>
               </div>
             </div>
           </div>

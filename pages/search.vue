@@ -79,23 +79,15 @@
                             :chart_data="year_list"
                             :whichpage="current_route"
             ></FilterBoxChart>
+            <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
-              <nuxt-link
-                :to="{
-                  path: this.$route.path,
-                  query: {
-                    query: query_params.query,
-                    start:0,
-                    size:this.per_page,
-                    page:1
-                  }
-                }"
-                class="button is-danger is-light"
-              >
+              <nuxt-link class="button is-danger is-light"
+                :to="{path: this.$route.path,
+                      query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
                 Clear
               </nuxt-link>
             </span>
-
+            <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
           </div>
           <!-------------------------------------------------------------------------->
         </div>
@@ -131,7 +123,7 @@
 </template>
 
 <script>
-import {filteredKeys_v2, formatNumber, publication_type} from "../assets/utils";
+import {formatNumber, publication_type} from "../assets/utils";
 import DropDown from "../components/function_components/DropDown";
 import AuthorCard from "../components/search_page/AuthorCard";
 import SearchResult from "../components/search_page/SearchResult";
@@ -163,7 +155,6 @@ export default {
           author_hidden: true,
           msg_hidden: false,
 
-          //24/08/2020: Nam changed this for pagination
           total_count: 0,
           per_page: 10,
           current_route:null
@@ -188,6 +179,7 @@ export default {
           let author_res = []
           this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
             author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              author_id: item.key,
               count:item.doc_count, checked:false})
           })
           return author_res
@@ -214,14 +206,17 @@ export default {
         },
         checked_authors_list: function() {
           let checked_authors_list = []
+          console.log("authors_checked", this.$store.state.search_result.filters.authors_checked)
+          console.log("this.authors_list", this.authors_list)
           this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
             for (let item of this.authors_list) {
-              if (selected === item.author) {
+              if (selected === item.author_id) {
                 checked_authors_list.push(item)
                 break
               }
             }
           })
+          console.log("checked_authors_list", checked_authors_list)
           return checked_authors_list
         },
         checked_venue_list: function() {
@@ -244,6 +239,7 @@ export default {
         },
         year_list: function (){
           let year_res = {label: [], data:[]}
+          console.log("year_info", this.year_info)
           this.year_info.forEach(item => {
             year_res.label.push(item.key)
             year_res.data.push(item.doc_count)
@@ -252,19 +248,28 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
+        console.log("query before", query)
+        if(query.author){
+         query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+        }
+        if(query.venue){
+          query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+        }
+        if(query.fos){
+          query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+        }
+        console.log("query after", query)
         await store.dispatch('search_result/paper_by_title', query)
-        if(store.state.search_result.search_results.length > 0) {
+
+        if(store.state.search_result.search_results.hits.hits.length > 0) {
           return {
              query_params: query,
              current_page: parseInt(query['page']),
              current_route: route.fullPath,
-             search_results: store.state.search_result.search_results,
+             search_results: store.state.search_result.search_results.hits.hits,
              keyword: query['query'],
              total_count: store.state.search_result.total,
-
-             year_info: store.state.search_result.aggregation.year_count.buckets,
-             ////////////////////////////////////////////////////////////////////////////////
-             last_paper_id: store.state.search_result.last_paper_id,
+             year_info: store.state.search_result.aggregation.year_count.buckets
           }
         }
         else{
@@ -272,7 +277,7 @@ export default {
              query_params: query,
              current_page: parseInt(query['page']),
              current_route: route.fullPath,
-             search_results: store.state.search_result.search_results,
+             search_results: store.state.search_result.search_results.hits.hits,
              keyword: query['searchContent'],
              total_count: 0,
           }
