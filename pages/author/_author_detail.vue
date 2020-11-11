@@ -200,13 +200,12 @@
     import SearchBar from "@/components/function_components/SearchBar";
     import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
     import SortButton from "@/components/function_components/SortButton";
-    import AuthorInfoCard from "@/components/author_components/AuthorInfoCard.vue"
 
     export default {
       name: "author_detail",
       watchQuery: true,
       components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton,
-                   SearchResult, PaperTable, AuthorInfoCard, Influence_graph, NuxtError},
+                   SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
           title: this.name + ' | DoIT Scholar'
