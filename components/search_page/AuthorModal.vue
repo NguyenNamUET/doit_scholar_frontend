@@ -3,20 +3,20 @@
     <span class="small_icon"><i class="fas fa-user-alt"></i></span>
     <span style="display: inline-block; vertical-align: top;">
       <p
-        v-if="author_hidden"
+        v-if="authors && author_hidden"
         v-for="(author, index) in authors.slice(0,3)"
         :key="author.authorId"
       >
-        <a
-          :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+        <nuxt-link :to="{path:'/author/' + formatTitle(author.name) + '-' + author.authorId,
+                        query:{start:0, size:5, page:1}}"
           class="link-class-3 secondary_description"
         >
           <b>{{ author.name }}</b>
-        </a>
+        </nuxt-link>
       </p>
       <span
         class="less-more-button"
-        v-if="author_hidden && authors.length - 3 > 0"
+        v-if="authors && author_hidden && authors.length - 3 > 0"
         v-on:click="show_author_modal = true"
       >
         {{ $t('search_page.see_all_author') }}
@@ -35,7 +35,8 @@
         <section class="modal-card-body">
           <div class="container">
             <div class="author_detail" v-for="author in authors">
-              <a :href="'/author/' + formatTitle(author.name) + '-' + author.authorId">
+              <nuxt-link :to="{path:'/author/' + formatTitle(author.name) + '-' + author.authorId,
+                               query:{start:0, size:5, page:1}}">
                 <span class="author_modal_name has-text-weight-semibold">
                   {{author.name}}
                 </span>
@@ -45,7 +46,7 @@
                 <span class="author_modal_hindex">
                   h-index
                 </span>
-              </a>
+              </nuxt-link>
             </div>
           </div>
         </section>

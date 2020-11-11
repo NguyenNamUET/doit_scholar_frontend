@@ -30,7 +30,10 @@
           <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
-                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')" style="min-width: 50vw"></SearchBar>
+                <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')"
+                           :current_page="this.localeRoute('search').path"
+                           style="min-width: 50vw">
+                </SearchBar>
               </div>
             </div>
           </div>
@@ -44,7 +47,8 @@
                 </button>
 
                 <b-dropdown-item
-                  v-for="locale in availableLocales"
+                  v-for="(locale,index) in availableLocales"
+                  :key="index"
                 >
                   <nuxt-link
                     :key="locale.code"
@@ -102,10 +106,12 @@ export default {
     return {
     }
   },
+  head() {
+    return this.$nuxtI18nSeo();
+  },
   data() {
     return {
-      showNav: false,
-      nowTime: moment().format('LLL')
+      showNav: false
     }
   },
   computed: {

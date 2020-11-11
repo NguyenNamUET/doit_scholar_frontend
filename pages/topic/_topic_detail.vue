@@ -72,8 +72,10 @@
           <!-------------------------------------------------------------------------->
           <SearchResult
             v-for="result in papers"
-            v-bind:search_result="result._source"/>
-<!--          {{papers}}-->
+            :key="result._source.paperId"
+            :search_result="result._source">
+          </SearchResult>
+
           <Pagination
             v-model="current_page"
             :page-count="Math.ceil(total_paper / per_page)"
@@ -101,7 +103,7 @@
     import SearchResult from "@/components/search_page/SearchResult";
     //import {wiki_summary} from "@/API/elastic_api";
     export default {
-      name: "_topic_detail",
+      name: "topic_detail",
       components: {SearchResult, TimelineItem},
       head() {
         return {

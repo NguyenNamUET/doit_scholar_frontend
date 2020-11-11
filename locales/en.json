@@ -8,7 +8,18 @@
     "next": "Next",
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
-    "search_bar_placeholder": "Search for paper",
+    "search_bar__filter": {
+      "paper": "Search paper...",
+      "author": "Search author...",
+      "venue": "Search venue...",
+      "fos": "Search field of study..."
+    },
+    "sort": {
+      "default": "Sort",
+      "by_score": "Sort by Relevant",
+      "by_year": "Sort by Year",
+      "by_cit_count": "Sort by Citations Count"
+    },
     "cite": "Cite",
     "more": "See more",
     "less": "See less",
@@ -31,14 +42,15 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "search_bar_placeholder": "Search papers by title or keywords",
       "search_bar_not_found": "Cannot find any result for keyword",
-      "lang_switch": "Switch to"
+      "lang_switch": "Language"
     },
     "footer" : {
       "address": "Address:",
       "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
-    }
+    },
+    "warning": "Please enter <b> at least one character </b> in search bar"
   },
 
   "home_page": {
@@ -94,7 +106,8 @@
       "citation": "Citations",
       "publication": "Publications",
       "highlighted_citation": "Highly influenced citations"
-    }
+    },
+    "co_author": "Co-authors"
   },
 
   "journal_detail_page": {
