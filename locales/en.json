@@ -106,7 +106,8 @@
       "citation": "Citations",
       "publication": "Publications",
       "highlighted_citation": "Highly influenced citations"
-    }
+    },
+    "co_author": "Co-authors"
   },
 
   "journal_detail_page": {

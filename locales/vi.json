@@ -105,7 +105,8 @@
       "citation": "Số lần được trích dẫn",
       "publication": "Số xuất bản",
       "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
-    }
+    },
+    "co_author": "Đồng tác giả"
   },
 
   "journal_detail_page": {

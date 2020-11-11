@@ -146,11 +146,12 @@
           <div class="level-left is-small">
             <a class="level-item"
                v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">
-              <button
+              <nuxt-link :to="{path:'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId,
+                               query:{start:0, size:10, page:1}}"
                 class="button is-info is-light is-outlined"
               >
                 {{ search_result.citations_count }} {{ $t('general_attribute.citation') }}
-              </button>
+              </nuxt-link>
             </a>
             <a
               v-if="Object.keys(search_result).includes('doi') && search_result.doi"

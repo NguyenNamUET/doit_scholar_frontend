@@ -336,7 +336,9 @@ export default {
       results = res
       fosChartData = doughnut_chart_prep(results[6])
       venueChartData = doughnut_chart_prep(results[7])
+      console.log("results[7]", results[7])
     })
+
     return {
       author_count: results[0],
       paper_count: results[1],
