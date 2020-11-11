@@ -13,7 +13,7 @@
                                   :paper_length="paper_length"
                                   :h-index="h_index">
                   </AuthorInfoCard>
-                  <div class="tile" style="background-color: white">
+                  <div v-if="this.chart_labels.length > 0" class="tile" style="background-color: white">
                     <CitationBar
                       :dataset="this.chart_data"
                       :labels="this.chart_labels"
@@ -22,13 +22,13 @@
                       :title="$t('paper_detail_page.citation_chart_title')">
                     </CitationBar>
                   </div>
-                  <div class="tile is-vertical" style="background-color: white; margin-top: 20px">
+                  <div v-if="this.coauthors.length > 0"
+                       class="tile is-vertical" style="background-color: white; margin-top: 20px">
                     <div class="content" style="padding-left: 5px; padding-top: 5px">
                       <b>{{ $t('author_detail_page.co_author') }}</b>
                     </div>
                     <table style="width: 100%">
-                      <tr v-for="coauthor in authors_list" :key="coauthor.author_id"
-                      v-if="coauthor.author_id !== author_id">
+                      <tr v-for="coauthor in this.coauthors" :key="coauthor.author_id">
                         <td style="width: 90%; padding-left: 5px">
                           <a class="text-class-3 color-class-3"
                           :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
@@ -291,6 +291,15 @@
         paper_length: function (){
           return this.paper_agg?.totalPapers ?? this.paper_detail.totalPapers
         },
+        coauthors: function (){
+          let res = []
+          this.authors_list.forEach(item => {
+            if(item.author_id !== this.author_id){
+              res.push(item)
+            }
+          })
+          return res
+        }
 
       },
       data() {
