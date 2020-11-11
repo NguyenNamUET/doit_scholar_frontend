@@ -12,15 +12,6 @@
       :focusable="false"
       custom
     >
-      <div>
-        <b-field>
-          <b-input placeholder="Search..."
-                   type="search"
-                   icon-pack="fas"
-                   icon="search">
-          </b-input>
-        </b-field>
-      </div>
       <div class="option_container">
         <b-table
           :data="data"
