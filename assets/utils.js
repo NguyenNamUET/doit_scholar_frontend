@@ -121,6 +121,15 @@ function doughnut_chart_prep(datas) {
   return chartData
 }
 
+function line_chart_prep(datas) {
+  let chartData = {}
+  chartData.labels = [2014,2015,2016,2017,2018]
+  let single_data = {}
+  Object.keys(datas).forEach(function (key) {
+    console.log(key)
+  })
+}
+
 function filteredKeys(obj, filter) {
   var key, keys = [];
   for (key in obj) {
@@ -156,5 +165,6 @@ export {
   isDictEmpty,
   doughnut_chart_prep,
   genBibtex,
-  host
+  host,
+  line_chart_prep
 }

@@ -247,6 +247,60 @@ const autocomplete = async(query_params) => {
 /************** Autocomple search *************/
 
 /************************************************* Homepage function **********************************************/
+const home_status_graph = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_status_graph, {
+      params: {
+        fos_graph: query_params.fos_graph,
+        venues_graph: query_params.venues_graph,
+        topics_graph: query_params.topics_graph,
+        size: query_params.size,
+        topics_size: query_params.topics_size,
+        year_size: query_params.year_size
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const home_papers = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_papers, {
+      params: {
+        size: query_params.size,
+        topics_size: query_params.topics_size,
+        order_by_citations_count: query_params.order_by_citations_count,
+        order_by_year: query_params.order_by_year,
+        order_by_topics__year: query_params.order_by_topics__year
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const home_status_count = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_status_count, {
+      params: {
+        is_papers_count: query_params.is_papers_count,
+        is_authors_count: query_params.is_authors_count,
+        is_fos_count: query_params.is_fos_count,
+        is_topics_count: query_params.is_topics_count
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 const citation_chart_data = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
@@ -330,6 +384,10 @@ export {
   most_cited_papers,
   fos_graph_data,
   venue_graph_data,
+
+  home_papers,
+  home_status_graph,
+  home_status_count,
 
   author_by_id,
 

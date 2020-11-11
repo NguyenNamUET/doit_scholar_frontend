@@ -12,8 +12,11 @@
         <!---------------------------------------Title------------------------------------------->
         <div class="has-text-weight-light">
           <!-------------- Year ------------------>
-          <p class="text-class-3"
-             v-if="search_result.year !== ''">
+          <p
+            class="text-class-3"
+            v-if="search_result.year !== ''"
+          >
+            <span class="small_icon"><i class="fas fa-calendar-alt"></i></span>
             {{search_result.year}}
           </p>
           <!-------------- Year ------------------>
@@ -31,15 +34,14 @@
             <span
               v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >&sdot;</span>
-            <!------------------------------- Venues/Journals --------------------------------->
-            <a
+            <span
               v-if="!field_hidden"
-              class="link-class-3"
+              class="text-class-3"
               v-for="(fos,index) in search_result.fieldsOfStudy"
             >
               {{ fos }}
               <span v-if="index < search_result.fieldsOfStudy.length - 1">,</span>
-            </a>
+            </span>
             <span
               class="less-more-button"
               v-if="!field_hidden"
@@ -48,12 +50,12 @@
               &nbsp{{ $t('general_attribute.less') }}
             </span>
 
-            <a
+            <span
               v-if="field_hidden"
-              class="link-class-3"
+              class="text-class-3"
             >
               {{ search_result.fieldsOfStudy[0] }}
-            </a>
+            </span>
             <span
               v-if="field_hidden && search_result.fieldsOfStudy.length - 1 > 0"
               class="link-class-3 less-more-button"
