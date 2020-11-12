@@ -22,28 +22,30 @@
                       :title="$t('paper_detail_page.citation_chart_title')">
                     </CitationBar>
                   </div>
-                  <div v-if="this.coauthors.length > 0"
-                       class="tile is-vertical" style="background-color: white; margin-top: 20px">
-                    <div class="content" style="padding-left: 5px; padding-top: 5px">
-                      <b>{{ $t('author_detail_page.co_author') }}</b>
-                    </div>
-                    <table style="width: 100%">
-                      <tr v-for="coauthor in this.coauthors" :key="coauthor.author_id">
-                        <td style="width: 90%; padding-left: 5px">
-                          <a class="text-class-3 color-class-3"
-                          :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
-                            {{coauthor.author}}
-                          </a>
-                        </td>
-                        <td>
+                  <div
+                    v-if="this.coauthors.length > 0"
+                    class="tile is-vertical"
+                  >
+                    <p class="content_title">{{ $t('author_detail_page.co_author') }}</p>
+                    <div class="content_box">
+                      <table>
+                        <tr v-for="coauthor in this.coauthors" :key="coauthor.author_id">
+                          <td style="width: 90%; padding-left: 5px">
+                            <a class="text-class-3 color-class-3"
+                               :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
+                              {{coauthor.author}}
+                            </a>
+                          </td>
+                          <td>
                           <span class="icon">
                             <a :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
                               <i class="fas fa-angle-right"></i>
                             </a>
                           </span>
-                        </td>
-                      </tr>
-                    </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -99,7 +101,7 @@
                       </i18n>
                     </p>
                     <div class="filter_section content_box">
-                      <div style="display: inline-block">
+                      <div>
                         <!--------------------------- SEARCH BAR ------------------------->
                         <SearchBar
                           :placeholder="$t('general_attribute.search_bar__filter.paper')"
@@ -108,38 +110,39 @@
                         ></SearchBar>
 
                         <!--------------------------- SEARCH BAR ------------------------->
-                      </div>
 
-                      <!------------------------ FILTER DROPDOWNS ------------------------>
-                      <FilterBoxMulti :type="'author'"
-                            :data="authors_list"
-                            :whichpage="current_route"
-                            :checked="checked_authors_list"
-                      ></FilterBoxMulti>
-                      <FilterBoxMulti :type="'venue'"
-                                      :data="venue_list"
-                                      :whichpage="current_route"
-                                      :checked="checked_venue_list"
-                      ></FilterBoxMulti>
-                      <FilterBoxMulti :type="'fos'"
-                                      :data="fos_list"
-                                      :whichpage="current_route"
-                                      :checked="checked_fos_list"
-                      ></FilterBoxMulti>
-                      <!------------------------ FILTER DROPDOWNS ------------------------>
+                        <!------------------------ FILTER DROPDOWNS ------------------------>
+                        <FilterBoxMulti :type="'author'"
+                                        :data="authors_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_authors_list"
+                        ></FilterBoxMulti>
+                        <FilterBoxMulti :type="'venue'"
+                                        :data="venue_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_venue_list"
+                        ></FilterBoxMulti>
+                        <FilterBoxMulti :type="'fos'"
+                                        :data="fos_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_fos_list"
+                        ></FilterBoxMulti>
+                        <!------------------------ FILTER DROPDOWNS ------------------------>
 
-                      <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-                      <span>
+                        <!--------------------- SORT BUTTON ------------------------->
+                        <SortButton :whichpage="current_route"></SortButton>
+                        <!--------------------- SORT BUTTON ------------------------->
+
+                        <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+                        <span>
                         <nuxt-link class="button is-danger is-light"
-                          :to="{path: this.$route.path,
+                                   :to="{path: this.$route.path,
                                 query: {start:0, size:this.per_page, page:1}}">
                           Clear
                         </nuxt-link>
                       </span>
-                      <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-                      <!--------------------- SORT BUTTON ------------------------->
-                      <SortButton :whichpage="current_route"></SortButton>
-                      <!--------------------- SORT BUTTON ------------------------->
+                        <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+                      </div>
                     </div>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">

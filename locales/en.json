@@ -55,25 +55,19 @@
 
   "home_page": {
     "title": "A search engine for scientific literature",
-    "paper_carousel": {
-      "title": "Most cited papers"
-    },
-    "author_carousel": {
-      "title": "Most cited authors",
-      "citation": "Citations",
-      "publication": "Publications",
-      "highlighted_citation": "Highly influenced citations"
-    },
-    "fos_carousel": {
-      "title": "Popular fields of study",
-      "count": "Number of papers"
+    "papers_content": {
+      "latest_papers": "Latest papers",
+      "most_cited_papers": "Most cited papers",
+      "famous_journals": "Famous journals"
     },
     "page_stat": {
+      "site_status": "Site status",
       "author_count": "Authors",
       "paper_count": "Papers",
       "fos_count": "Fields of study"
     },
     "chart": {
+      "trending_topics": "Trending topics",
       "paper_by_fos_chart": "Papers per field of study",
       "paper_by_venue_chart": "Papers per journal"
     }
