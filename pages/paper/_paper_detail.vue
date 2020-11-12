@@ -1,7 +1,6 @@
 <template>
-  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
-<!--    {{this.gg_scholar_meta}}-->
-    <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
+  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container">
+    <div class="tile is-ancestor is-vertical" id="abstract_box">
       <div class="tile">
         <div class="tile is-parent is-7">
           <div class="tile is-child">
@@ -160,7 +159,8 @@
             <!--------------------------------------- View pdf -------------------------------------------->
           </div>
         </div>
-        <div class="tile is-parent">
+
+        <div class="tile is-parent is-hidden-touch">
           <div class="tile is-child top_citation" v-if="citation_length > 0">
             <p>
               <i18n

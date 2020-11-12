@@ -23,7 +23,6 @@
             <LineGraph
               :title="$t('home_page.chart.trending_topics')"
               :dataset="line_data"
-              style="height: 400px; width: 400px;"
             ></LineGraph>
           </div>
         </div>

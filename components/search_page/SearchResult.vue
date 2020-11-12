@@ -14,7 +14,7 @@
           <!-------------- Year ------------------>
           <p
             class="text-class-3"
-            v-if="search_result.year !== ''"
+            v-if="search_result.year !== '' && search_result.year !== null && search_result.year !== undefined"
           >
             <span class="small_icon"><i class="fas fa-calendar-alt"></i></span>
             {{search_result.year}}
@@ -142,7 +142,7 @@
         <!------------------------------------------ Abstract ----------------------------------------->
 
         <!-------------------------------------- Action Buttons --------------------------------------->
-        <nav class="level is-mobile util_level">
+        <nav class="level util_level">
           <div class="level-left is-small">
             <a class="level-item"
                v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">

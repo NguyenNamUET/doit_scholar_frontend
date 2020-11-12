@@ -13,7 +13,7 @@
                                   :paper_length="paper_length"
                                   :h-index="h_index">
                   </AuthorInfoCard>
-                  <div v-if="this.chart_labels.length > 0" class="tile" style="background-color: white">
+                  <div v-if="this.chart_labels.length > 0" class="content_box">
                     <CitationBar
                       :dataset="this.chart_data"
                       :labels="this.chart_labels"

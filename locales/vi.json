@@ -4,6 +4,12 @@
     "author": "Tác giả",
     "venue": "Hội nghị",
 
+    "lang": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt"
+    },
+
+
     "previous": "Trước",
     "next": "Sau",
     "search": "Tìm kiếm",

@@ -4,6 +4,11 @@
     "author": "Authors",
     "venue": "Journal",
 
+    "lang": {
+      "en": "English",
+      "vi": "Vietnamese"
+    },
+
     "previous": "Previous",
     "next": "Next",
     "search": "Search",

@@ -17,7 +17,7 @@
               class="navbar-burger"
               aria-label="menu"
               aria-expanded="false"
-              data-target="layout_search_bar"
+              data-target="nav_content"
               @click="showNav = !showNav"
               :class="{ 'is-active': showNav }"
             >
@@ -27,7 +27,7 @@
             </a>
           </div>
 
-          <div class="navbar-menu search-area" :class="{ 'is-active': showNav }">
+          <div id="nav_content" class="navbar-menu search-area" :class="{ 'is-active': showNav }">
             <div class="navbar-start">
               <div class="navbar-item">
                 <SearchBar :placeholder="$t('default_layout.header.search_bar_placeholder')"
@@ -36,33 +36,35 @@
                 </SearchBar>
               </div>
             </div>
-          </div>
 
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <b-dropdown aria-role="list">
-                <button class="button is-light" slot="trigger" slot-scope="{ active }">
-                  <span>{{ $t('default_layout.header.lang_switch') }}</span>
-                  <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
-                </button>
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link">
+                    {{ $t('default_layout.header.lang_switch') }}
+                  </a>
 
-                <b-dropdown-item
-                  v-for="(locale,index) in availableLocales"
-                  :key="index"
-                >
-                  <nuxt-link
-                    :key="locale.code"
-                    :to="switchLocalePath(locale.code)"
-                  >
-                    <span v-if="locale.name === 'English'">
-                      Tiếng Anh
-                    </span>
-                    <span v-else>
-                      {{ locale.name }}
-                    </span>
-                  </nuxt-link>
-                </b-dropdown-item>
-              </b-dropdown>
+                  <div class="navbar-dropdown">
+                    <a
+                      v-for="(locale,index) in availableLocales"
+                      :key="index"
+                      class="navbar-item"
+                    >
+                      <nuxt-link
+                        :key="locale.code"
+                        :to="switchLocalePath(locale.code)"
+                      >
+                      <span v-if="locale.code === 'en'">
+                        {{$t('general_attribute.lang.en')}}
+                      </span>
+                        <span v-else-if="locale.code === 'vi'">
+                        {{$t('general_attribute.lang.vi')}}
+                      </span>
+                      </nuxt-link>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -98,14 +100,9 @@
 </template>
 
 <script>
-import moment from 'moment';
 import SearchBar from "../components/function_components/SearchBar";
 export default {
   components: {SearchBar},
-  chart_data() {
-    return {
-    }
-  },
   head() {
     return this.$nuxtI18nSeo();
   },
@@ -116,7 +113,7 @@ export default {
   },
   computed: {
     availableLocales () {
-      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
+      return this.$i18n.locales.filter(i => i.code)
     }
   },
   methods: {
@@ -127,8 +124,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import 'assets/general_styling.scss';
+  a:hover {
+    text-decoration: none;
+  }
   .logo {
     display: block;
     margin-left: auto;
@@ -145,7 +145,7 @@ export default {
       margin-top: 10px;
     }
     background: #4e54c8;
-    height: 180px;
+    height: 35vh;
     color: white;
     padding: 40px 40px 40px 80px;
   }
