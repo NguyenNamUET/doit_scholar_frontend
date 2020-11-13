@@ -64,11 +64,11 @@
                               :checked="checked_fos_list"
               ></FilterBoxMulti>
               <!--------------------- SORT BUTTON ------------------------->
-              <SortButton :whichpage="current_route"></SortButton>
+              <SortButton class="filter_button" :whichpage="current_route"></SortButton>
               <!--------------------- SORT BUTTON ------------------------->
               <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
               <span>
-                <nuxt-link class="button is-danger is-light"
+                <nuxt-link class="button is-danger is-light filter_button"
                            :to="{path: this.$route.path,
                                  query: {start:0, size:this.per_page, page:1}}">
                   Clear

@@ -1,5 +1,5 @@
 <template>
-  <b-dropdown aria-role="list">
+  <b-dropdown aria-role="list" class="filter_button">
     <button class="button is-light" type="button" slot="trigger">
       <template>
         <span  v-if="checked[0] === init_year && checked[1] === current_year">{{ $t(this.name) }}</span>
@@ -138,15 +138,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.option_container {
-  overflow-y: auto;
-  min-width: 500px;
-  max-height: 300px;
-  margin: 10px 0 10px 0;
-}
 .time_option_container {
   margin: 10px 0 10px 0;
-  min-width: 250px;
+  min-width: 25vw;
   .button {
     display: block;
     margin: 5px;
