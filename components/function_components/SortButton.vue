@@ -1,6 +1,6 @@
 <template>
     <b-dropdown v-model="sort_field" aria-role="list">
-        <button class="button is-primary" type="button" slot="trigger">
+        <button class="button is-light" type="button" slot="trigger">
             <template v-if="sort_field==='score'">
                 <span>{{ $t('general_attribute.sort.by_score') }}</span>
             </template>

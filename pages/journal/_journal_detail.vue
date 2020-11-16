@@ -47,8 +47,9 @@
           </div>
           <!-----------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <div style="display: inline-block">
+            <div>
               <SearchBar
+                style="width: 100%"
                :placeholder="$t('general_attribute.search_bar__filter.venue')"
                :authors="null"
                :venues="Array(journal_name)"></SearchBar>
@@ -62,18 +63,18 @@
                               :whichpage="current_route"
                               :checked="checked_fos_list"
               ></FilterBoxMulti>
+              <!--------------------- SORT BUTTON ------------------------->
+              <SortButton class="filter_button" :whichpage="current_route"></SortButton>
+              <!--------------------- SORT BUTTON ------------------------->
               <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
               <span>
-                <nuxt-link class="button is-danger is-light"
+                <nuxt-link class="button is-danger is-light filter_button"
                            :to="{path: this.$route.path,
                                  query: {start:0, size:this.per_page, page:1}}">
                   Clear
                 </nuxt-link>
               </span>
               <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-              <!--------------------- SORT BUTTON ------------------------->
-              <SortButton :whichpage="current_route"></SortButton>
-              <!--------------------- SORT BUTTON ------------------------->
             </div>
           </div>
           <!-------------------------------------------------------------------------->

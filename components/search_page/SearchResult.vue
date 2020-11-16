@@ -14,7 +14,7 @@
           <!-------------- Year ------------------>
           <p
             class="text-class-3"
-            v-if="search_result.year !== ''"
+            v-if="search_result.year !== '' && search_result.year !== null && search_result.year !== undefined"
           >
             <span class="small_icon"><i class="fas fa-calendar-alt"></i></span>
             {{search_result.year}}
@@ -169,7 +169,7 @@
               v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && !search_result.pdf_url.endsWith('.pdf')"
               :href="search_result.pdf_url"
               target="_blank"
-              class="level-item"
+              class="level-item is-hidden-mobile"
             >
               <button class="button is-info is-light is-outlined">
                 <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
@@ -186,9 +186,8 @@
             </span>
           </div>
           <div class="level-right is-small">
-
             <button
-              class="button is-info is-light is-outlined"
+              class="level-item button is-info is-light is-outlined"
               @click="handle_cite_button"
             >
               <span><i class="fas fa-quote-left"></i> {{ $t('general_attribute.cite') }}</span>

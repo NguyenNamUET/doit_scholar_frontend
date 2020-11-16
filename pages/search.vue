@@ -81,7 +81,7 @@
             ></FilterBoxChart>
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
-              <nuxt-link class="button is-danger is-light"
+              <nuxt-link class="button is-danger is-light filter_button"
                 :to="{path: this.$route.path,
                       query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
                 Clear
