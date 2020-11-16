@@ -1,4 +1,4 @@
-<!-- 150080110 -->
+`<!-- 150080110 -->
 <template>
     <div v-if="paper_detail.length !== 0" class="container" ref="top" id="top">
       <div class="tile is-ancestor">
@@ -16,6 +16,7 @@
                   <div v-if="this.chart_labels.length > 0" class="tile" style="background-color: white">
                     <CitationBar
                       :dataset="this.chart_data"
+
                       :labels="this.chart_labels"
                       :width="250"
                       :height="250"
@@ -391,3 +392,4 @@
     text-decoration: none;
   }
 </style>
+`
