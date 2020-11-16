@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="tile is-ancestor">
-      <!-- Left side bar      -->
+      <!---------------------------------------- Left side bar --------------------------------------->
       <div class="tile is-parent is-vertical is-3">
 <!--        <div class="tile is-child">-->
 <!--          <p class="content_title">Authors</p>-->
@@ -96,7 +96,7 @@
             <ul>
               <li v-for="item in highlight_venues">
                 <nuxt-link
-                  :to="{path: '/journal/' + formatTitle(item),
+                  :to="{path: lang+'journal/' + formatTitle(item),
                    query: {start: 0, size: 10, page: 1}}"
                   class="link-class-3"
                 >
@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <!-- Center content      -->
+      <!----------------------------------------- Center content -------------------------------------->
       <div class="tile is-parent is-vertical is-6">
         <div class="tile is-child">
           <p class="content_title">{{ $t('home_page.papers_content.latest_papers') }}</p>
@@ -125,12 +125,8 @@
             :search_result="item._source"
           ></SearchResult>
         </div>
-<!--        <div class="tile is-child">-->
-<!--          <p class="content_title">Popular papers</p>-->
-<!--&lt;!&ndash;          <SearchResult></SearchResult>&ndash;&gt;-->
-<!--        </div>-->
       </div>
-      <!-- Right side bar      -->
+      <!------------------------------------------- Right side bar ----------------------------------->
       <div class="tile">
         <div class="tile is-parent is-vertical">
           <div class="tile is-child">
@@ -138,7 +134,11 @@
             <div class="content_box">
               <ul>
                 <li v-for="item in highlight_topics">
-                  <a class="link-class-3">{{item}}</a>
+                  <nuxt-link class="link-class-3"
+                             :to="{path: lang+'topic/' + formatTitle(item.name) + '-' + item.id,
+                             query: {start: 0, size: 10, page: 1}}">
+                    {{item.name}}
+                  </nuxt-link>
                 </li>
               </ul>
             </div>
@@ -148,10 +148,9 @@
             <div class="content_box">
               <ul>
                 <li v-for="item in highlight_fos">
-                  <nuxt-link
-                    :to="{path: '/search',
-                    query: {query: item, start: 0, size: 10, page: 1}}"
-                    class="link-class-3"
+                  <nuxt-link class="link-class-3"
+                    :to="{path: lang+'search',
+                    query: {query: '', start: 0, size: 10, page: 1, fos: item}}"
                   >
                     {{item}}
                   </nuxt-link>
@@ -229,10 +228,11 @@ export default {
             data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
           }
         ]
-      }
+      },
+      lang: null
     }
   },
-  async asyncData() {
+  async asyncData({route}) {
     let results = null
     let fosChartData = null
     let venueChartData = null
@@ -269,7 +269,7 @@ export default {
       paper_count: results[1].papers_count,
       fos_count: results[1].fos_count,
 
-      highlight_topics: Object.keys(results[0].topics_chart),
+      highlight_topics: results[0].topics_chart,
       highlight_authors: null,
       highlight_venues: Object.keys(results[0].venues_chart),
       highlight_fos: Object.keys(results[0].fos_chart),
@@ -280,7 +280,9 @@ export default {
       most_cited_authors: results[3],
       most_cited_papers: results[2].most_cited_papers,
       most_recent_papers: results[2].most_recent_paper,
-      most_cited_fos: results[5]
+      most_cited_fos: results[5],
+
+      lang: route.path
     }
   },
   filters: {

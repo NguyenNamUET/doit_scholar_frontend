@@ -169,7 +169,7 @@ export default {
         // all of the following 7 variables are needed in order for the dropdowns filters to work properly
         fos_list: function (){
           let fos_res = []
-          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+          this.$store.state.search_result.aggregation.fos_aggs.buckets.forEach(item => {
             fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
               count:item.doc_count, checked:false})
           })
@@ -177,16 +177,16 @@ export default {
         },
         authors_list: function (){
           let author_res = []
-          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
-            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-              author_id: item.key,
+          this.$store.state.search_result.aggregation.author_aggs.buckets.forEach(item => {
+            author_res.push({author:item.name.trim()!=="" ? item.name.trim() : "John Doe",
+              author_id: item.id,
               count:item.doc_count, checked:false})
           })
           return author_res
         },
         venue_list: function (){
           let venue_res = []
-          this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
+          this.$store.state.search_result.aggregation.venue_aggs.buckets.forEach(item => {
             venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
               count:item.doc_count, checked:false})
           })
@@ -250,13 +250,28 @@ export default {
       async asyncData({query, store, route}) {
         console.log("query before", query)
         if(query.author){
-         query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+          if(typeof query.author === "string"){
+            query['author'] = Array(query['author']).map(str => _.last(_.split(str,'-')))
+          }
+          else{
+            query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+          }
         }
         if(query.venue){
-          query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+          if(typeof query.venue === "string"){
+            query['venue'] = Array(query['venue']).map(str => str.replace(/-/g, ' '))
+          }
+          else{
+            query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+          }
         }
         if(query.fos){
-          query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+          if(typeof query.fos === "string"){
+            query['fos'] = Array(query['fos']).map(str => str.replace(/-/g, ' '))
+          }
+          else{
+            query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+          }
         }
         console.log("query after", query)
         await store.dispatch('search_result/paper_by_title', query)
@@ -269,7 +284,7 @@ export default {
              search_results: store.state.search_result.search_results.hits.hits,
              keyword: query['query'],
              total_count: store.state.search_result.total,
-             year_info: store.state.search_result.aggregation.year_count.buckets
+             year_info: store.state.search_result.aggregation.year_aggs.buckets
           }
         }
         else{
