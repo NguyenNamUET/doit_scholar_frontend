@@ -1,42 +1,58 @@
+`<!-- 150080110 -->
 <template>
-    <div v-if="Object.keys(author_detail).length !== 0" class="container" ref="top" id="top">
+    <div v-if="paper_detail.length !== 0" class="container" ref="top" id="top">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child is-vertical">
             <div class="columns is-5">
+              <!--------------------------------------------- AUTHOR INFO ------------------------------------------------>
               <div class="column is-one-quarter">
-                <div class="card_wrapper">
-                  <div class="content_box">
-                    <p class="author_name">
-                      <b>{{author_detail.name}}</b>
-                    </p>
-                    <table style="width: 100%">
-                      <tr v-if="author_detail.papers !== undefined">
-                        <td style="width: 90%">
-                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.publication') }} </span>
-                        </td>
-                        <td>
-                      <span
-                        class="author_stat"
-                      >
-                      {{author_detail.papers.length | formatNumber}}
-                      </span>
-                        </td>
-                      </tr>
-                      <tr v-if="author_detail.influentialCitationCount !== undefined">
-                        <td>
-                          <span class="text-class-3 color-class-3">{{ $t('author_detail_page.author_info.highlighted_citation') }}</span>
-                        </td>
-                        <td>
-                      <span
-                        class="author_stat"
-                      >{{author_detail.influentialCitationCount | formatNumber}}</span>
-                        </td>
-                      </tr>
-                    </table>
+                <div class="tile is-vertical">
+                  <AuthorInfoCard :name="name"
+                                  :influential-citation-count="paper_agg.influentialCitationCount!== undefined ? paper_agg.influentialCitationCount.value : 0"
+                                  :paper_length="paper_length"
+                                  :h-index="h_index">
+                  </AuthorInfoCard>
+                  <div v-if="this.chart_labels.length > 0" class="content_box">
+                    <CitationBar
+                      :dataset="this.chart_data"
+
+                      :labels="this.chart_labels"
+                      :width="250"
+                      :height="250"
+                      :title="$t('paper_detail_page.citation_chart_title')">
+                    </CitationBar>
+                  </div>
+                  <div
+                    v-if="this.coauthors.length > 0"
+                    class="tile is-vertical"
+                  >
+                    <p class="content_title">{{ $t('author_detail_page.co_author') }}</p>
+                    <div class="content_box">
+                      <table>
+                        <tr v-for="coauthor in this.coauthors" :key="coauthor.author_id">
+                          <td style="width: 90%; padding-left: 5px">
+                            <a class="text-class-3 color-class-3"
+                               :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
+                              {{coauthor.author}}
+                            </a>
+                          </td>
+                          <td>
+                          <span class="icon">
+                            <a :href="'/author/' + formatTitle(coauthor.author) + '-' + coauthor.author_id">
+                              <i class="fas fa-angle-right"></i>
+                            </a>
+                          </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
+              <!--------------------------------------------- AUTHOR INFO ------------------------------------------------>
+
+              <!--------------------------------------------- NAV BAR ---------------------------------------------------->
               <div class="column">
                 <div class="tabs">
                   <ul>
@@ -60,13 +76,11 @@
                     </li>
                   </ul>
                 </div>
+
                 <div class="tab-content">
                   <div v-if="this.current_tab === 'publication'">
                     <p class="text-class-3">
-                      <i18n
-                        tag="span"
-                        path="general_attribute.list_label"
-                      >
+                      <i18n tag="span" path="general_attribute.list_label">
                         <template v-slot:start>
                           <span>
                             {{ (current_paper_page-1)*per_page + 1}}
@@ -88,31 +102,62 @@
                       </i18n>
                     </p>
                     <div class="filter_section content_box">
-                      <div style="display: inline-block">
+                      <div>
+                        <!--------------------------- SEARCH BAR ------------------------->
                         <SearchBar
-                          :placeholder="$t('general_attribute.search_bar_placeholder')"
-                          :authors="Array(this.author_id)"
-                          :venues="null"
+                          :placeholder="$t('general_attribute.search_bar__filter.paper')"
+                          :current_page="this.$route.path"
+                          :authors="this.author_id"
                         ></SearchBar>
+
+                        <!--------------------------- SEARCH BAR ------------------------->
+
+                        <!------------------------ FILTER DROPDOWNS ------------------------>
+                        <FilterBoxMulti :type="'author'"
+                                        :data="authors_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_authors_list"
+                        ></FilterBoxMulti>
+                        <FilterBoxMulti :type="'venue'"
+                                        :data="venue_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_venue_list"
+                        ></FilterBoxMulti>
+                        <FilterBoxMulti :type="'fos'"
+                                        :data="fos_list"
+                                        :whichpage="current_route"
+                                        :checked="checked_fos_list"
+                        ></FilterBoxMulti>
+                        <!------------------------ FILTER DROPDOWNS ------------------------>
+
+                        <!--------------------- SORT BUTTON ------------------------->
+                        <SortButton :whichpage="current_route" class="filter_button"></SortButton>
+                        <!--------------------- SORT BUTTON ------------------------->
+
+                        <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+                        <span>
+                        <nuxt-link class="button is-danger is-light filter_button"
+                                   :to="{path: this.$route.path,
+                                query: {start:0, size:this.per_page, page:1}}">
+                          Clear
+                        </nuxt-link>
+                      </span>
+                        <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
                       </div>
-                      <SortButton :whichpage="current_route"></SortButton>
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.fos'), fields: this.fos_list, id: 1}" @update-fos-checked="updateFOSChecked"/>-->
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.author'), fields: this.authors_list, id: 2}" @update-authors-checked="updateAuthorsChecked"/>-->
-<!--                      <DropDown :dd_data="{msg: $t('general_attribute.venue'), fields: this.venue_list, id: 3}" @update-venues-checked="updateVenuesChecked"/>-->
                     </div>
                     <div class="tile is-ancestor">
                       <div class="tile is-parent">
                         <div class="tile is-child">
                           <SearchResult
-                            v-for="result in paper_data"
+                            v-for="result in paper_detail"
                             :key="result.paperId"
-                            :search_result="result"
+                            :search_result="result._source"
                           >
                           </SearchResult>
 
                           <PaginationV2
                             :is-small="true"
-                            :page-count="Math.ceil(paper_length / per_page)"
+                            :page-count="Math.ceil(this.paper_length / per_page)"
                             :page-range="3"
                             :margin-pages="2"
                             :per-page="this.per_page"
@@ -128,6 +173,7 @@
                   </div>
                 </div>
               </div>
+              <!--------------------------------------------- NAV BAR ------------------------------------------------>
             </div>
           </div>
         </div>
@@ -150,36 +196,119 @@
 
 <script>
     import {formatNumber, formatTitle} from "assets/utils";
-    import {author_by_id, author_papers, paper_citation} from "@/API/elastic_api";
-    import Influence_graph from "@/components/influence_graph/influence_graph";
-    import PaperTable from "@/components/function_components/PaperTable";
-    import NuxtError from "@/components/static_components/ErrorPage";
-    import SearchResult from "@/components/search_page/SearchResult";
-    import PaginationV2 from "@/components/function_components/PaginationV2";
-    import SearchBar from "@/components/function_components/SearchBar";
-    import SortButton from "@/components/function_components/SortButton";
-
     export default {
       name: "author_detail",
       watchQuery: true,
-      components: {SearchBar, PaginationV2, SortButton, SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
-          title: this.author_detail.name + ' | DoIT Scholar'
+          title: this.name + ' | DoIT Scholar'
         }
+      },
+      computed: {
+        // all of the following 7 variables are needed in order for the dropdowns filters to work properly
+        fos_list: function (){
+          let fos_res = []
+          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+            fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
+              count:item.doc_count, checked:false})
+          })
+          return fos_res
+        },
+        authors_list: function (){
+          let author_res = []
+          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
+            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
+              author_id: item.key,
+              count:item.doc_count, checked:false})
+          })
+          return author_res
+        },
+        venue_list: function (){
+          let venue_res = []
+          this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
+            venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
+              count:item.doc_count, checked:false})
+          })
+          return venue_res
+        },
+        checked_fos_list: function() {
+          let checked_fos_list = []
+          this.$store.state.search_result.filters.fos_checked?.forEach(selected => {
+            for (let item of this.fos_list) {
+              if (selected === item.fos) {
+                checked_fos_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_fos_list
+        },
+        checked_authors_list: function() {
+          let checked_authors_list = []
+          this.$store.state.search_result.filters.authors_checked?.forEach(selected => {
+            for (let item of this.authors_list) {
+              if (selected === item.author_id) {
+                checked_authors_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_authors_list
+        },
+        checked_venue_list: function() {
+          let checked_venue_list = []
+          this.$store.state.search_result.filters.venue_checked?.forEach(selected => {
+            for (let item of this.venue_list) {
+              if (selected === item.venue) {
+                checked_venue_list.push(item)
+                break
+              }
+            }
+          })
+          return checked_venue_list
+        },
+        checked_year_range: function () {
+          let checked_year_range = []
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.start)
+          checked_year_range.push(this.$store.state.search_result.filters.year_check.end)
+          return checked_year_range
+        },
+        year_list: function (){
+          let year_res = {label: [], data:[]}
+          this.year_info.forEach(item => {
+            year_res.label.push(item.key)
+            year_res.data.push(item.doc_count)
+          })
+          return year_res
+        },
+        paper_length: function (){
+          return this.paper_agg?.totalPapers ?? this.paper_detail.totalPapers
+        },
+        coauthors: function (){
+          let res = []
+          this.authors_list.forEach(item => {
+            if(item.author_id !== this.author_id){
+              res.push(item)
+            }
+          })
+          return res
+        }
+
       },
       data() {
         return {
           author_id: null,
-          author_detail: null,
+          name: null,
+          h_index: null,
+          paper_detail: null,
+          paper_agg: null,
+          chart_data: null,
+          chart_labels: null,
           current_tab: 'publication',
           current_paper_page: 1,
           per_page: 5,
-          paper_length: null,
-          paper_data: null,
           is_loading: false,
           search_query: '',
-
           current_route: null
         }
       },
@@ -196,29 +325,43 @@
           return formatTitle(title)
         },
       },
-      async asyncData({route}) {
-        let id_pattern = /[0-9]+$/g
-        let author_id = id_pattern.exec(route.params.author_detail)
-        let params = {
-          start: route.query.start,
-          size: route.query.size,
-          sort_by: route.query?.sort ?? "score"
+      async asyncData({store, query, route}) {
+        console.log("query before", query)
+        let author_id = /[0-9]+$/g.exec(route.params.author_detail)
+        query["author_id"] = author_id
+        query['author'] = Array(author_id)
+        if(query.author){
+         query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
         }
-        let data = await author_by_id(author_id, params)
-        if (Object.keys(data).length !== 0){
+        if(query.venue){
+          query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+        }
+        if(query.fos){
+          query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+        }
+        console.log("query after", query)
+
+        await store.dispatch('search_result/author_filter', query)
+
+        if (store.state.search_result.search_results.hits.hits.length > 0){
           return {
-            author_id: author_id,
-            author_detail: data,
-            paper_length: data.totalPapers,
-            paper_data: data.papers,
+            author_id: author_id[0],
+            h_index: store.state.search_result.search_results.h_index,
+            name: store.state.search_result.search_results.name,
+            paper_detail: store.state.search_result.search_results.hits.hits,
+            paper_agg: store.state.search_result.aggregation,
+
+            chart_labels: Object.keys(store.state.search_result.aggregation.citations_chart),
+            chart_data: Object.values(store.state.search_result.aggregation.citations_chart),
             current_route: route.fullPath,
             current_paper_page: route?.query?.page ?? 1
           }
         }
         else{
           return {
-            author_id: author_id,
-            author_detail: {},
+            author_id: author_id[0],
+            paper_detail: {},
+            h_index: 0,
             current_route: route.fullPath
           }
         }
@@ -231,16 +374,14 @@
     padding: 40px 20px;
     min-height: 100vh;
   }
-  .author_name {
-    font-size: 24px;
-    font-weight: 600;
-  }
-  .author_stat {
-    font-weight: 700;
-    color: #dc710f;
-    font-size: 14px;
-  }
   .tab_title {
     color: #756c6c;
   }
+  button:hover {
+    cursor: pointer;
+  }
+  a:hover {
+    text-decoration: none;
+  }
 </style>
+`

@@ -4,11 +4,22 @@
     "author": "Tác giả",
     "venue": "Hội nghị",
 
+    "lang": {
+      "en": "Tiếng Anh",
+      "vi": "Tiếng Việt"
+    },
+
+
     "previous": "Trước",
     "next": "Sau",
     "search": "Tìm kiếm",
     "list_label": "Đang xem {start} - {end} trong {total} văn bản",
-    "search_bar_placeholder": "Tìm kiếm văn bản",
+    "search_bar__filter": {
+      "paper": "Tìm kiếm văn bản...",
+      "author": "Tìm kiếm tác giả...",
+      "venue": "Tìm kiếm hội nghị...",
+      "fos": "Tìm kiếm lĩnh vực..."
+    },
     "sort": {
       "default": "Sắp xếp theo",
       "by_score": "Sắp xếp theo Độ tương đồng",
@@ -37,37 +48,32 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề, tác giả, doi hoặc từ khóa văn bản",
+      "search_bar_placeholder": "Tìm kiếm bằng tiêu đề hoặc từ khóa văn bản",
       "search_bar_not_found": "Không tìm thấy kết quả cho từ khóa",
       "lang_switch": "Ngôn ngữ"
     },
     "footer" : {
       "address": "Địa chỉ:",
       "address_value": "Phòng 320 - E3 Trường đại học Công nghệ - Đại học Quốc gia Hà Nội"
-    }
+    },
+    "warning" : "Thanh tìm kiếm <b>không thể để trống</b>"
   },
 
   "home_page": {
     "title": "Bộ máy tìm kiếm cho dữ liệu học thuật",
-    "paper_carousel": {
-      "title": "Văn bản được trích dẫn nhiều nhất"
-    },
-    "author_carousel": {
-      "title": "Tác giả được trích dẫn nhiều nhất",
-      "citation": "Số lần được trích dẫn",
-      "publication": "Số xuất bản",
-      "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
-    },
-    "fos_carousel": {
-      "title": "Lĩnh vực nghiên cứu nổi bật",
-      "count": "Số văn bản"
+    "papers_content": {
+      "latest_papers": "Văn bản mới nhất",
+      "most_cited_papers": "Văn bản được trích dẫn nhiều nhất",
+      "famous_journals": "Tạp chí nổi tiếng"
     },
     "page_stat": {
+      "site_status": "Trạng thái trang",
       "author_count": "Tác giả",
       "paper_count": "Văn bản",
       "fos_count": "Lĩnh vực"
     },
     "chart": {
+      "trending_topics": "Chủ đề thịnh hành",
       "paper_by_fos_chart": "Số văn bản theo lĩnh vực",
       "paper_by_venue_chart": "Số văn bản theo hội nghị"
     }
@@ -99,7 +105,8 @@
       "citation": "Số lần được trích dẫn",
       "publication": "Số xuất bản",
       "highlighted_citation": "Số trích dẫn có ảnh hưởng lớn"
-    }
+    },
+    "co_author": "Đồng tác giả"
   },
 
   "journal_detail_page": {

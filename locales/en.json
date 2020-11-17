@@ -4,11 +4,21 @@
     "author": "Authors",
     "venue": "Journal",
 
+    "lang": {
+      "en": "English",
+      "vi": "Vietnamese"
+    },
+
     "previous": "Previous",
     "next": "Next",
     "search": "Search",
     "list_label": "Showing {start} - {end} of {total} papers",
-    "search_bar_placeholder": "Search for paper",
+    "search_bar__filter": {
+      "paper": "Search paper...",
+      "author": "Search author...",
+      "venue": "Search venue...",
+      "fos": "Search field of study..."
+    },
     "sort": {
       "default": "Sort",
       "by_score": "Sort by Relevant",
@@ -37,37 +47,32 @@
 
   "default_layout": {
     "header": {
-      "search_bar_placeholder": "Search papers by title, authors, doi or keywords",
+      "search_bar_placeholder": "Search papers by title or keywords",
       "search_bar_not_found": "Cannot find any result for keyword",
       "lang_switch": "Language"
     },
     "footer" : {
       "address": "Address:",
       "address_value": "Room 320 - Building E3 - VNU University of Engineering and Technology"
-    }
+    },
+    "warning": "Please enter <b> at least one character </b> in search bar"
   },
 
   "home_page": {
     "title": "A search engine for scientific literature",
-    "paper_carousel": {
-      "title": "Most cited papers"
-    },
-    "author_carousel": {
-      "title": "Most cited authors",
-      "citation": "Citations",
-      "publication": "Publications",
-      "highlighted_citation": "Highly influenced citations"
-    },
-    "fos_carousel": {
-      "title": "Popular fields of study",
-      "count": "Number of papers"
+    "papers_content": {
+      "latest_papers": "Latest papers",
+      "most_cited_papers": "Most cited papers",
+      "famous_journals": "Famous journals"
     },
     "page_stat": {
+      "site_status": "Site status",
       "author_count": "Authors",
       "paper_count": "Papers",
       "fos_count": "Fields of study"
     },
     "chart": {
+      "trending_topics": "Trending topics",
       "paper_by_fos_chart": "Papers per field of study",
       "paper_by_venue_chart": "Papers per journal"
     }
@@ -100,7 +105,8 @@
       "citation": "Citations",
       "publication": "Publications",
       "highlighted_citation": "Highly influenced citations"
-    }
+    },
+    "co_author": "Co-authors"
   },
 
   "journal_detail_page": {

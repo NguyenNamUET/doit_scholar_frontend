@@ -8,6 +8,9 @@ const SEARCH_DOCUMENTS = {
   count_field: SEARCH_API + '/s2api/papers/countFOS',
   count_topics: SEARCH_API + '/s2api/papers/countTopics',
 
+  home_status_graph: SEARCH_API + '/s2api/papers/generateGraphs',
+  home_papers: SEARCH_API + '/s2api/papers/homepagePapers',
+  home_status_count: SEARCH_API + '/s2api/papers/statsCount',
 
   paper_detail: SEARCH_API + '/s2api/papers',
   paper_by_title: SEARCH_API + '/s2api/papers/searchPaperTitle',

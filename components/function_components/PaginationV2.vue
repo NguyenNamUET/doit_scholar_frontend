@@ -61,10 +61,12 @@ export default {
       default: 1
     },
     whichpage: {
-      type: String
+      type: String,
+      required: true
     },
     query: {
-      type: Array
+      type: Array,
+      required: true
     },
     perPage: {
       type: Number,

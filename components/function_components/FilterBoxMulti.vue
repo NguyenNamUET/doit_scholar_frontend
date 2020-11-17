@@ -1,34 +1,41 @@
 <template>
-  <b-dropdown aria-role="list">
+  <b-dropdown aria-role="list" class="filter_button">
     <button class="button is-light" type="button" slot="trigger">
       <template>
-        <span>{{ $t(this.name) }}</span>
+        <span v-if="checked.length === 0">{{ $t(this.name) }}</span>
+        <span v-else class="has-text-info">{{checked.length}} {{$t(this.name)}}</span>
       </template>
       <b-icon icon="menu-down"></b-icon>
     </button>
 
-    <!------------------------------------- VENUE DROPDOWN ------------------------------------------>
     <b-dropdown-item
       :focusable="false"
       custom
     >
-      <div>
-        <b-field>
-          <b-input placeholder="Search..."
-                   type="search"
-                   icon-pack="fas"
-                   icon="search">
-          </b-input>
-        </b-field>
-      </div>
       <div class="option_container">
         <b-table
           :data="data"
-          :columns="columns"
-          :checked-rows.sync="checkedRows"
+          :checked-rows.sync="checked_rows"
           :is-row-checkable="(row) => true"
           checkable
         >
+          <template slot-scope="props">
+            <template v-for="column in columns">
+              <b-table-column :key="column.id" v-bind="column">
+                <template
+                  v-if="column.searchable "
+                  slot="searchable"
+                  slot-scope="props">
+                  <b-input
+                    v-model="props.filters[props.column.field]"
+                    :placeholder="placeholder"
+                    icon="magnify"
+                    size="is-small" />
+                </template>
+                {{ props.row[column.field] }}
+              </b-table-column>
+            </template>
+          </template>
         </b-table>
       </div>
       <nav class="level">
@@ -49,28 +56,36 @@
 </template>
 
 <script>
-import {filteredKeys_v2} from "assets/utils";
-
 export default {
   name: "FilterBoxMulti",
-  props: ['type', 'whichpage'],
+  props: ['type', 'whichpage', 'data', 'checked'],
+  watch: {
+    checked() {
+      this.checked_rows = this.checked
+    }
+  },
   computed: {
     apply_path: function (){
       let params = {
         path: this.whichpage,
         query: {}
       }
-      console.log('selected ',this.checkedRows)
+      // console.log('selected ',this.checked_rows)
       params.query[this.type] = []
-      for(let i=0; i<this.checkedRows.length; i++){
-        params.query[this.type].push(this.checkedRows[i][this.type])
+      for(let i=0; i<this.checked_rows.length; i++){
+        let field_name = this.checked_rows[i][this.type].replace(/ /g, '-')
+        if(Object.keys(this.checked_rows[i]).includes(this.type+'_id')){
+          params.query[this.type].push(field_name+'-'+this.checked_rows[i][this.type+'_id'])
+        }
+        else{
+          params.query[this.type].push(field_name)
+        }
       }
-      // console.log(params)
       return params
     },
     clear_path: function (){
       let params = {path: ""}
-      let re = new RegExp("[&|?]"+this.type+"\\d+=.+(?=&)", "g")
+      let re = new RegExp("[&|?]"+this.type+"=.+(?=&)", "g")
       let current = this.whichpage+"&"
       params['path'] = current.replace(re,"").slice(0, -1)
       return params
@@ -80,12 +95,13 @@ export default {
     const name='general_attribute.'+this.type
     return {
       name,
-      data: [],
-      checkedRows: [],
-      columns:[
+      placeholder:this.$t('general_attribute.search_bar__filter.'+this.type),
+      checked_rows: this.checked,
+      columns: [
         {
           field: this.type,
-          label: this.$t(name)
+          label: this.$t(name),
+          searchable: true,
         },
         {
           field: 'count',
@@ -94,79 +110,6 @@ export default {
         }
       ]
     }
-  },
-  // created() {
-  //   this.makeChecked()
-  // },
-  methods: {
-    // makeChecked() {
-    //   this.data.forEach(item => {
-    //     if (item.checked){
-    //       this.checkedRows.push(item)
-    //     }
-    //   })
-    //   console.log("makeChecked", this.checkedRows)
-    // },
-    fos_list: function () {
-      let fos_res = []
-      this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
-        fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          count:item.doc_count, checked:false})
-      })
-      return fos_res
-    },
-    authors_list: function () {
-      let author_res = []
-      this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
-        author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          count:item.doc_count, checked:false})
-      })
-      return author_res
-    },
-    venue_list: function () {
-      let venue_res = []
-      this.$store.state.search_result.aggregation.venue_count.buckets.forEach(item => {
-        venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          count:item.doc_count, checked:false})
-      })
-      return venue_res
-    },
-
-    checked_fos_list() {
-      let fos_res = []
-      this.$store.state.search_result.filters.fos_checked.forEach(item => {
-        fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
-          count:item.doc_count, checked:false})
-      })
-      return fos_res
-    },
-    checked_authors_list() {
-      let author_res = []
-      this.$store.state.search_result.filters.authors_checked.forEach(item => {
-        author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-          count:item.doc_count, checked:false})
-      })
-      return author_res
-    },
-    checked_venue_list() {
-      let venue_res = []
-      this.$store.state.search_result.filters.venue_checked.forEach(item => {
-        venue_res.push({venue:item.key.trim()!=="" ? item.key.trim() : "Anonymous",
-          count:item.doc_count, checked:false})
-      })
-      return venue_res
-    }
-  },
-  mounted() {
-    if (this.type === 'author') {
-      this.data = this.authors_list()
-    }
-    else if (this.type === 'venue') {
-      this.data = this.venue_list()
-    }
-    else if (this.type === 'fos') {
-      this.data = this.fos_list()
-    }
   }
 }
 </script>
@@ -174,8 +117,8 @@ export default {
 <style lang="scss" scoped>
 .option_container {
   overflow-y: auto;
-  min-width: 500px;
-  max-height: 300px;
+  min-width: 50vw;
+  max-height: 50vh;
   margin: 10px 0 10px 0;
 }
 .time_option_container {
@@ -186,4 +129,5 @@ export default {
     margin: 5px;
   }
 }
+
 </style>

@@ -50,16 +50,6 @@ const all_topics = async() => {
 /***************************************** Counting function ******************************************/
 
 /***************************************** Search paper function ******************************************/
-// const paper_detail = async (paper_id) => {
-//   try {
-//     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id)
-//     console.log("paper_detail", paper_id)
-//     return result.data
-//   } catch(e) {
-//     console.log(e)
-//     return null
-//   }
-// }
 const paper_detail = async (params) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + params.paper_id,
@@ -75,6 +65,7 @@ const paper_detail = async (params) => {
     return null
   }
 }
+
 const paper_by_title = async (query_params) => {
   // console.log('api', query_params)
   try {
@@ -89,7 +80,7 @@ const paper_by_title = async (query_params) => {
       return_year_aggs: true,
       return_top_author: true,
       from_year:query_params.from_year, end_year:query_params.end_year,
-      top_author_size: 10
+      top_author_size: 30
     })
     return result.data
   } catch(e) {
@@ -147,12 +138,15 @@ const paper_by_fos = async(query_params) => {
 
 const paper_by_venue = async(query_params) => {
   try {
-    // console.log("paper_by_venue query: ", query_params)
+    console.log("paper_by_venue query: ", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_venue, {
-      venues: query_params.venues,
-      start: query_params.start,
-      size: query_params.size,
-      sort_by: query_params.sort_by
+      search_content: query_params.query,
+      start: query_params.start, size: query_params.size,
+      sort_by: query_params.sort_by,
+      venues: query_params.venue, venues_is_should:true, return_venue_aggs: true,
+      authors: query_params.author, author_is_should: true, return_top_author: true, top_author_size: 10,
+      fields_of_study: query_params.fos, fos_is_should: true, return_fos_aggs: true,
+      from_year: query_params.from_year, end_year: query_params.end_year, return_year_aggs: true
     })
     return result.data
   } catch(e) {
@@ -161,33 +155,21 @@ const paper_by_venue = async(query_params) => {
   }
 }
 
-const paper_by_fos_and_title = async(query_params) => {
-  try {
-    const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title_and_fos, {
-      search_content: query_params.query,
-      fields_of_study: query_params.fields_of_study,
-      fos_is_should: query_params.fos_is_should,
-      return_fos_aggs: query_params.return_fos_aggs,
-      return_top_author: query_params.return_top_author,
-      top_author_size: query_params.top_author_size,
-      start: query_params.start,
-      size: query_params.size
-    })
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
 /***************************************** Search paper function ******************************************/
 
 
 /***************************************** Search author function ******************************************/
 
-const author_by_id = async (author_id, params) => {
+const author_by_id = async (query_params) => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.author_by_id + '/' + author_id, {
-      params: params
+    let result = await axios.post(SEARCH_DOCUMENTS.author_by_id + '/' + query_params.author_id, {
+      search_content: query_params.query,
+      start: query_params.start, size: query_params.size,
+      sort_by: query_params.sort_by,
+      authors: query_params.author, author_is_should: true, return_top_author: true, top_author_size: 10,
+      fields_of_study: query_params.fos, fos_is_should: true, return_fos_aggs: true,
+      venues: query_params.venue, venues_is_should:true, return_venue_aggs: true,
+      from_year: query_params.from_year, end_year: query_params.end_year, return_year_aggs: true
     })
     return result.data
   } catch(e) {
@@ -196,33 +178,6 @@ const author_by_id = async (author_id, params) => {
   }
 }
 
-const author_by_name = async(query_params) => {
-  try {
-    let result = await axios.get(SEARCH_DOCUMENTS.author_by_name, {
-      author_name: query_params.author_name
-    })
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
-
-const author_papers = async (query_params) => {
-  try {
-    let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + query_params.author_id + '/papers', {
-      params: {
-        start: query_params.start,
-        size: query_params.size
-      }
-    })
-    // console.log('api', result.data)
-    return result.data
-  } catch(e) {
-    console.log(e)
-    return null
-  }
-}
 /***************************************** Search author function ******************************************/
 
 
@@ -277,7 +232,7 @@ const autocomplete = async(query_params) => {
   try {
     console.log("autocomplete", query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.autocomplete, {
-      search_content: query_params.search_content,
+      search_content: query_params.query,
       authors: query_params.authors,
       venues: query_params.venues,
       size: query_params.size
@@ -292,6 +247,60 @@ const autocomplete = async(query_params) => {
 /************** Autocomple search *************/
 
 /************************************************* Homepage function **********************************************/
+const home_status_graph = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_status_graph, {
+      params: {
+        fos_graph: query_params.fos_graph,
+        venues_graph: query_params.venues_graph,
+        topics_graph: query_params.topics_graph,
+        size: query_params.size,
+        topics_size: query_params.topics_size,
+        year_size: query_params.year_size
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const home_papers = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_papers, {
+      params: {
+        size: query_params.size,
+        topics_size: query_params.topics_size,
+        order_by_citations_count: query_params.order_by_citations_count,
+        order_by_year: query_params.order_by_year,
+        order_by_topics__year: query_params.order_by_topics__year
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
+const home_status_count = async (query_params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.home_status_count, {
+      params: {
+        is_papers_count: query_params.is_papers_count,
+        is_authors_count: query_params.is_authors_count,
+        is_fos_count: query_params.is_fos_count,
+        is_topics_count: query_params.is_topics_count
+      }
+    })
+    return result.data
+  } catch(e) {
+    console.log(e)
+    return null
+  }
+}
+
 const citation_chart_data = async (paper_id) => {
   try {
     let result = await axios.get(SEARCH_DOCUMENTS.paper_detail + '/' + paper_id + '/citationsGraph', {
@@ -342,7 +351,11 @@ const fos_graph_data = async(queryParams) => {
 
 const venue_graph_data = async() => {
   try {
-    let result = await axios.get(SEARCH_DOCUMENTS.venue_graph)
+    let result = await axios.get(SEARCH_DOCUMENTS.venue_graph, {
+      params: {
+        size: 30
+      }
+    })
     return result.data
   } catch (e) {
     console.log(e)
@@ -355,7 +368,6 @@ export {
   paper_by_abstract,
   paper_by_title,
   paper_by_topic,
-  paper_by_fos_and_title,
   paper_detail,
   paper_citation,
   paper_references,
@@ -373,9 +385,11 @@ export {
   fos_graph_data,
   venue_graph_data,
 
+  home_papers,
+  home_status_graph,
+  home_status_count,
+
   author_by_id,
-  author_by_name,
-  author_papers,
 
   wiki_summary,
   autocomplete

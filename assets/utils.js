@@ -121,6 +121,35 @@ function doughnut_chart_prep(datas) {
   return chartData
 }
 
+function line_chart_prep(datas) {
+  //data format:
+  //[
+  //  {
+  //    id:
+  //    name:
+  //    years_count:
+  //                [
+  //                  {
+  //                    year: value
+  //                  }
+  //                ]
+  //  }
+  //]
+
+  let labels = new Set()
+  let color = require('randomcolor')
+  for (let item of datas) {
+    let randomColor = color()
+    let single_data = {
+      label: item.name,
+      borderColor: randomColor
+    }
+    // for (let count of item.years_count) {
+    //   if (count)
+    // }
+  }
+}
+
 function filteredKeys(obj, filter) {
   var key, keys = [];
   for (key in obj) {
@@ -156,5 +185,6 @@ export {
   isDictEmpty,
   doughnut_chart_prep,
   genBibtex,
-  host
+  host,
+  line_chart_prep
 }
