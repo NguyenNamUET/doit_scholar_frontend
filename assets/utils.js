@@ -122,12 +122,32 @@ function doughnut_chart_prep(datas) {
 }
 
 function line_chart_prep(datas) {
-  let chartData = {}
-  chartData.labels = [2014,2015,2016,2017,2018]
-  let single_data = {}
-  Object.keys(datas).forEach(function (key) {
-    console.log(key)
-  })
+  //data format:
+  //[
+  //  {
+  //    id:
+  //    name:
+  //    years_count:
+  //                [
+  //                  {
+  //                    year: value
+  //                  }
+  //                ]
+  //  }
+  //]
+
+  let labels = new Set()
+  let color = require('randomcolor')
+  for (let item of datas) {
+    let randomColor = color()
+    let single_data = {
+      label: item.name,
+      borderColor: randomColor
+    }
+    // for (let count of item.years_count) {
+    //   if (count)
+    // }
+  }
 }
 
 function filteredKeys(obj, filter) {

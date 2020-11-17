@@ -96,7 +96,7 @@
             <ul>
               <li v-for="item in highlight_venues">
                 <nuxt-link
-                  :to="{path: lang+'journal/' + formatTitle(item),
+                  :to="{path: '/journal/' + formatTitle(item),
                    query: {start: 0, size: 10, page: 1}}"
                   class="link-class-3"
                 >
@@ -135,8 +135,8 @@
               <ul>
                 <li v-for="item in highlight_topics">
                   <nuxt-link class="link-class-3"
-                             :to="{path: lang+'topic/' + formatTitle(item.name) + '-' + item.id,
-                             query: {start: 0, size: 10, page: 1}}">
+                             :to="{path: '/topic/' + formatTitle(item.name) + '-' + item.id}"
+                  >
                     {{item.name}}
                   </nuxt-link>
                 </li>
@@ -149,7 +149,7 @@
               <ul>
                 <li v-for="item in highlight_fos">
                   <nuxt-link class="link-class-3"
-                    :to="{path: lang+'search',
+                    :to="{path: 'search',
                     query: {query: '', start: 0, size: 10, page: 1, fos: item}}"
                   >
                     {{item}}
@@ -198,8 +198,11 @@ export default {
       author_count: null,
       paper_count: null,
       fos_count: null,
+
       fos_chart_data: null,
       venue_chart_data: null,
+      topics_chart_data: null,
+
       most_cited_authors: null,
       most_cited_papers: null,
       most_recent_papers: null,
@@ -228,14 +231,15 @@ export default {
             data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
           }
         ]
-      },
-      lang: null
+      }
     }
   },
   async asyncData({route}) {
     let results = null
-    let fosChartData = null
-    let venueChartData = null
+    let fos_chart_data = null
+    let venue_chart_data = null
+    let topics_chart_data = null
+
     await Promise.all(
       [
         home_status_graph({
@@ -261,8 +265,9 @@ export default {
       ]
     ).then((res) => {
       results = res
-      fosChartData = doughnut_chart_prep(results[0].fos_chart)
-      venueChartData = doughnut_chart_prep(results[0].venues_chart)
+      fos_chart_data = doughnut_chart_prep(results[0].fos_chart)
+      venue_chart_data = doughnut_chart_prep(results[0].venues_chart)
+      // topics_chart_data = line_chart_prep(results[0].topics_chart)
     })
     return {
       author_count: results[1].authors_count,
@@ -274,15 +279,14 @@ export default {
       highlight_venues: Object.keys(results[0].venues_chart),
       highlight_fos: Object.keys(results[0].fos_chart),
 
-      fos_chart_data: fosChartData,
-      venue_chart_data: venueChartData,
+      fos_chart_data: fos_chart_data,
+      venue_chart_data: venue_chart_data,
+      topics_chart_data: topics_chart_data,
 
       most_cited_authors: results[3],
       most_cited_papers: results[2].most_cited_papers,
       most_recent_papers: results[2].most_recent_paper,
       most_cited_fos: results[5],
-
-      lang: route.path
     }
   },
   filters: {

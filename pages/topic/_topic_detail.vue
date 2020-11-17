@@ -124,6 +124,7 @@
         let topic_id = id_pattern.exec(route.params.topic_detail)
         let query_params = {topics: Array(topic_id[0])}
         let data = await paper_by_topic(query_params)
+        console.log(data)
         //let wiki_topic_summary = await wiki_summary({name: topic_name})
         let name_pattern = /.+(?=\-[0-9]+$)/g
         let topic_name = name_pattern.exec(route.params.topic_detail)

@@ -74,7 +74,7 @@ export default {
     'nuxt-fontawesome',
     'nuxt-buefy',
     'nuxt-lazy-load',
-    ['@nuxtjs/pwa', { meta: false, icon: false, manifest: false }]
+    '@nuxtjs/pwa'
   ],
   // sentry: {
   //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
