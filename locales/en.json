@@ -17,7 +17,8 @@
       "paper": "Search paper...",
       "author": "Search author...",
       "venue": "Search venue...",
-      "fos": "Search field of study..."
+      "fos": "Search field of study...",
+      "topic": "Search field of topic..."
     },
     "sort": {
       "default": "Sort",

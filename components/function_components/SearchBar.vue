@@ -40,7 +40,7 @@ import {formatTitle} from "assets/utils";
 
 export default {
       name: "SearchBar",
-      props: ['placeholder', 'current_page', 'authors', 'venues'],
+      props: ['placeholder', 'current_page', 'authors', 'venues', 'topics'],
       data() {
         return {
           search_query: '',
@@ -61,6 +61,7 @@ export default {
             query: name,
             authors: this.authors,
             venues: this.venues,
+            topics: this.topics,
             size: 10
           })
           this.autocomplete_data = _.toArray(this.raw_data)
@@ -71,8 +72,10 @@ export default {
             query: this.search_query,
             start: 0,
             size: 10,
-            page: 1
+            page: 1,
+            sort: 'score'
           }
+          console.log("this.current_page", this.current_page)
           if(this.search_query!==""){
             this.$router.push({path: this.current_page, query: this.query_params})
           }

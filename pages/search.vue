@@ -79,6 +79,9 @@
                             :chart_data="year_list"
                             :whichpage="current_route"
             ></FilterBoxChart>
+            <!--------------------- SORT BUTTON ------------------------->
+            <SortButton class="filter_button" :whichpage="current_route"></SortButton>
+            <!--------------------- SORT BUTTON ------------------------->
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
               <nuxt-link class="button is-danger is-light filter_button"
@@ -248,7 +251,6 @@ export default {
         }
       },
       async asyncData({query, store, route}) {
-        console.log("query before", query)
         if(query.author){
           if(typeof query.author === "string"){
             query['author'] = Array(query['author']).map(str => _.last(_.split(str,'-')))
@@ -273,7 +275,6 @@ export default {
             query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
           }
         }
-        console.log("query after", query)
         await store.dispatch('search_result/paper_by_title', query)
 
         if(store.state.search_result.search_results.hits.hits.length > 0) {

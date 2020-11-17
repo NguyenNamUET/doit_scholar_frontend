@@ -50,9 +50,9 @@
             <div>
               <SearchBar
                 style="width: 100%"
-               :placeholder="$t('general_attribute.search_bar__filter.venue')"
-               :authors="null"
-               :venues="Array(journal_name)"></SearchBar>
+                :placeholder="$t('general_attribute.search_bar__filter.venue')"
+                :authors="null"
+                :venues="Array(journal_name)"></SearchBar>
               <FilterBoxMulti :type="'author'"
                               :data="authors_list"
                               :whichpage="current_route"
@@ -125,7 +125,7 @@ export default {
         // all of the following 7 variables are needed in order for the dropdowns filters to work properly
         fos_list: function (){
           let fos_res = []
-          this.$store.state.search_result.aggregation.fos_count.buckets.forEach(item => {
+          this.$store.state.search_result.aggregation.fos_aggs.buckets.forEach(item => {
             fos_res.push({fos:item.key.trim()!=="" ? item.key.trim() : "Unknown",
               count:item.doc_count, checked:false})
           })
@@ -133,10 +133,10 @@ export default {
         },
         authors_list: function (){
           let author_res = []
-          this.$store.state.search_result.aggregation.author_count.name.buckets.forEach(item => {
-            author_res.push({author:item.name.buckets[0].key.trim()!=="" ? item.name.buckets[0].key.trim() : "John Doe",
-              author_id: item.key,
-              count:item.doc_count, checked:false})
+          this.$store.state.search_result.aggregation.author_aggs.buckets.forEach(item => {
+            author_res.push({author:item.name.trim()!=="" ? item.name.trim() : "John Doe",
+                             author_id: item.id,
+                             count:item.doc_count, checked:false})
           })
           return author_res
         },
@@ -198,14 +198,24 @@ export default {
   async asyncData({store, query, route}) {
     let journal_name = route.params.journal_detail.replace(/-/g, ' ')
     query["venue"] = Array(journal_name)
-    if(query.author){
-      query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
-    }
-    if(query.fos){
-      query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
-    }
 
-    console.log("venues query", query)
+    if(query.author){
+          if(typeof query.author === "string"){
+            query['author'] = Array(query['author']).map(str => _.last(_.split(str,'-')))
+          }
+          else{
+            query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+          }
+        }
+    if(query.fos){
+          if(typeof query.fos === "string"){
+            query['fos'] = Array(query['fos']).map(str => str.replace(/-/g, ' '))
+          }
+          else{
+            query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+          }
+        }
+
     await store.dispatch('search_result/paper_by_venue', query)
     if (store.state.search_result.search_results.hits.hits.length > 0){
       return {

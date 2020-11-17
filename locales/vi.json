@@ -18,7 +18,8 @@
       "paper": "Tìm kiếm văn bản...",
       "author": "Tìm kiếm tác giả...",
       "venue": "Tìm kiếm hội nghị...",
-      "fos": "Tìm kiếm lĩnh vực..."
+      "fos": "Tìm kiếm lĩnh vực...",
+      "topic": "Tìm kiếm chủ đề..."
     },
     "sort": {
       "default": "Sắp xếp theo",

@@ -28,7 +28,7 @@
             <nuxt-link  v-if="Object.keys(search_result).includes('venue') && search_result.venue"
                         class="link-class-3 secondary_description"
                         :to="{path:'/journal/' + search_result.venue.replace(' ','-'),
-                              query:{start:0, size:10, page:1}}">
+                              query:{start:0, size:10, page:1, sort: 'score'}}">
               <b>{{search_result.venue}}</b>
             </nuxt-link>
             <span
@@ -74,12 +74,11 @@
               v-for="(topic, index) in search_result.topics"
               :key="topic.topicId"
             >
-              <a
-                :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
-                class="link-class-3"
-              >
+             <nuxt-link class="link-class-3"
+                        :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,
+                              query: {start: 0, size: 10, page: 1, sort: 'score'}}">
                 {{ topic.topic }}
-              </a>
+              </nuxt-link>
               <span v-if="index < search_result.topics.length - 1">,</span>
             </span>
             <span
@@ -94,12 +93,11 @@
               v-if="topic_hidden"
               v-for="(topic, index) in search_result.topics.slice(0,5)"
             >
-              <a
-                :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
-                class="link-class-3"
-              >
+              <nuxt-link class="link-class-3"
+                         :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,
+                               query: {start: 0, size: 10, page: 1, sort: 'score'}}">
                 {{ topic.topic }}
-              </a>
+              </nuxt-link>
               <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
             </span>
             <span

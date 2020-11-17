@@ -95,11 +95,10 @@
           <div class="content_box">
             <ul>
               <li v-for="item in highlight_venues">
-                <nuxt-link
+                <nuxt-link class="link-class-3"
                   :to="{path: '/journal/' + formatTitle(item),
-                   query: {start: 0, size: 10, page: 1}}"
-                  class="link-class-3"
-                >
+                        query: {start: 0, size: 10, page: 1, sort: 'score'}}"
+                  >
                   {{item}}
                 </nuxt-link>
               </li>
@@ -135,7 +134,8 @@
               <ul>
                 <li v-for="item in highlight_topics">
                   <nuxt-link class="link-class-3"
-                             :to="{path: '/topic/' + formatTitle(item.name) + '-' + item.id}"
+                             :to="{path: '/topic/' + formatTitle(item.name) + '-' + item.id,
+                                   query: {start: 0, size: 10, page: 1, sort: 'score'}}"
                   >
                     {{item.name}}
                   </nuxt-link>

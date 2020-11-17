@@ -71,16 +71,12 @@ const paper_by_title = async (query_params) => {
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
       search_content:query_params.query,
-      venues:query_params.venue, venues_is_should: true,
-      authors:query_params.author, author_is_should: true,
-      fields_of_study:query_params.fos, fos_is_should: true,
+      sort_by: query_params.sort,
+      venues:query_params.venue, venues_is_should: true, return_venue_aggs: true,
+      authors:query_params.author, author_is_should: true, return_top_author: true, top_author_size: 30,
+      fields_of_study:query_params.fos, fos_is_should: true, return_fos_aggs: true,
       start:query_params.start, size:query_params.size,
-      return_fos_aggs: true,
-      return_venue_aggs: true,
-      return_year_aggs: true,
-      return_top_author: true,
-      from_year:query_params.from_year, end_year:query_params.end_year,
-      top_author_size: 30
+      from_year:query_params.from_year, end_year:query_params.end_year, return_year_aggs: true
     })
     return result.data
   } catch(e) {
@@ -108,11 +104,20 @@ const paper_by_abstract = async(query_params) => {
 
 const paper_by_topic = async(query_params) => {
   try {
-    // console.log(query_params)
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_topic, {
-      topics: query_params.topics,
-      source: query_params.source
-    })
+      topics: query_params.topics, topic_is_should: true,
+      search_content: query_params.query,
+      start: query_params.start, size: query_params.size,
+      sort_by: query_params.sort,
+      venues: query_params.venue, venues_is_should:true, return_venue_aggs: true,
+      authors: query_params.author, author_is_should: true, return_top_author: true, top_author_size: 10,
+      fields_of_study: query_params.fos, fos_is_should: true, return_fos_aggs: true,
+      from_year: query_params.from_year, end_year: query_params.end_year, return_year_aggs: true
+    },
+      {params: {
+              topics_size:query_params.topics_size, year_size:query_params.year_size
+            }
+      })
     return result.data
   } catch(e) {
     console.log(e)
@@ -142,7 +147,7 @@ const paper_by_venue = async(query_params) => {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_venue, {
       search_content: query_params.query,
       start: query_params.start, size: query_params.size,
-      sort_by: query_params.sort_by,
+      sort_by: query_params.sort,
       venues: query_params.venue, venues_is_should:true, return_venue_aggs: true,
       authors: query_params.author, author_is_should: true, return_top_author: true, top_author_size: 10,
       fields_of_study: query_params.fos, fos_is_should: true, return_fos_aggs: true,
@@ -235,6 +240,7 @@ const autocomplete = async(query_params) => {
       search_content: query_params.query,
       authors: query_params.authors,
       venues: query_params.venues,
+      topics: query_params.topics,
       size: query_params.size
     })
     console.log(result.data)
