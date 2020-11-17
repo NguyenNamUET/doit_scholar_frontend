@@ -98,13 +98,10 @@
 </template>
 
 <script>
-    import TimelineItem from "../../components/function_components/TimelineItem";
     import {paper_by_topic} from "@/API/elastic_api";
-    import SearchResult from "@/components/search_page/SearchResult";
     //import {wiki_summary} from "@/API/elastic_api";
     export default {
       name: "topic_detail",
-      components: {SearchResult, TimelineItem},
       head() {
         return {
           title: this.topic_name + ' | DoIT Scholar'
@@ -151,8 +148,5 @@
   }
   .title {
     color: #2e414f;
-  }
-  .paper_section {
-    background-color: white;
   }
 </style>

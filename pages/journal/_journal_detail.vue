@@ -107,16 +107,10 @@
 
 <script>
 import {formatNumber, formatTitle} from "assets/utils";
-import SearchResult from "@/components/search_page/SearchResult";
-import LineGraph from "@/components/static_components/LineGraph";
-import PaginationV2 from "@/components/function_components/PaginationV2";
-import SortButton from "@/components/function_components/SortButton";
-import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
 
 export default {
   name: "journal_detail",
   watchQuery: true,
-  components: {LineGraph, SearchResult, PaginationV2, FilterBoxMulti, SortButton},
   head() {
     return {
       title: this.journal_name + ' | ' + 'DoIT Scholar'

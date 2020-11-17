@@ -196,20 +196,9 @@
 
 <script>
     import {formatNumber, formatTitle} from "assets/utils";
-    import Influence_graph from "@/components/influence_graph/influence_graph";
-    import PaperTable from "@/components/function_components/PaperTable";
-    import NuxtError from "@/components/static_components/ErrorPage";
-    import SearchResult from "@/components/search_page/SearchResult";
-    import PaginationV2 from "@/components/function_components/PaginationV2";
-    import SearchBar from "@/components/function_components/SearchBar";
-    import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
-    import SortButton from "@/components/function_components/SortButton";
-
     export default {
       name: "author_detail",
       watchQuery: true,
-      components: {SearchBar, PaginationV2, FilterBoxMulti, SortButton,
-                   SearchResult, PaperTable, Influence_graph, NuxtError},
       head() {
         return {
           title: this.name + ' | DoIT Scholar'

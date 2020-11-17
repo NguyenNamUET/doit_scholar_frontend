@@ -518,11 +518,9 @@
 <script>
 import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
 import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
-import SearchResult from "@/components/search_page/SearchResult";
 
 export default {
       name: "paper_detail",
-      components: {SearchResult},
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -780,8 +778,10 @@ export default {
         async updateCitation(page_num) {
           this.is_loading_citation = true
           this.$refs.citation_box.click()
-          this.$router.push({path: this.$route.path+"#citation_box",
-                            query: {cit_page:page_num, ref_page:this.current_ref_page}})
+          await this.$router.push({
+            path: this.$route.path + "#citation_box",
+            query: {cit_page: page_num, ref_page: this.current_ref_page}
+          })
           this.current_citation_page = page_num
           let result = await paper_citation({
             paper_id: this.paper_id,
@@ -795,8 +795,10 @@ export default {
         async updateReference(page_num) {
           this.is_loading_ref = true
           this.$refs.reference_box.click()
-          this.$router.push({path: this.$route.path+"#reference_box",
-                            query: {cit_page:this.current_citation_page, ref_page:page_num}})
+          await this.$router.push({
+            path: this.$route.path + "#reference_box",
+            query: {cit_page: this.current_citation_page, ref_page: page_num}
+          })
           this.current_ref_page = page_num
           let result = await paper_references({
             paper_id: this.paper_id,

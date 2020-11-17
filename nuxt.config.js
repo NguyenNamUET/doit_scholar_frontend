@@ -63,7 +63,8 @@ export default {
   buildModules: [
     [
       'nuxt-i18n', i18n
-    ]
+    ],
+    '@nuxt/components'
   ],
   /*
   ** Nuxt.js modules

@@ -166,20 +166,12 @@
 
 <script>
 import {
-  all_author,
-  all_field,
-  all_paper,
-  fos_graph_data, home_papers, home_status_count, home_status_graph,
-  most_cited_authors,
-  most_cited_papers, venue_graph_data
+  home_papers, home_status_count, home_status_graph
 } from "@/API/elastic_api";
 import {doughnut_chart_prep, formatNumber, formatTitle, line_chart_prep} from "assets/utils";
-import SearchResult from "@/components/search_page/SearchResult";
-import LineGraph from "@/components/static_components/LineGraph";
 
 export default {
   name: "home",
-  components: {LineGraph, SearchResult},
   layout: 'default',
   head() {
     return {
