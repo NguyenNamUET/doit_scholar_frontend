@@ -257,6 +257,7 @@ export default {
       ]
     ).then((res) => {
       results = res
+      console.log(results)
       fos_chart_data = doughnut_chart_prep(results[0].fos_chart)
       venue_chart_data = doughnut_chart_prep(results[0].venues_chart)
       // topics_chart_data = line_chart_prep(results[0].topics_chart)
