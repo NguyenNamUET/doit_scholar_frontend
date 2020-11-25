@@ -67,17 +67,17 @@ const paper_detail = async (params) => {
 }
 
 const paper_by_title = async (query_params) => {
-  // console.log('api', query_params)
   try {
     const result = await axios.post(SEARCH_DOCUMENTS.paper_by_title, {
       search_content:query_params.query,
       sort_by: query_params.sort,
       venues:query_params.venue, venues_is_should: true, return_venue_aggs: true,
-      authors:query_params.author, author_is_should: true, return_top_author: true, top_author_size: 30,
+      authors:query_params.author, author_is_should: true, return_top_author: true, top_author_size: 10,
       fields_of_study:query_params.fos, fos_is_should: true, return_fos_aggs: true,
       start:query_params.start, size:query_params.size,
       from_year:query_params.from_year, end_year:query_params.end_year, return_year_aggs: true
     })
+    console.log('api', result.data)
     return result.data
   } catch(e) {
     console.log(e)

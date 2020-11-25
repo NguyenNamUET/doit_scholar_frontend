@@ -75,7 +75,7 @@ export default {
             page: 1,
             sort: 'score'
           }
-          console.log("this.current_page", this.current_page)
+          // console.log("this.current_page", this.current_page)
           if(this.search_query!==""){
             this.$router.push({path: this.current_page, query: this.query_params})
           }

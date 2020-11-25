@@ -82,7 +82,8 @@
 
   "search_page": {
     "result_stat": "Khoảng {result_count} kết quả cho từ khóa {keyword}",
-    "see_all_author": "Xem tất cả tác giả"
+    "see_all_author": "Xem tất cả tác giả",
+    "related_author": "Tác giả liên quan"
   },
 
   "paper_detail_page": {

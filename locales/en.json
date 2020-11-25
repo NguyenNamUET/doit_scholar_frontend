@@ -82,7 +82,8 @@
   "search_page": {
     "result_stat": "About {result_count} results for keyword {keyword}",
     "see_all_author": "See all authors",
-    "see_fewer_author": "See fewer authors"
+    "see_fewer_author": "See fewer authors",
+    "related_author": "Related authors"
   },
 
   "paper_detail_page": {

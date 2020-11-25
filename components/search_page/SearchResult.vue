@@ -229,13 +229,10 @@
 </template>
 
 <script>
-import CitationBar from "./CitationBar";
-import AuthorModal from "./AuthorModal";
-import {formatTitle, genBibtex} from "../../assets/utils";
+import {formatTitle, genBibtex} from "assets/utils";
 
 export default {
   name: "SearchResult",
-  components: {CitationBar, AuthorModal},
   props: ['search_result'],
   data() {
     return {

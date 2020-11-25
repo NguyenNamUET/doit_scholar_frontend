@@ -111,7 +111,7 @@ export default {
         removeRedundantAttributes: true,
         trimCustomFragments: true,
         useShortDoctype: true,
-        minifyURLs: true,
+        minifyURLs: false,
         removeComments: true,
         removeEmptyElements: true
       }
