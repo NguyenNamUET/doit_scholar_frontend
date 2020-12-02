@@ -6,7 +6,10 @@
 
 <script>
     export default {
-        name: "home_layout"
+        name: "home_layout",
+      head() {
+        return this.$nuxtI18nSeo();
+      }
     }
 </script>
 

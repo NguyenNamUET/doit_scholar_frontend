@@ -2,35 +2,46 @@
   <div class="tile is-ancestor">
     <div class="tile is-parent is-vertical">
       <div class="tile is-child content_box">
-        <a
+        <!---------------------------------------Title------------------------------------------->
+        <a v-if="Object.keys(search_result).includes('title')"
           class="text-class-1"
           :href="'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId"
         >
           <b>{{ search_result.title }}</b>
         </a>
-        <!----------------------------------------------------------------------------------------------->
+        <!---------------------------------------Title------------------------------------------->
         <div class="has-text-weight-light">
+          <!-------------- Year ------------------>
+          <p
+            class="text-class-3"
+            v-if="search_result.year !== '' && search_result.year !== null && search_result.year !== undefined"
+          >
+            <span class="small_icon"><i class="fas fa-calendar-alt"></i></span>
+            {{search_result.year}}
+          </p>
+          <!-------------- Year ------------------>
+
           <!------------------------------------ Fields of study ---------------------------------------->
-          <p v-if="search_result.fieldsOfStudy">
+          <p v-if="Object.keys(search_result).includes('fieldsOfStudy') && search_result.fieldsOfStudy">
+            <!------------------------------- Venues/Journals --------------------------------->
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
-            <a
-              class="link-class-3 secondary_description"
-              :href="'/journal/' + formatTitle(search_result.venue)"
-              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
-            >
+            <nuxt-link  v-if="Object.keys(search_result).includes('venue') && search_result.venue"
+                        class="link-class-3 secondary_description"
+                        :to="{path:'/journal/' + search_result.venue.replace(' ','-'),
+                              query:{start:0, size:10, page:1, sort: 'score'}}">
               <b>{{search_result.venue}}</b>
-            </a>
+            </nuxt-link>
             <span
-              v-if="search_result.venue !== undefined && search_result.venue !== null && search_result.venue !== ''"
+              v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >&sdot;</span>
-            <a
+            <span
               v-if="!field_hidden"
-              class="link-class-3"
+              class="text-class-3"
               v-for="(fos,index) in search_result.fieldsOfStudy"
             >
               {{ fos }}
               <span v-if="index < search_result.fieldsOfStudy.length - 1">,</span>
-            </a>
+            </span>
             <span
               class="less-more-button"
               v-if="!field_hidden"
@@ -39,12 +50,12 @@
               &nbsp{{ $t('general_attribute.less') }}
             </span>
 
-            <a
+            <span
               v-if="field_hidden"
-              class="link-class-3"
+              class="text-class-3"
             >
               {{ search_result.fieldsOfStudy[0] }}
-            </a>
+            </span>
             <span
               v-if="field_hidden && search_result.fieldsOfStudy.length - 1 > 0"
               class="link-class-3 less-more-button"
@@ -56,20 +67,18 @@
           <!------------------------------------ Fields of study ---------------------------------------->
 
           <!------------------------------------------ Topics ------------------------------------------->
-          <p v-if="search_result.topics.length > 0">
+          <p v-if="Object.keys(search_result).includes('topics') && search_result.topics && search_result.topics.length > 0">
             <span class="small_icon"><i class="fas fa-sticky-note"></i></span>
             <span
               v-if="!topic_hidden"
               v-for="(topic, index) in search_result.topics"
               :key="topic.topicId"
-
             >
-              <a
-                :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
-                class="link-class-3"
-              >
+             <nuxt-link class="link-class-3"
+                        :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,
+                              query: {start: 0, size: 10, page: 1, sort: 'score'}}">
                 {{ topic.topic }}
-              </a>
+              </nuxt-link>
               <span v-if="index < search_result.topics.length - 1">,</span>
             </span>
             <span
@@ -84,14 +93,13 @@
               v-if="topic_hidden"
               v-for="(topic, index) in search_result.topics.slice(0,5)"
             >
-              <a
-                :href="'/topic/' + formatTitle(topic.topic) + '-' + topic.topicId"
-                class="link-class-3"
-              >
+              <nuxt-link class="link-class-3"
+                         :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,
+                               query: {start: 0, size: 10, page: 1, sort: 'score'}}">
                 {{ topic.topic }}
-              </a>
+              </nuxt-link>
               <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
-          </span>
+            </span>
             <span
               v-if="topic_hidden && search_result.topics.length > 5"
               class="less-more-button"
@@ -103,20 +111,22 @@
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <AuthorModal v-bind:authors="search_result.authors"></AuthorModal>
+          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
+                        :authors="search_result.authors">
+          </AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
         <!------------------------------------------ Abstract ----------------------------------------->
         <p
-          v-if="!abstract_hidden && typeof search_result.abstract !== 'object'"
+          v-if="!abstract_hidden && Object.keys(search_result).includes('abstract') && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
           {{ search_result.abstract }}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
-          v-if="abstract_hidden && typeof search_result.abstract !== 'object'"
+          v-if="abstract_hidden && Object.keys(search_result).includes('abstract') && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
           {{ search_result.abstract.slice(0, 400) }}
@@ -128,18 +138,21 @@
         </p>
         <br>
         <!------------------------------------------ Abstract ----------------------------------------->
+
         <!-------------------------------------- Action Buttons --------------------------------------->
         <nav class="level is-mobile util_level">
           <div class="level-left is-small">
-            <a class="level-item" v-if="search_result.citations_count > 0">
-              <button
+            <a class="level-item"
+               v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">
+              <nuxt-link :to="{path:'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId,
+                               query:{start:0, size:10, page:1}}"
                 class="button is-info is-light is-outlined"
               >
                 {{ search_result.citations_count }} {{ $t('general_attribute.citation') }}
-              </button>
+              </nuxt-link>
             </a>
             <a
-              v-if="search_result.doi !== undefined && search_result.doi !== null"
+              v-if="Object.keys(search_result).includes('doi') && search_result.doi"
               :href="'https://doi.org/' + search_result.doi"
               target="_blank"
               class="level-item"
@@ -151,21 +164,19 @@
               </button>
             </a>
             <a
-              v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && !search_result.pdf_url.endsWith('.pdf')"
+              v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && !search_result.pdf_url.endsWith('.pdf')"
               :href="search_result.pdf_url"
               target="_blank"
-              class="level-item"
+              class="level-item is-hidden-mobile"
             >
-              <button
-                class="button is-info is-light is-outlined"
-              >
+              <button class="button is-info is-light is-outlined">
                 <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
             <span class="level-item">
               <span
                 class="tag is-success is-small"
-                v-if="search_result.pdf_url !== null && search_result.pdf_url !== undefined && search_result.pdf_url.endsWith('.pdf')"
+                v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && search_result.pdf_url.endsWith('.pdf')"
               >
 <!--                {{search_result.pdf_url}}-->
               <span>PDF <i class="fas fa-check"></i></span>
@@ -173,9 +184,8 @@
             </span>
           </div>
           <div class="level-right is-small">
-
             <button
-              class="button is-info is-light is-outlined"
+              class="level-item button is-info is-light is-outlined"
               @click="handle_cite_button"
             >
               <span><i class="fas fa-quote-left"></i> {{ $t('general_attribute.cite') }}</span>
@@ -219,13 +229,10 @@
 </template>
 
 <script>
-import CitationBar from "./CitationBar";
-import AuthorModal from "./AuthorModal";
-import {formatTitle, genBibtex} from "../../assets/utils";
+import {formatTitle, genBibtex} from "assets/utils";
 
 export default {
   name: "SearchResult",
-  components: {CitationBar, AuthorModal},
   props: ['search_result'],
   data() {
     return {

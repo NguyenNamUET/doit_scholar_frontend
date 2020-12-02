@@ -23,7 +23,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'DoIT Scholar - Your trusty academic search engine',
     script: [
       {
         // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
@@ -36,7 +36,9 @@ export default {
       { hid: 'description', name: 'description', content: 'DoIT Scholar - A search engine for scientific literature' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'alternate', hreflang: 'x-default', href: '/'},
+      { rel: 'canonical', href: '/'}
     ]
   },
   /*
@@ -67,7 +69,8 @@ export default {
   buildModules: [
     [
       'nuxt-i18n', i18n
-    ]
+    ],
+    '@nuxt/components'
   ],
   /*
   ** Nuxt.js modules
@@ -77,7 +80,8 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    'nuxt-lazy-load'
+    'nuxt-lazy-load',
+    '@nuxtjs/pwa'
   ],
   // sentry: {
   //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
@@ -113,7 +117,7 @@ export default {
         removeRedundantAttributes: true,
         trimCustomFragments: true,
         useShortDoctype: true,
-        minifyURLs: true,
+        minifyURLs: false,
         removeComments: true,
         removeEmptyElements: true
       }

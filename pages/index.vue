@@ -1,276 +1,178 @@
 <template>
-  <div>
-    <section class="hero is-medium" id="content">
-      <div class="hero-head">
-        <nav class="navbar">
-          <div class="container">
-            <div class="navbar-end">
-              <div class="navbar-item">
-                <b-dropdown aria-role="list">
-                  <button class="button is-light" slot="trigger" slot-scope="{ active }">
-                    <span>{{ $t('default_layout.header.lang_switch') }}</span>
-                    <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>
-                  </button>
-
-                  <b-dropdown-item
-                    v-for="locale in availableLocales"
+  <div class="container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-3">
+        <div class="tile is-child">
+          <div class="column has-text-centered content_box">
+            <DoughnutGraph
+              :dataset="fos_chart_data"
+              :title="$t('home_page.chart.paper_by_fos_chart')"
+              style="height: 200px; width: 200px; display: inline-block"
+            ></DoughnutGraph>
+            <DoughnutGraph
+              :dataset="venue_chart_data"
+              :title="$t('home_page.chart.paper_by_venue_chart')"
+              style="height: 200px; width: 200px; display: inline-block"
+            ></DoughnutGraph>
+          </div>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child">
+          <div class="content_box has-text-centered">
+            <LineGraph
+              :title="$t('home_page.chart.trending_topics')"
+              :dataset="line_data"
+            ></LineGraph>
+          </div>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child">
+          <p class="content_title">{{ $t('home_page.page_stat.site_status') }}</p>
+          <div class="info_container content_box">
+            <div class="columns is-3">
+              <div class="column has-text-centered">
+                <div>
+                  <client-only>
+                    <number
+                      class="number_status"
+                      ref="author_count"
+                      :from="0"
+                      :to=author_count
+                      :duration="1.5"
+                      :format="formatNumber"
+                    />
+                  </client-only>
+                  <br>
+                  <span class="status_description">{{$t('home_page.page_stat.author_count')}}</span>
+                </div>
+                <div>
+                  <client-only>
+                    <number
+                      class="number_status"
+                      ref="doc_count"
+                      :from="0"
+                      :to=paper_count
+                      :format="formatNumber"
+                      :duration="1.5"
+                    />
+                  </client-only>
+                  <br>
+                  <span class="status_description">{{$t('home_page.page_stat.paper_count')}}</span>
+                </div>
+                <div>
+                  <client-only>
+                    <number
+                      class="number_status"
+                      ref="field_count"
+                      :from="0"
+                      :to=fos_count
+                      :format="formatNumber"
+                      :duration="1.5"
+                    />
+                  </client-only>
+                  <br>
+                  <span class="status_description">{{$t('home_page.page_stat.fos_count')}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile is-ancestor">
+      <!---------------------------------------- Left side bar --------------------------------------->
+      <div class="tile is-parent is-vertical is-3">
+<!--        <div class="tile is-child">-->
+<!--          <p class="content_title">Authors</p>-->
+<!--          <div class="content_box">-->
+<!--            {{highlight_authors}}-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="tile is-child">
+          <p class="content_title">{{ $t('home_page.papers_content.famous_journals') }}</p>
+          <div class="content_box">
+            <ul>
+              <li v-for="item in highlight_venues">
+                <nuxt-link class="link-class-3"
+                  :to="{path: '/journal/' + formatTitle(item),
+                        query: {start: 0, size: 10, page: 1, sort: 'score'}}"
                   >
-                    <nuxt-link
-                      :key="locale.code"
-                      :to="switchLocalePath(locale.code)"
-                    >
-                    <span v-if="locale.name === 'English'">
-                      Tiếng Anh
-                    </span>
-                      <span v-else>
-                      {{ locale.name }}
-                    </span>
-                    </nuxt-link>
-                  </b-dropdown-item>
-                </b-dropdown>
-              </div>
-            </div>
+                  {{item}}
+                </nuxt-link>
+              </li>
+            </ul>
           </div>
-        </nav>
-      </div>
-      <!-- Hero content: will be in the middle -->
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <img
-            class="logo"
-            src="~/static/logo.png"
-            alt="DoIT Scholar"
-          >
-          <div class="subtitle has-text-black">
-            {{$t('home_page.title')}}
-          </div>
-          <SearchBar
-            :placeholder="$t('default_layout.header.search_bar_placeholder')"
-            style="box-shadow: 0 5px 8px 1px #C5C8C9;"
-          />
         </div>
-        <div class="container carousel_container">
-          <b-carousel
-            :pause-hover="true"
-            :pause-info="false"
-            :arrow="false"
-            :indicator-mode="'hover'"
-            :indicator-style="'is-lines'"
-          >
-            <b-carousel-item>
-              <p
-                class="content_title"
-              >
-                {{$t('home_page.author_carousel.title')}}
-              </p>
-              <div class="columns is-1">
-                <div
-                  class="column is-one-third"
-                  v-for="result in most_cited_authors"
-                >
-                  <div class="card_wrapper">
-                    <div class="content_box">
-                      <a
-                        class="author_name"
-                        :href="'/author/' + formatTitle(result.name) + '-' + result.authorId"
-                      >
-                        <b>{{result.name}}</b>
-                      </a>
-                      <table style="width: 100%">
-                        <tr v-if="result.citationsCount !== undefined">
-                          <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">
-                              {{$t('home_page.author_carousel.citation')}}
-                            </span>
-                          </td>
-                          <td>
-                            <span
-                              class="author_stat"
-                            >
-                              {{result.citationsCount | formatNumber}}
-                            </span>
-                          </td>
-                        </tr>
-                        <tr v-if="result.totalPapers !== undefined">
-                          <td style="width: 90%">
-                            <span class="text-class-3 color-class-3">
-                              {{$t('home_page.author_carousel.publication')}}
-                            </span>
-                          </td>
-                          <td>
-                            <span
-                              class="author_stat"
-                            >
-                            {{result.totalPapers | formatNumber}}
-                            </span>
-                          </td>
-                        </tr>
-                        <tr v-if="result.influentialCitationCount !== undefined">
-                          <td>
-                            <span class="text-class-3 color-class-3">
-                              {{$t('home_page.author_carousel.highlighted_citation')}}
-                            </span>
-                          </td>
-                          <td>
-                            <span
-                              class="author_stat"
-                            >{{result.influentialCitationCount | formatNumber}}</span>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </b-carousel-item>
-
-            <b-carousel-item>
-              <p
-                class="content_title"
-              >
-                {{$t('home_page.paper_carousel.title')}}
-              </p>
-              <div class="columns is-1">
-                <div
-                  class="column is-one-third"
-                  v-for="result in most_cited_papers"
-                >
-                  <PaperCard
-                    :paper_detail="result._source"
+      </div>
+      <!----------------------------------------- Center content -------------------------------------->
+      <div class="tile is-parent is-vertical is-6">
+        <div class="tile is-child">
+          <p class="content_title">{{ $t('home_page.papers_content.latest_papers') }}</p>
+          <SearchResult
+            v-for="item in most_recent_papers"
+            :key="item._source.paperId"
+            :search_result="item._source"
+          ></SearchResult>
+        </div>
+        <div class="tile is-child">
+          <p class="content_title">{{ $t('home_page.papers_content.most_cited_papers') }}</p>
+          <SearchResult
+            v-for="item in most_cited_papers"
+            :key="item._source.paperId"
+            :search_result="item._source"
+          ></SearchResult>
+        </div>
+      </div>
+      <!------------------------------------------- Right side bar ----------------------------------->
+      <div class="tile">
+        <div class="tile is-parent is-vertical">
+          <div class="tile is-child">
+            <p class="content_title">{{ $t('home_page.chart.trending_topics') }}</p>
+            <div class="content_box">
+              <ul>
+                <li v-for="item in highlight_topics">
+                  <nuxt-link class="link-class-3"
+                             :to="{path: '/topic/' + formatTitle(item.name) + '-' + item.id,
+                                   query: {start: 0, size: 10, page: 1, sort: 'score'}}"
                   >
-                  </PaperCard>
-                </div>
-              </div>
-            </b-carousel-item>
-
-            <b-carousel-item>
-              <p
-                class="content_title"
-              >
-                {{$t('home_page.fos_carousel.title')}}
-              </p>
-              <div class="columns is-1">
-                <div
-                  class="column is-one-third"
-                  v-for="(value, key) in most_cited_fos"
-                >
-                  <div class="card_wrapper">
-                    <div class="content_box">
-                      <a
-                        class="text-class-2 has-text-weight-medium"
-                      >
-                        {{key}}
-                      </a>
-                      <p>{{$t('home_page.fos_carousel.count')}}: {{value}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </b-carousel-item>
-          </b-carousel>
-        </div>
-        <div class="info_container container">
-          <div class="columns is-1">
-            <div class="column has-text-centered is-half">
-              <div>
-                <number
-                  class="number_status"
-                  ref="author_count"
-                  :from="0"
-                  :to=author_count
-                  :duration="1.5"
-                  :format="formatNumber"
-                />
-                <span class="status_description">{{$t('home_page.page_stat.author_count')}}</span>
-              </div>
-              <div>
-                <number
-                  class="number_status"
-                  ref="doc_count"
-                  :from="0"
-                  :to=paper_count
-                  :format="formatNumber"
-                  :duration="1.5"
-                />
-                <span class="status_description">{{$t('home_page.page_stat.paper_count')}}</span>
-              </div>
-              <div>
-                <number
-                  class="number_status"
-                  ref="field_count"
-                  :from="0"
-                  :to=fos_count
-                  :format="formatNumber"
-                  :duration="1.5"
-                />
-                <span class="status_description">{{$t('home_page.page_stat.fos_count')}}</span>
-              </div>
-
+                    {{item.name}}
+                  </nuxt-link>
+                </li>
+              </ul>
             </div>
-            <div class="column has-text-centered is-half content_box">
-              <DoughnutGraph
-                :dataset="fos_chart_data"
-                :title="$t('home_page.chart.paper_by_fos_chart')"
-                style="height: 250px; width: 250px; display: inline-block"
-              ></DoughnutGraph>
-              <DoughnutGraph
-                :dataset="venue_chart_data"
-                :title="$t('home_page.chart.paper_by_venue_chart')"
-                style="height: 250px; width: 250px; display: inline-block"
-              >
-
-              </DoughnutGraph>
+          </div>
+          <div class="tile is-child">
+            <p class="content_title">{{ $t('general_attribute.fos') }}</p>
+            <div class="content_box">
+              <ul>
+                <li v-for="item in highlight_fos">
+                  <nuxt-link class="link-class-3"
+                    :to="{path: 'search',
+                    query: {query: '', start: 0, size: 10, page: 1, fos: item}}"
+                  >
+                    {{item}}
+                  </nuxt-link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
-      <div class="hero-foot">
-        <div id="footer">
-          <div class="container">
-            <div class="columns">
-              <div class="column">
-                <p>
-                  <i class="fas fa-map-marker-alt"></i>
-                  <b>{{ $t('default_layout.footer.address') }}: </b>
-                  {{ $t('default_layout.footer.address_value') }}
-                </p>
-                <p>
-                  <i class="fas fa-envelope"></i>
-                  <b>Email: </b>
-                  <a href="mailto:doit@vnu.edu.vn">doit@vnu.edu.vn</a>
-                </p>
-                <p>
-                  <i class="fab fa-facebook-f"></i>
-                  <b>Facebook: </b>
-                  <a href="https://facebook.com/doitvn">DoIT</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   </div>
 </template>
 
 <script>
-  import {doughnut_chart_prep, formatNumber} from "assets/utils";
-  import {
-    all_author,
-    all_field,
-    all_paper,
-    fos_graph_data,
-    most_cited_authors,
-    most_cited_papers, venue_graph_data
-  } from "@/API/elastic_api";
-  import DoughnutGraph from "@/components/static_components/DoughnutGraph";
-  import AuthorCard from "@/components/search_page/AuthorCard";
-  import PaperCard from "@/components/static_components/PaperCard";
-  import {formatTitle} from 'assets/utils';
+import {
+  home_papers, home_status_count, home_status_graph
+} from "@/API/elastic_api";
+import {doughnut_chart_prep, formatNumber, formatTitle, line_chart_prep} from "assets/utils";
 
 export default {
-  components: {PaperCard, AuthorCard, DoughnutGraph},
-  layout: 'home_layout',
+  name: "home",
+  layout: 'default',
   head() {
     return {
       title: 'DoIT Scholar - Your trusty academic search engine',
@@ -288,34 +190,96 @@ export default {
       author_count: null,
       paper_count: null,
       fos_count: null,
+
       fos_chart_data: null,
       venue_chart_data: null,
+      topics_chart_data: null,
+
       most_cited_authors: null,
       most_cited_papers: null,
+      most_recent_papers: null,
       most_cited_fos: null,
+
+      highlight_topics: null,
+      highlight_authors: null,
+      highlight_venues: null,
+      highlight_fos: null,
+
+      line_data: {
+        labels: [2015, 2016, 2017, 2018],
+        datasets: [
+          {
+            label: 'Algorithm',
+            borderColor: '#ffe502',
+            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
+          }, {
+            label: 'Neoplasms',
+            borderColor: '#2948c3',
+            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
+          },
+          {
+            label: 'Diethylstilbestrol',
+            borderColor: '#bf5611',
+            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()]
+          }
+        ]
+      }
     }
   },
-  async asyncData() {
-    let author_count = await all_author()
-    let paper_count = await all_paper()
-    let fos_count = await all_field()
+  async asyncData({route}) {
+    let results = null
+    let fos_chart_data = null
+    let venue_chart_data = null
+    let topics_chart_data = null
 
-    let most_cited_author = await most_cited_authors()
-    let most_cited_paper = await most_cited_papers()
-    let most_cited_fos = await fos_graph_data({size: 3})
-    let fos_data = await fos_graph_data({size: 1000})
-    let venue_data = await venue_graph_data()
-    let fosChartData = doughnut_chart_prep(fos_data)
-    let venueChartData = doughnut_chart_prep(venue_data)
+    await Promise.all(
+      [
+        home_status_graph({
+          fos_graph: true,
+          venues_graph: true,
+          topics_graph: true,
+          size: 50,
+          topics_size: 50,
+          year_size: 5
+        }),
+        home_status_count({
+          is_papers_count: true,
+          is_authors_count: true,
+          is_fos_count: true,
+          is_topics_count: true
+        }),
+        home_papers({
+          size: 3,
+          topics_size: 10,
+          order_by_citations_count: true,
+          order_by_year: true,
+        })
+      ]
+    ).then((res) => {
+      results = res
+      console.log(results)
+      fos_chart_data = doughnut_chart_prep(results[0].fos_chart)
+      venue_chart_data = doughnut_chart_prep(results[0].venues_chart)
+      // topics_chart_data = line_chart_prep(results[0].topics_chart)
+    })
     return {
-      fos_chart_data: fosChartData,
-      venue_chart_data: venueChartData,
-      most_cited_fos: most_cited_fos,
-      most_cited_authors: most_cited_author,
-      most_cited_papers: most_cited_paper,
-      author_count: author_count,
-      paper_count: paper_count,
-      fos_count: fos_count
+      author_count: results[1].authors_count,
+      paper_count: results[1].papers_count,
+      fos_count: results[1].fos_count,
+
+      highlight_topics: results[0].topics_chart,
+      highlight_authors: null,
+      highlight_venues: Object.keys(results[0].venues_chart),
+      highlight_fos: Object.keys(results[0].fos_chart),
+
+      fos_chart_data: fos_chart_data,
+      venue_chart_data: venue_chart_data,
+      topics_chart_data: topics_chart_data,
+
+      most_cited_authors: results[3],
+      most_cited_papers: results[2].most_cited_papers,
+      most_recent_papers: results[2].most_recent_paper,
+      most_cited_fos: results[5],
     }
   },
   filters: {
@@ -329,6 +293,9 @@ export default {
     }
   },
   methods: {
+    getRandomInt () {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    },
     formatNumber(number) {
       return formatNumber(number)
     },
@@ -339,73 +306,21 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  ._container {
-    //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    //background-size: 400% 400%;
-    //animation: gradient 20s ease infinite;
-    //background-color: #e8e8e8;
-    min-height: 100vh;
-    background: rgb(252,244,244);
-    background: linear-gradient(45deg, rgba(252,244,244,1) 55%, rgba(255,255,255,1) 100%);
-  }
-
-  .info_container {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    min-height: 200px;
-  }
-  .status_container {
-    background: #4e54c8;
-    color: white;
-    div {
-      padding: 20px;
-    }
-  }
-
-  .author_name {
-    font-size: 24px;
-    font-weight: 600;
-  }
-
-  .carousel_container {
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-
-  .author_stat {
-    font-weight: 700;
-    color: #dc710f;
-    font-size: 14px;
-  }
-
-  #footer {
-    a {
-      color: white
-    }
-    p {
-      margin-top: 10px;
-    }
-    background: #4e54c8;
-    height: 180px;
-    color: white;
-    padding: 40px 40px 40px 80px;
-  }
-  .column.has-text-centered.is-half.content_box {
-    border-radius: 10px 10px 10px 10px;
-  }
-
-  .number_status {
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: #f0a500;
-  }
-
-  .status_description {
-    font-size: 1.5rem;
-    color: #2e414f;
-  }
-  .text-class-2 {
-    color: #0352ba;
-  }
+<style scoped>
+.container {
+  padding: 40px 20px;
+}
+.number_status {
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #f0a500;
+}
+.status_description {
+  font-size: 1.5rem;
+  color: #2e414f;
+}
+ul {
+  list-style-type: circle;
+  padding: 10px;
+}
 </style>

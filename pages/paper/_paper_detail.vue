@@ -1,7 +1,6 @@
 <template>
-  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container" id="abstract">
-<!--    {{this.gg_scholar_meta}}-->
-    <div class="tile is-ancestor is-vertical" id="abstract_box" style="flex-wrap: wrap">
+  <div v-if="Object.keys(this.paper_detail).length !== 0" class="container">
+    <div class="tile is-ancestor is-vertical" id="abstract_box">
       <div class="tile">
         <div class="tile is-parent is-7">
           <div class="tile is-child">
@@ -160,7 +159,8 @@
             <!--------------------------------------- View pdf -------------------------------------------->
           </div>
         </div>
-        <div class="tile is-parent">
+
+        <div class="tile is-parent is-hidden-touch">
           <div class="tile is-child top_citation" v-if="citation_length > 0">
             <p>
               <i18n
@@ -186,6 +186,7 @@
             <PaperCard
               v-for="result in citation_data.slice(0,3)"
               :paper_detail="result"
+              :key="result.paperId"
             >
             </PaperCard>
           </div>
@@ -280,7 +281,7 @@
               <li
                 class="topic_list"
                 v-for="item in paper_detail.topics"
-
+                :key="item.topicId"
               >
                 <a
                   :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
@@ -297,7 +298,13 @@
 
     <!------------------------------------------ Citations Table -------------------------------------------------->
     <div class="tile is-ancestor" id="citation_box" >
-      <div class="tile" v-if="citation_length > 0">
+      <div v-if="this.is_loading_citation" class="tile">
+        <div class="tile is-parent">
+          <i class="fas fa-spinner fa-pulse"></i>
+          <p>Loading</p>
+        </div>
+      </div>
+      <div class="tile" v-else-if="citation_length > 0 && !this.is_loading_citation">
         <div class="tile is-parent">
           <article class="tile is-child">
             <p class="content_title">
@@ -320,9 +327,7 @@
                       {{ (current_citation_page-1)*per_page + 1}}
                   </span>
                 </template>
-                <template
-                  v-slot:end
-                >
+                <template v-slot:end>
                   <span v-if="(current_citation_page-1)*per_page + per_page < citation_length">
                       {{ (current_citation_page-1)*per_page + per_page}}
                   </span>
@@ -341,7 +346,8 @@
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
                   v-for="result in citation_data"
-                  v-bind:search_result="result"
+                  :key="result.paperId"
+                  :search_result="result"
                 >
                 </SearchResult>
                 <Pagination
@@ -399,7 +405,13 @@
 
     <!----------------------------------------- References Table -------------------------------------------------->
     <div class="tile is-ancestor is-vertical " id="reference_box">
-      <div class="tile is-parent" v-if="ref_data.length > 0">
+      <div v-if="this.is_loading_ref" class="tile">
+        <div class="tile is-parent">
+          <i class="fas fa-spinner fa-pulse"></i>
+          <p>Loading</p>
+        </div>
+      </div>
+      <div class="tile is-parent" v-else-if="ref_length > 0 && !this.is_loading_ref">
         <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.reference') }}
@@ -421,9 +433,7 @@
                       {{ (current_ref_page-1)*per_page + 1}}
                   </span>
               </template>
-              <template
-                v-slot:end
-              >
+              <template v-slot:end>
                   <span v-if="(current_ref_page-1)*per_page + per_page < ref_length">
                       {{ (current_ref_page-1)*per_page + per_page}}
                   </span>
@@ -442,7 +452,8 @@
             <div class="tile is-child is-8">
               <SearchResult
                 v-for="result in ref_data"
-                v-bind:search_result="result"
+                :key="result.paperId"
+                :search_result="result"
               >
               </SearchResult>
               <Pagination
@@ -459,6 +470,8 @@
       </div>
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
+
+    <!----------------------------------------- Suggestion  -------------------------------------------------->
     <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">
       <div class="tile is-parent">
         <div class="tile is-child">
@@ -473,11 +486,13 @@
             <b-carousel-item
               style="margin-bottom: 10px;"
               v-for="page in Math.round(suggestion_data.length / 3)"
+              :key="page"
             >
               <div class="columns is-1">
                 <div
                   class="column is-one-third"
                   v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
+                  :key="result._source.paperId"
                 >
                   <PaperCard
                     :paper_detail="result._source"
@@ -490,6 +505,7 @@
         </div>
       </div>
     </div>
+    <!----------------------------------------- Suggestion  -------------------------------------------------->
   </div>
 
   <!--Error page-->
@@ -502,11 +518,9 @@
 <script>
 import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
 import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
-import SearchResult from "@/components/search_page/SearchResult";
 
 export default {
-      name: "_paper_detail",
-      components: {SearchResult},
+      name: "paper_detail",
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
@@ -515,16 +529,6 @@ export default {
           redirect('/')
         }
       },
-      // watch: {
-      //   scroll_position: async function (old_value, new_value) {
-      //     if (new_value > (this.abstract_height + this.topic_height)) {
-      //       let data = await citation_chart_data(this.paper_id)
-      //       console.log(data)
-      //       this.chart_labels = Object.keys(data.citations_chart)
-      //       this.chart_data = Object.values(data.citations_chart)
-      //     }
-      //   }
-      // },
       head() {
         return {
           title: this.paper_detail.title + ' | DoIT Scholar',
@@ -773,26 +777,34 @@ export default {
         },
         async updateCitation(page_num) {
           this.is_loading_citation = true
+          this.$refs.citation_box.click()
+          await this.$router.push({
+            path: this.$route.path + "#citation_box",
+            query: {cit_page: page_num, ref_page: this.current_ref_page}
+          })
+          this.current_citation_page = page_num
           let result = await paper_citation({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$refs.citation_box.click()
-          this.current_citation_page = page_num
           this.citation_data = result
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
         },
         async updateReference(page_num) {
           this.is_loading_ref = true
+          this.$refs.reference_box.click()
+          await this.$router.push({
+            path: this.$route.path + "#reference_box",
+            query: {cit_page: this.current_citation_page, ref_page: page_num}
+          })
+          this.current_ref_page = page_num
           let result = await paper_references({
             paper_id: this.paper_id,
             start: (page_num - 1) * this.per_page,
             size: this.per_page
           })
-          this.$refs.reference_box.click()
-          this.current_ref_page = page_num
           this.ref_data = result
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
@@ -810,7 +822,7 @@ export default {
               document.getElementById('topic_box').offsetHeight,
               document.getElementById('citation_box').offsetHeight,
               document.getElementById('reference_box').offsetHeight
-          ]
+            ]
           }
           else{
             return [0,0,0,0]
@@ -827,32 +839,41 @@ export default {
       },
       async asyncData({route, $axios}) {
         let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
-
-        let data = await paper_detail(paper_id)
+        let params = {paper_id:paper_id,
+                      cstart:0, csize:10,
+                      rstart:0, rsize:10}
+        if(Object.keys(route.query).includes('cit_page')){
+          params.cstart = route.query?.cit_page-1 ?? 0
+          this.current_citation_page = this.$route.query?.cit_page ?? 1
+        }
+        if(Object.keys(route.query).includes('ref_page')){
+          params.rstart = route.query?.ref_page-1 ?? 0
+          this.current_ref_page = this.$route.query?.ref_page ?? 1
+        }
+        let paper_data = await paper_detail(params)
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
 
         let suggestion_data = []
-        if(data?.fieldsOfStudy){
+        if(paper_data?.fieldsOfStudy){
           suggestion_data = await paper_by_fos({
-            fields_of_study: data.fieldsOfStudy,
+            fields_of_study: paper_data.fieldsOfStudy,
             size: 15
           })
         }
-        if (Object.keys(data).length !== 0) {
-          if (data.citations_count > 0) {
-            let data = await citation_chart_data(paper_id)
-            data_dict = data.citations_chart
+        if (Object.keys(paper_data).length !== 0) {
+          if (paper_data.citations_count > 0){
+            data_dict = paper_data.citations_chart
             is_citation_empty = false
           }
           // console.log(data_dict)
-          if (data.references_count > 0) {
+          if (paper_data.references_count > 0) {
             is_ref_empty = false
           }
           // console.log(data)
           //Sort topics alphabetically
-          data.topics.sort(function(a,b){
+          paper_data.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
           return {
@@ -862,11 +883,11 @@ export default {
             chart_labels: Object.keys(data_dict),
             chart_data: Object.values(data_dict),
             paper_id: paper_id[0],
-            paper_detail: data,
-            citation_data: data.citations,
-            ref_data: data.references,
-            citation_length: data.citations_count,
-            ref_length: data.references_count
+            paper_detail: paper_data,
+            citation_data: paper_data.citations,
+            ref_data: paper_data.references,
+            citation_length: paper_data.citations_count,
+            ref_length: paper_data.references_count
           }
         }
         else {
@@ -951,9 +972,6 @@ export default {
     top: 80px;
     right: 60px;
     z-index: 4;
-  }
-
-  .related_content {
   }
 
   .top_citation {

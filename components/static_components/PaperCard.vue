@@ -1,7 +1,7 @@
 <template>
   <div class="card_wrapper">
     <div class="content_box">
-      <a
+      <a v-if="Object.keys(paper_detail).includes('title')"
         class="text-class-2 has-text-weight-medium"
         :href="'/paper/' + formatTitle(paper_detail.title) + '.p' + '-' + paper_detail.paperId"
         :title="paper_detail.title"
@@ -10,17 +10,17 @@
         <span v-if="paper_detail.title.length > 30">...</span>
       </a>
       <br>
-      <p
-        :title="paper_detail.abstract"
-        v-if="paper_detail.abstract !== undefined && paper_detail.abstract !== null"
+      <p v-if="Object.keys(paper_detail).includes('abstract') &&
+               paper_detail.abstract !== undefined && paper_detail.abstract !== null"
+         :title="paper_detail.abstract"
       >
         {{paper_detail.abstract.slice(0,60)}}
         <span v-if="paper_detail.abstract.length > 60">...</span>
       </p>
-      <span v-if="paper_detail.authors !== undefined">
+      <span v-if="Object.keys(paper_detail).includes('authors')">
         <span
         v-for="(author, index) in paper_detail.authors.slice(0,1)"
-        :key="author.authorId"
+        v-bind:key="author.authorId"
         >
           <a
             :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
@@ -30,14 +30,15 @@
           </a>
         </span>
       </span>
-      <span
-        v-if="paper_detail.venue !== '' && paper_detail.venue !== undefined"
-        class="text-class-3 color-class-3"
+      <span v-if="Object.keys(paper_detail).includes('venue') &&
+                  paper_detail.venue !== '' && paper_detail.venue !== undefined"
+            class="text-class-3 color-class-3"
       >
       | {{paper_detail.venue}}
       </span>
-      <span v-if="paper_detail.year !== undefined" class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
-      <div>
+      <span v-if="Object.keys(paper_detail).includes('year')"
+            class="text-class-3 color-class-3"> | {{paper_detail.year}}</span>
+      <div v-if="Object.keys(paper_detail).includes('citations_count')">
         <button
           class="button is-info is-small is-light is-outlined"
         >

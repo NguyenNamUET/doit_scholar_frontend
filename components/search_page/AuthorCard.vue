@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-            <a
-              :href="'/author/' + formatTitle(author_name) + '-' + author_id"
-            >
-              <strong class="text-class-2">{{author_name}}</strong>
-            </a>
-            <p class="text-class-3">{{doc_count}} {{ $t('general_attribute.publication') }}</p>
-        </div>
+  <a class="media content_box"
+     :href="'/author/' + formatTitle(author_name) + '-' + author_id"
+  >
+    <div class="media-content">
+      <div class="content">
+        <a
+          :href="'/author/' + formatTitle(author_name) + '-' + author_id"
+        >
+          <strong class="text-class-2">{{author_name}}</strong>
+        </a>
+        <p class="text-class-3">{{doc_count}} {{ $t('general_attribute.publication') }}</p>
       </div>
-    </article>
-  </div>
+    </div>
+  </a>
 </template>
 
 <script>
@@ -22,9 +22,9 @@
       props: ['author_info'],
       data() {
         return {
-          author_id: this.author_info.key,
-          doc_count: this.author_info.doc_count,
-          author_name: this.author_info.name.buckets[0].key
+          author_id: this.author_info.author_id,
+          doc_count: this.author_info.count,
+          author_name: this.author_info.author
         }
       },
       methods: {
@@ -36,8 +36,11 @@
 </script>
 
 <style scoped>
+  a {
+    color: #2e414f;
+  }
   a:hover {
-    text-decoration: none;
+    text-decoration: underline;
   }
   .text-class-3:hover {
     text-decoration: none;
