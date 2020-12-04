@@ -113,7 +113,7 @@ export default {
   watchQuery: true,
   head() {
     return {
-      title: this.journal_name + ' | ' + 'DoIT Scholar'
+      title: this.journal_name + ' | ' + 'Compasify'
     }
   },
   filters: {

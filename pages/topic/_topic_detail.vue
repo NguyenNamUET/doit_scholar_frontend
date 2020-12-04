@@ -120,7 +120,7 @@
       watchQuery: true,
       head() {
         return {
-          title: this.topic_name + ' | DoIT Scholar'
+          title: this.topic_name + ' | Compasify'
         }
       },
       computed: {

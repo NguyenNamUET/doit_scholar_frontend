@@ -201,7 +201,7 @@
       watchQuery: true,
       head() {
         return {
-          title: this.name + ' | DoIT Scholar'
+          title: this.name + ' | Compasify'
         }
       },
       computed: {

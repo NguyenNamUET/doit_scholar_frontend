@@ -528,7 +528,7 @@ export default {
       },
       head() {
         return {
-          title: this.paper_detail.title + ' | DoIT Scholar',
+          title: this.paper_detail.title + ' | Compasify',
           meta: this.all_meta
         }
       },
@@ -570,7 +570,7 @@ export default {
             {
               hid: 'twitter:image:alt',
               property: 'twitter:image:alt',
-              content: 'DoIT Scholar'
+              content: 'Compasify'
             },
             {
               hid: 'twitter:card',
@@ -609,7 +609,7 @@ export default {
             {
               hid: 'og:site_name',
               property: 'og:site_name',
-              content: 'DoIT Scholar'
+              content: 'Compasify'
             },
             {
               hid: 'og:url',
