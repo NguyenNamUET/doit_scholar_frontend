@@ -1,4 +1,4 @@
-const SEARCH_API =  'http://51.210.251.250:8000'
+const SEARCH_API =  'http://localhost:8000'
 // http://localhost:8000
 // http://51.210.251.250:8000
 
@@ -28,7 +28,9 @@ const SEARCH_DOCUMENTS = {
   most_cited_papers: SEARCH_API + '/s2api/papers/homepagePapers',
 
   fos_graph: SEARCH_API + '/s2api/papers/fosGraph',
-  venue_graph: SEARCH_API + '/s2api/papers/venuesGraph'
+  venue_graph: SEARCH_API + '/s2api/papers/venuesGraph',
+
+  paper_site_map: SEARCH_API + '/s2api/sitemaps/getPaperSitemaps'
 }
 
 export {

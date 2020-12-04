@@ -531,7 +531,7 @@ export default {
       },
       head() {
         return {
-          title: this.paper_detail.title + ' | DoIT Scholar',
+          title: this.paper_detail.title + ' | Compasify',
           meta: this.all_meta
         }
       },

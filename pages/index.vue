@@ -175,7 +175,7 @@ export default {
   layout: 'default',
   head() {
     return {
-      title: 'DoIT Scholar - Your trusty academic search engine',
+      title: 'Compasify - Homepage',
       meta: [
         {
           hid: 'info',

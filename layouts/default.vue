@@ -7,8 +7,8 @@
             <a class="navbar-item header-icon" href="/">
               <img
                 class="logo"
-                src="~/static/icon.png"
-                alt="DoIT Scholar"
+                src="~/static/compasify.png"
+                alt="Compasify"
               >
             </a>
 

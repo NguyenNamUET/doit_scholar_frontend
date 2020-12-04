@@ -1,12 +1,22 @@
 import webpack from 'webpack'
 import path from 'path'
 import fs from 'fs'
-import {i18n} from "./config/i18n";
+import {i18n} from "./config/i18n"
+import {paper_sitemap} from "./API/elastic_api"
 
 export default {
-  server: {
-    port: 3400,
-    host: '0.0.0.0'
+  // server: {
+  //   port: 3400,
+  //   host: '0.0.0.0'
+  // },
+  robots: {
+    UserAgent: '*',
+    Disallow: '/',
+    Sitemap: 'http://localhost:3000/paper_sitemap_index.xml'
+  },
+  sitemap: async()=> {
+    const paperSitemap = await paper_sitemap();
+    return paperSitemap
   },
   /*
   ** Nuxt rendering mode
@@ -23,7 +33,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: 'DoIT Scholar - Your trusty academic search engine',
+    title: 'Compasify - Search tool for knowledge',
     script: [
       {
         // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
@@ -33,10 +43,10 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'DoIT Scholar - A search engine for scientific literature' }
+      { hid: 'description', name: 'description', content: 'Compasify - A search engine for scientific literature' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/x-icon', href: '/compasify.ico' },
       { rel: 'alternate', hreflang: 'x-default', href: '/'},
       { rel: 'canonical', href: '/'}
     ]
@@ -78,8 +88,10 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/robots',
     'nuxt-fontawesome',
     'nuxt-buefy',
+    '@nuxtjs/sitemap',
     'nuxt-lazy-load',
     '@nuxtjs/pwa'
   ],
