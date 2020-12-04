@@ -58,7 +58,7 @@ const paper_detail = async (params) => {
                       rstart:params.rstart,
                       rsize:params.rsize}
       })
-    console.log("paper_detail", params)
+    // console.log("paper_detail", params)
     return result.data
   } catch(e) {
     console.log(e)
@@ -77,7 +77,7 @@ const paper_by_title = async (query_params) => {
       start:query_params.start, size:query_params.size,
       from_year:query_params.from_year, end_year:query_params.end_year, return_year_aggs: true
     })
-    console.log('api', result.data)
+    // console.log('api', result.data)
     return result.data
   } catch(e) {
     console.log(e)

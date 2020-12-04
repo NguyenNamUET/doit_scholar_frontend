@@ -13,28 +13,28 @@
           </p>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <FilterBoxMulti :type="'author'"
+            <LazyFilterBoxMulti :type="'author'"
                             :data="authors_list"
                             :whichpage="current_route"
                             :checked="checked_authors_list"
-            ></FilterBoxMulti>
-            <FilterBoxMulti :type="'venue'"
+            ></LazyFilterBoxMulti>
+            <LazyFilterBoxMulti :type="'venue'"
                             :data="venue_list"
                             :whichpage="current_route"
                             :checked="checked_venue_list"
-            ></FilterBoxMulti>
-            <FilterBoxMulti :type="'fos'"
+            ></LazyFilterBoxMulti>
+            <LazyFilterBoxMulti :type="'fos'"
                             :data="fos_list"
                             :whichpage="current_route"
                             :checked="checked_fos_list"
-            ></FilterBoxMulti>
-            <FilterBoxChart :type="'year'"
+            ></LazyFilterBoxMulti>
+            <LazyFilterBoxChart :type="'year'"
                             :checked="checked_year_range"
                             :chart_data="year_list"
                             :whichpage="current_route"
-            ></FilterBoxChart>
+            ></LazyFilterBoxChart>
             <!--------------------- SORT BUTTON ------------------------->
-            <SortButton class="filter_button" :whichpage="current_route"></SortButton>
+            <LazySortButton class="filter_button" :whichpage="current_route"></LazySortButton>
             <!--------------------- SORT BUTTON ------------------------->
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
@@ -69,7 +69,7 @@
 
 
     <!-------------------------   PAGINATION HERE   ---------------------------->
-    <PaginationV2
+    <LazyPaginationV2
       :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
       :page-range="3"
@@ -77,12 +77,12 @@
       :per-page="this.per_page"
       :whichpage="current_route"
       :query="['page','start','size']">
-    </PaginationV2>
+    </LazyPaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
 
   <div v-else>
-    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></NuxtError>
+    <LazyNuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></LazyNuxtError>
   </div>
 
 </template>

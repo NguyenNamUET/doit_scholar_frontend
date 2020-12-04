@@ -23,7 +23,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: 'DoIT Scholar - Your trusty academic search engine',
+    title: 'Compasify - Your trusty academic search engine',
     script: [
       {
         // src: 'https://use.fontawesome.com/releases/v5.3.1/js/all.js',
@@ -33,7 +33,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'DoIT Scholar - A search engine for scientific literature' }
+      { hid: 'description', name: 'description', content: 'Compasify - A search engine for scientific literature' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -81,7 +81,7 @@ export default {
     'nuxt-fontawesome',
     'nuxt-buefy',
     'nuxt-lazy-load',
-    '@nuxtjs/pwa'
+    ['@nuxtjs/pwa', { meta: true, icon: false, manifest: false }]
   ],
   // sentry: {
   //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'

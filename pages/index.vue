@@ -175,12 +175,12 @@ export default {
   layout: 'default',
   head() {
     return {
-      title: 'DoIT Scholar - Your trusty academic search engine',
+      title: 'Compasify - Your trusty academic search engine',
       meta: [
         {
           hid: 'info',
           name: 'info',
-          content: 'Hệ thống tra cứu văn bản học thuật cập nhật nhất'
+          content: 'The most updated academic search engine - ever!'
         }
       ]
     }
