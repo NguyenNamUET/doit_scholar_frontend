@@ -2,6 +2,14 @@
   <a class="media content_box"
      :href="'/author/' + formatTitle(author_name) + '-' + author_id"
   >
+    <figure class="media-left">
+      <p
+        style="font-size: 24px; color: #688cf5"
+      >
+<!--        <img src="https://bulma.io/images/placeholders/128x128.png">-->
+        <i class="fas fa-user-circle" ></i>
+      </p>
+    </figure>
     <div class="media-content">
       <div class="content">
         <a

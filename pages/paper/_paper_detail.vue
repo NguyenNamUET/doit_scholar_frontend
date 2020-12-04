@@ -254,16 +254,6 @@
             {{ref_length | formatNumber}} {{ $t('general_attribute.reference') }}
           </a>
         </li>
-<!--            <li v-if="paper_detail.fieldsOfStudy">-->
-<!--              <a-->
-<!--                class="nav-item"-->
-<!--                v-scroll-to="{el: '#suggestion_box', offset: -100}"-->
-<!--                :class="{'in-view': scroll_position > (abstract_height + topic_height + citation_height + reference_height)}"-->
-<!--                ref="suggestion_box"-->
-<!--              >-->
-<!--                Văn bản liên quan-->
-<!--              </a>-->
-<!--            </li>-->
           </ul>
 
     </div>
@@ -350,25 +340,25 @@
                   :search_result="result"
                 >
                 </SearchResult>
-                <Pagination
+                <LazyPagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
                   :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
                   :isSmall="true">
-                </Pagination>
+                </LazyPagination>
               </div>
               <div class="tile is-child is-4">
                 <div v-if="this.chart_data.length > 0" class="content_box">
-                  <CitationBar
+                  <LazyCitationBar
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
                     :width="250"
                     :height="250"
                     :title="$t('paper_detail_page.citation_chart_title')"
                   >
-                  </CitationBar>
+                  </LazyCitationBar>
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
@@ -393,7 +383,6 @@
                       </span>
                     </template>
                   </i18n>
-
                 </div>
               </div>
             </div>
@@ -456,14 +445,16 @@
                 :search_result="result"
               >
               </SearchResult>
-              <Pagination
-                v-model="current_ref_page"
-                :page-count="Math.ceil(ref_length / per_page)"
-                :click-handler="updateReference"
-                :page-range="3"
-                :margin-pages="2"
-                :isSmall="true">
-              </Pagination>
+              <LazyHydrate on-interaction>
+                <LazyPagination
+                  v-model="current_ref_page"
+                  :page-count="Math.ceil(ref_length / per_page)"
+                  :click-handler="updateReference"
+                  :page-range="3"
+                  :margin-pages="2"
+                  :isSmall="true">
+                </LazyPagination>
+              </LazyHydrate>
             </div>
           </div>
         </div>
@@ -476,32 +467,34 @@
       <div class="tile is-parent">
         <div class="tile is-child">
           <p class="content_title">{{ $t('paper_detail_page.related_paper') }}</p>
-          <b-carousel
-            :pause-hover="true"
-            :pause-info="false"
-            :arrow="false"
-            :indicator-mode="'hover'"
-            :indicator-style="'is-lines'"
-          >
-            <b-carousel-item
-              style="margin-bottom: 10px;"
-              v-for="page in Math.round(suggestion_data.length / 3)"
-              :key="page"
+          <LazyHydrate when-visible>
+            <b-carousel
+              :pause-hover="true"
+              :pause-info="false"
+              :arrow="false"
+              :indicator-mode="'hover'"
+              :indicator-style="'is-lines'"
             >
-              <div class="columns is-1">
-                <div
-                  class="column is-one-third"
-                  v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
-                  :key="result._source.paperId"
-                >
-                  <PaperCard
-                    :paper_detail="result._source"
+              <b-carousel-item
+                style="margin-bottom: 10px;"
+                v-for="page in Math.round(suggestion_data.length / 3)"
+                :key="page"
+              >
+                <div class="columns is-1">
+                  <div
+                    class="column is-one-third"
+                    v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
+                    :key="result._source.paperId"
                   >
-                  </PaperCard>
+                    <PaperCard
+                      :paper_detail="result._source"
+                    >
+                    </PaperCard>
+                  </div>
                 </div>
-              </div>
-            </b-carousel-item>
-          </b-carousel>
+              </b-carousel-item>
+            </b-carousel>
+          </LazyHydrate>
         </div>
       </div>
     </div>
@@ -518,9 +511,13 @@
 <script>
 import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
 import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
+import LazyHydrate from 'vue-lazy-hydration';
 
 export default {
       name: "paper_detail",
+      components: {
+        LazyHydrate
+      },
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {
           return true
