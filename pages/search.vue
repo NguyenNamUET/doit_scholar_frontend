@@ -13,28 +13,28 @@
           </p>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <LazyFilterBoxMulti :type="'author'"
+            <FilterBoxMulti :type="'author'"
                             :data="authors_list"
                             :whichpage="current_route"
                             :checked="checked_authors_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxMulti :type="'venue'"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'venue'"
                             :data="venue_list"
                             :whichpage="current_route"
                             :checked="checked_venue_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxMulti :type="'fos'"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'fos'"
                             :data="fos_list"
                             :whichpage="current_route"
                             :checked="checked_fos_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxChart :type="'year'"
+            ></FilterBoxMulti>
+            <FilterBoxChart :type="'year'"
                             :checked="checked_year_range"
                             :chart_data="year_list"
                             :whichpage="current_route"
-            ></LazyFilterBoxChart>
+            ></FilterBoxChart>
             <!--------------------- SORT BUTTON ------------------------->
-            <LazySortButton class="filter_button" :whichpage="current_route"></LazySortButton>
+            <SortButton class="filter_button" :whichpage="current_route"></SortButton>
             <!--------------------- SORT BUTTON ------------------------->
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
@@ -69,7 +69,7 @@
 
 
     <!-------------------------   PAGINATION HERE   ---------------------------->
-    <LazyPaginationV2
+    <PaginationV2
       :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
       :page-range="3"
@@ -77,7 +77,7 @@
       :per-page="this.per_page"
       :whichpage="current_route"
       :query="['page','start','size']">
-    </LazyPaginationV2>
+    </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
 

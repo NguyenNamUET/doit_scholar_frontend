@@ -169,10 +169,15 @@ import {
   home_papers, home_status_count, home_status_graph
 } from "@/API/elastic_api";
 import {doughnut_chart_prep, formatNumber, formatTitle, line_chart_prep} from "assets/utils";
+import DoughnutGraph from "../components/static_components/DoughnutGraph";
+import LineGraph from "../components/static_components/LineGraph";
 
 export default {
   name: "home",
   layout: 'default',
+  components: {
+    DoughnutGraph, LineGraph
+  },
   head() {
     return {
       title: 'Compasify - Your trusty academic search engine',
