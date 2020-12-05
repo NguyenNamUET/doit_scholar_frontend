@@ -104,7 +104,7 @@ export default {
       components: {FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
       head() {
         return {
-          title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
+          title: 'Compasify - Search tool for Knowdlege'
         }
       },
       data() {

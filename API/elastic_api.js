@@ -1,4 +1,4 @@
-import {SEARCH_DOCUMENTS} from "@/config/elastic_api_config";
+import {SEARCH_DOCUMENTS} from "../config/elastic_api_config";
 import axios from "axios";
 
 
@@ -368,6 +368,17 @@ const venue_graph_data = async() => {
     return null
   }
 }
+
+
+const paper_sitemap = async() => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.paper_site_map)
+    return result.data
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
 /************************************************* Homepage function **********************************************/
 
 export {
@@ -398,5 +409,7 @@ export {
   author_by_id,
 
   wiki_summary,
-  autocomplete
+  autocomplete,
+
+  paper_sitemap
 }
