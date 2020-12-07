@@ -140,7 +140,8 @@
         <!------------------------------------------ Abstract ----------------------------------------->
 
         <!-------------------------------------- Action Buttons --------------------------------------->
-        <nav class="level is-mobile util_level">
+        <client-only>
+          <nav class="level is-mobile util_level">
           <div class="level-left is-small">
             <a class="level-item"
                             v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">
@@ -225,6 +226,7 @@
               </div>
           </div>
         </nav>
+        </client-only>
         <!-------------------------------------- Action Buttons --------------------------------------->
       </div>
     </div>
