@@ -2,6 +2,10 @@ import webpack from 'webpack'
 import {i18n} from "./config/i18n";
 
 export default {
+  server: {
+    port: 3400,
+    host: '0'
+  },
   ssr: true,
   /*
   ** Nuxt target
