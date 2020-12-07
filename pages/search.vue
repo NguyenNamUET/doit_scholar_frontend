@@ -59,7 +59,8 @@
       <div class="tile is-parent is-vertical">
         <p class="content_title">{{ $t('search_page.related_author') }}</p>
         <AuthorCard
-          v-for="author in authors_list"
+          v-for="(author, index) in authors_list"
+          :key="index"
           v-bind:author_info="author"
         >
         </AuthorCard>
@@ -82,26 +83,28 @@
   </div>
 
   <div v-else>
-    <LazyNuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></LazyNuxtError>
+    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></NuxtError>
   </div>
 
 </template>
 
 <script>
-import {formatNumber, publication_type} from "../assets/utils";
+import {formatNumber, publication_type} from "assets/utils";
 import DropDown from "../components/function_components/DropDown";
 import AuthorCard from "../components/search_page/AuthorCard";
 import SearchResult from "../components/search_page/SearchResult";
 import NuxtError from "@/components/static_components/ErrorPage";
-import Pagination from "@/components/function_components/Pagination";
 import PaginationV2 from "@/components/function_components/PaginationV2";
 import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
 import FilterBoxChart from "@/components/function_components/FilterBoxChart";
+import SortButton from "~/components/function_components/SortButton";
 
 export default {
       name: "search",
       watchQuery: true,
-      components: {FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
+      components: {
+        SortButton,
+        FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, NuxtError, PaginationV2},
       head() {
         return {
           title: 'Compasify - Search tool for Knowdlege'

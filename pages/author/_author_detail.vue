@@ -196,8 +196,23 @@
 
 <script>
     import {formatNumber, formatTitle} from "assets/utils";
+    import SearchResult from "~/components/search_page/SearchResult";
+    import SearchBar from "~/components/function_components/SearchBar";
+    import AuthorInfoCard from "~/components/author_components/AuthorInfoCard";
+    import CitationBar from "~/components/search_page/CitationBar";
+    import FilterBoxMulti from "~/components/function_components/FilterBoxMulti";
+    import SortButton from "~/components/function_components/SortButton";
+
     export default {
       name: "author_detail",
+      components: {
+        SearchBar,
+        SearchResult,
+        AuthorInfoCard,
+        CitationBar,
+        FilterBoxMulti,
+        SortButton
+      },
       watchQuery: true,
       head() {
         return {

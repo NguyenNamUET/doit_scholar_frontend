@@ -81,20 +81,15 @@
         </div>
       </div>
     </div>
+
     <div class="tile is-ancestor">
       <!---------------------------------------- Left side bar --------------------------------------->
       <div class="tile is-parent is-vertical is-3">
-<!--        <div class="tile is-child">-->
-<!--          <p class="content_title">Authors</p>-->
-<!--          <div class="content_box">-->
-<!--            {{highlight_authors}}-->
-<!--          </div>-->
-<!--        </div>-->
         <div class="tile is-child">
           <p class="content_title">{{ $t('home_page.papers_content.famous_journals') }}</p>
           <div class="content_box">
             <ul>
-              <li v-for="item in highlight_venues">
+              <li v-for="(item, index) in highlight_venues" :key="index">
                 <nuxt-link class="link-class-3"
                   :to="{path: '/journal/' + formatTitle(item),
                         query: {start: 0, size: 10, page: 1, sort: 'score'}}"
@@ -132,7 +127,7 @@
             <p class="content_title">{{ $t('home_page.chart.trending_topics') }}</p>
             <div class="content_box">
               <ul>
-                <li v-for="item in highlight_topics">
+                <li v-for="(item, index) in highlight_topics" :key="index">
                   <nuxt-link class="link-class-3"
                              :to="{path: '/topic/' + formatTitle(item.name) + '-' + item.id,
                                    query: {start: 0, size: 10, page: 1, sort: 'score'}}"
@@ -147,7 +142,7 @@
             <p class="content_title">{{ $t('general_attribute.fos') }}</p>
             <div class="content_box">
               <ul>
-                <li v-for="item in highlight_fos">
+                <li v-for="(item, index) in highlight_fos" :key="index">
                   <nuxt-link class="link-class-3"
                     :to="{path: 'search',
                     query: {query: '', start: 0, size: 10, page: 1, fos: item}}"
@@ -171,12 +166,13 @@ import {
 import {doughnut_chart_prep, formatNumber, formatTitle, line_chart_prep} from "assets/utils";
 import DoughnutGraph from "../components/static_components/DoughnutGraph";
 import LineGraph from "../components/static_components/LineGraph";
+import SearchResult from "@/components/search_page/SearchResult";
 
 export default {
-  name: "home",
+  name: "index",
   layout: 'default',
   components: {
-    DoughnutGraph, LineGraph
+    DoughnutGraph, LineGraph, SearchResult
   },
   head() {
     return {
@@ -262,7 +258,7 @@ export default {
       ]
     ).then((res) => {
       results = res
-      console.log(results)
+      // console.log('here', results)
       fos_chart_data = doughnut_chart_prep(results[0].fos_chart)
       venue_chart_data = doughnut_chart_prep(results[0].venues_chart)
       // topics_chart_data = line_chart_prep(results[0].topics_chart)

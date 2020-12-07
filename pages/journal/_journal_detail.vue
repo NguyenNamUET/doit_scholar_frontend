@@ -107,9 +107,21 @@
 
 <script>
 import {formatNumber, formatTitle} from "assets/utils";
+import SearchResult from "~/components/search_page/SearchResult";
+import PaginationV2 from "~/components/function_components/PaginationV2";
+import SearchBar from "~/components/function_components/SearchBar";
+import FilterBoxMulti from "~/components/function_components/FilterBoxMulti";
+import SortButton from "~/components/function_components/SortButton";
 
 export default {
   name: "journal_detail",
+  components: {
+    SearchResult,
+    PaginationV2,
+    SearchBar,
+    FilterBoxMulti,
+    SortButton
+  },
   watchQuery: true,
   head() {
     return {

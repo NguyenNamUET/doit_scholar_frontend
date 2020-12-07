@@ -2,11 +2,7 @@ import webpack from 'webpack'
 import {i18n} from "./config/i18n";
 
 export default {
-  /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
-  mode: 'universal',
+  ssr: true,
   /*
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
@@ -30,7 +26,7 @@ export default {
       { hid: 'description', name: 'description', content: 'Compasify - A search engine for scientific literature' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/x-icon', href: '/compasify.ico' },
       { rel: 'alternate', hreflang: 'x-default', href: '/'},
       { rel: 'canonical', href: '/'}
     ]
@@ -56,7 +52,7 @@ export default {
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
   */
-  components: true,
+  components: false,
   /*
   ** Nuxt.js dev-modules
   */
@@ -64,7 +60,6 @@ export default {
     [
       'nuxt-i18n', i18n
     ],
-    '@nuxt/components'
   ],
   /*
   ** Nuxt.js modules
@@ -74,11 +69,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
-    ['@nuxtjs/pwa', { meta: false, icon: false, manifest: false }]
   ],
-  // sentry: {
-  //   dsn: 'https://b6364c5309e94d0cbb21919e281efd41@o458414.ingest.sentry.io/5455936'
-  // },
 
   /*
   ** Axios module configuration
@@ -112,7 +103,8 @@ export default {
         useShortDoctype: true,
         minifyURLs: false,
         removeComments: true,
-        removeEmptyElements: true
+        removeEmptyElements: true,
+        collapseWhitespace: false
       }
     },
     extractCSS: true,

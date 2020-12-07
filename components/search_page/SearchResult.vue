@@ -111,9 +111,9 @@
           <!------------------------------------------ Topics ------------------------------------------->
 
           <!----------------------------------------- Authors ------------------------------------------->
-          <LazyAuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
+          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
                         :authors="search_result.authors">
-          </LazyAuthorModal>
+          </AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
@@ -142,8 +142,7 @@
         <!-------------------------------------- Action Buttons --------------------------------------->
         <nav class="level is-mobile util_level">
           <div class="level-left is-small">
-            <LazyHydrate when-idle>
-              <a class="level-item"
+            <a class="level-item"
                             v-if="Object.keys(search_result).includes('citations_count') && search_result.citations_count > 0">
               <nuxt-link :to="{path:'/paper/' + formatTitle(search_result.title) + '.p' + '-' + search_result.paperId,
                                query:{start:0, size:10, page:1}}"
@@ -152,10 +151,8 @@
                 {{ search_result.citations_count }} {{ $t('general_attribute.citation') }}
               </nuxt-link>
             </a>
-            </LazyHydrate>
 
-            <LazyHydrate when-idle>
-              <a class="level-item"
+            <a class="level-item"
                 v-if="Object.keys(search_result).includes('doi') && search_result.doi"
                 :href="'https://doi.org/' + search_result.doi"
                 target="_blank"
@@ -166,10 +163,8 @@
                 <span>DOI <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
-            </LazyHydrate>
 
-            <LazyHydrate when-idle>
-              <a class="level-item is-hidden-mobile"
+            <a class="level-item is-hidden-mobile"
                 v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && !search_result.pdf_url.endsWith('.pdf')"
                 :href="search_result.pdf_url"
                 target="_blank"
@@ -178,10 +173,8 @@
                 <span>{{search_result.pdf_url.slice(0,20)}}... <i class="fas fa-external-link-alt"></i></span>
               </button>
             </a>
-            </LazyHydrate>
 
-            <LazyHydrate when-idle>
-              <span class="level-item">
+            <span class="level-item">
               <span
                   class="tag is-success is-small"
                   v-if="Object.keys(search_result).includes('pdf_url') && search_result.pdf_url && search_result.pdf_url.endsWith('.pdf')"
@@ -190,20 +183,16 @@
               <span>PDF <i class="fas fa-check"></i></span>
             </span>
             </span>
-            </LazyHydrate>
           </div>
 
           <div class="level-right is-small">
-            <LazyHydrate when-idle>
               <button
                   class="level-item button is-info is-light is-outlined"
                   @click="handle_cite_button"
               >
                 <span><i class="fas fa-quote-left"></i> {{ $t('general_attribute.cite') }}</span>
               </button>
-            </LazyHydrate>
 
-            <LazyHydrate never :trigger-hydration="show_cite_modal">
               <div class="modal" v-bind:class="{ 'is-active': show_cite_modal }">
                 <div class="modal-background"></div>
                 <div class="modal-card">
@@ -234,7 +223,6 @@
                   </section>
                 </div>
               </div>
-            </LazyHydrate>
           </div>
         </nav>
         <!-------------------------------------- Action Buttons --------------------------------------->
@@ -245,14 +233,14 @@
 
 <script>
 import {formatTitle, genBibtex} from "assets/utils";
-import LazyHydrate from 'vue-lazy-hydration';
+import AuthorModal from "~/components/search_page/AuthorModal";
 
 export default {
   name: "SearchResult",
-  props: ['search_result'],
   components: {
-    LazyHydrate
+    AuthorModal
   },
+  props: ['search_result'],
   data() {
     return {
       topic_hidden: true,

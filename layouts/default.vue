@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <client-only>
     <div>
-      <nav id="layout_header" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div>
+      <div id="layout_header" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="container" id="nav_container">
           <div class="navbar-brand">
             <a class="navbar-item header-icon" href="/">
@@ -68,7 +69,7 @@
             </div>
           </div>
         </div>
-      </nav>
+      </div>
     </div>
     <div id="body_container">
       <Nuxt />
@@ -97,6 +98,7 @@
       </div>
     </div>
   </div>
+  </client-only>
 </template>
 
 <script>
