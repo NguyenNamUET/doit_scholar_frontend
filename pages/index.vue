@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <div class="tile is-ancestor">
+    <client-only>
+      <div class="tile is-ancestor">
       <div class="tile is-parent is-3">
         <div class="tile is-child">
           <div class="column has-text-centered content_box">
@@ -81,7 +82,7 @@
         </div>
       </div>
     </div>
-
+    </client-only>
     <div class="tile is-ancestor">
       <!---------------------------------------- Left side bar --------------------------------------->
       <div class="tile is-parent is-vertical is-3">
