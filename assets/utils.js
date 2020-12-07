@@ -55,7 +55,7 @@ const publication_type = [
   'Phân tích siêu dữ liệu'
 ]
 
-const host = 'http://51.210.251.250:3400'
+const host = 'https://compasify.com'
 
 function formatNumber(number) {
   return number.toLocaleString('en-UK', {maximumFractionDigits: 0})

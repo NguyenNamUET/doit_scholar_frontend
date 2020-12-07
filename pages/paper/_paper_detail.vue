@@ -254,7 +254,7 @@
             {{ref_length | formatNumber}} {{ $t('general_attribute.reference') }}
           </a>
         </li>
-          </ul>
+      </ul>
 
     </div>
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
@@ -340,25 +340,25 @@
                   :search_result="result"
                 >
                 </SearchResult>
-                <LazyPagination
+                <Pagination
                   v-model="current_citation_page"
                   :page-count="Math.ceil(citation_length / per_page)"
                   :click-handler="updateCitation"
                   :page-range="3"
                   :margin-pages="2"
                   :isSmall="true">
-                </LazyPagination>
+                </Pagination>
               </div>
               <div class="tile is-child is-4">
                 <div v-if="this.chart_data.length > 0" class="content_box">
-                  <LazyCitationBar
+                  <CitationBar
                     :dataset="this.chart_data"
                     :labels="this.chart_labels"
                     :width="250"
                     :height="250"
                     :title="$t('paper_detail_page.citation_chart_title')"
                   >
-                  </LazyCitationBar>
+                  </CitationBar>
                 </div>
                 <div
                   v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
@@ -445,16 +445,14 @@
                 :search_result="result"
               >
               </SearchResult>
-              <LazyHydrate on-interaction>
-                <LazyPagination
+              <Pagination
                   v-model="current_ref_page"
                   :page-count="Math.ceil(ref_length / per_page)"
                   :click-handler="updateReference"
                   :page-range="3"
                   :margin-pages="2"
                   :isSmall="true">
-                </LazyPagination>
-              </LazyHydrate>
+              </Pagination>
             </div>
           </div>
         </div>
@@ -467,8 +465,7 @@
       <div class="tile is-parent">
         <div class="tile is-child">
           <p class="content_title">{{ $t('paper_detail_page.related_paper') }}</p>
-          <LazyHydrate when-visible>
-            <b-carousel
+          <b-carousel
               :pause-hover="true"
               :pause-info="false"
               :arrow="false"
@@ -494,7 +491,6 @@
                 </div>
               </b-carousel-item>
             </b-carousel>
-          </LazyHydrate>
         </div>
       </div>
     </div>
@@ -509,14 +505,22 @@
 </template>
 
 <script>
-import {citation_chart_data, paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
+import {paper_by_fos, paper_citation, paper_detail, paper_references} from "@/API/elastic_api";
 import {chartColors, formatNumber, formatTitle, host} from "assets/utils";
-import LazyHydrate from 'vue-lazy-hydration';
+import SearchResult from "~/components/search_page/SearchResult";
+import Pagination from "~/components/function_components/Pagination";
+import PaperCard from "~/components/static_components/PaperCard";
+import NuxtError from "~/components/static_components/ErrorPage";
+import CitationBar from "~/components/search_page/CitationBar";
 
 export default {
       name: "paper_detail",
       components: {
-        LazyHydrate
+        CitationBar,
+        NuxtError,
+        SearchResult,
+        PaperCard,
+        Pagination
       },
       validate({route, redirect}) {
         if(/.p-\w+$/g.test(route.params.paper_detail)) {

@@ -13,28 +13,28 @@
           </p>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <div class="content_box filter_section">
-            <LazyFilterBoxMulti :type="'author'"
+            <FilterBoxMulti :type="'author'"
                             :data="authors_list"
                             :whichpage="current_route"
                             :checked="checked_authors_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxMulti :type="'venue'"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'venue'"
                             :data="venue_list"
                             :whichpage="current_route"
                             :checked="checked_venue_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxMulti :type="'fos'"
+            ></FilterBoxMulti>
+            <FilterBoxMulti :type="'fos'"
                             :data="fos_list"
                             :whichpage="current_route"
                             :checked="checked_fos_list"
-            ></LazyFilterBoxMulti>
-            <LazyFilterBoxChart :type="'year'"
+            ></FilterBoxMulti>
+            <FilterBoxChart :type="'year'"
                             :checked="checked_year_range"
                             :chart_data="year_list"
                             :whichpage="current_route"
-            ></LazyFilterBoxChart>
+            ></FilterBoxChart>
             <!--------------------- SORT BUTTON ------------------------->
-            <LazySortButton class="filter_button" :whichpage="current_route"></LazySortButton>
+            <SortButton class="filter_button" :whichpage="current_route"></SortButton>
             <!--------------------- SORT BUTTON ------------------------->
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span>
@@ -59,7 +59,8 @@
       <div class="tile is-parent is-vertical">
         <p class="content_title">{{ $t('search_page.related_author') }}</p>
         <AuthorCard
-          v-for="author in authors_list"
+          v-for="(author, index) in authors_list"
+          :key="index"
           v-bind:author_info="author"
         >
         </AuthorCard>
@@ -69,7 +70,7 @@
 
 
     <!-------------------------   PAGINATION HERE   ---------------------------->
-    <LazyPaginationV2
+    <PaginationV2
       :is-small="true"
       :page-count="(Math.ceil(this.total_count/this.per_page))"
       :page-range="3"
@@ -77,34 +78,36 @@
       :per-page="this.per_page"
       :whichpage="current_route"
       :query="['page','start','size']">
-    </LazyPaginationV2>
+    </PaginationV2>
     <!-------------------------------------------------------------------------->
   </div>
 
   <div v-else>
-    <LazyNuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></LazyNuxtError>
+    <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy từ khóa'}"></NuxtError>
   </div>
 
 </template>
 
 <script>
-import {formatNumber, publication_type} from "../assets/utils";
+import {formatNumber, publication_type} from "assets/utils";
 import DropDown from "../components/function_components/DropDown";
 import AuthorCard from "../components/search_page/AuthorCard";
 import SearchResult from "../components/search_page/SearchResult";
 import NuxtError from "@/components/static_components/ErrorPage";
-import Pagination from "@/components/function_components/Pagination";
 import PaginationV2 from "@/components/function_components/PaginationV2";
 import FilterBoxMulti from "@/components/function_components/FilterBoxMulti";
 import FilterBoxChart from "@/components/function_components/FilterBoxChart";
+import SortButton from "~/components/function_components/SortButton";
 
 export default {
       name: "search",
       watchQuery: true,
-      components: {FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, Pagination, NuxtError, PaginationV2},
+      components: {
+        SortButton,
+        FilterBoxMulti, FilterBoxChart, SearchResult, AuthorCard, DropDown, NuxtError, PaginationV2},
       head() {
         return {
-          title: 'DoIT Scholar - Tìm kiếm văn bản học thuật'
+          title: 'Compasify - Search tool for Knowdlege'
         }
       },
       data() {

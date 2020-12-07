@@ -115,8 +115,15 @@
 <script>
     import {paper_by_topic} from "@/API/elastic_api";
     //import {wiki_summary} from "@/API/elastic_api";
+    import SearchResult from "~/components/search_page/SearchResult";
+    import SearchBar from "~/components/function_components/SearchBar";
+    import FilterBoxMulti from "~/components/function_components/FilterBoxMulti";
+    import SortButton from "~/components/function_components/SortButton";
+    import PaginationV2 from "~/components/function_components/PaginationV2";
+
     export default {
       name: "topic_detail",
+      components: {SearchBar, SearchResult, PaginationV2, FilterBoxMulti, SortButton},
       watchQuery: true,
       head() {
         return {

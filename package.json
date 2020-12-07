@@ -7,17 +7,17 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "export": "nuxt export",
-    "serve": "nuxt serve"
+    "serve": "nuxt serve",
+    "generate": "nuxt generate"
   },
   "dependencies": {
-    "@antv/g6": "^3.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
-    "@nuxt/components": "^1.1.1",
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/bulma": "^1.2.7",
     "@nuxtjs/google-analytics": "^2.4.0",
-    "@nuxtjs/pwa": "^3.2.2",
+    "@nuxtjs/robots": "^2.4.2",
+    "@nuxtjs/sitemap": "^2.4.0",
     "bulma": "^0.9.0",
     "chart.js": "^2.9.4",
     "html-to-text": "^5.1.1",
@@ -27,16 +27,14 @@
     "nuxt-fontawesome": "^0.4.0",
     "nuxt-i18n": "^6.15.1",
     "nuxt-jsonld": "^1.4.10",
-    "nuxt-lazy-load": "^1.2.4",
     "randomcolor": "^0.6.2",
     "vue-chartjs": "^3.5.0",
     "vue-clipboard2": "^0.3.1",
-    "vue-lazy-hydration": "^2.0.0-beta.4",
     "vue-number-animation": "^1.0.5",
     "vue-scrollto": "^2.18.2"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.13.3",
+    "@nuxt/types": "^2.14.9",
     "node-sass": "^4.14.1",
     "sass-loader": "^9.0.2",
     "webpack": "^4.44.1"
