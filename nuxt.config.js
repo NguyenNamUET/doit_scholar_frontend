@@ -61,10 +61,13 @@ export default {
     [
       'nuxt-i18n', i18n
     ],
-    '@nuxtjs/google-analytics'
+    '@nuxtjs/google-analytics',
   ],
   googleAnalytics: {
     id: 'G-1KFEFC05EJ'
+  },
+  'google-adsense': {
+    id: 'ca-pub-7379513138624386'
   },
   /*
   ** Nuxt.js modules
@@ -74,6 +77,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-fontawesome',
     'nuxt-buefy',
+    ['@nuxtjs/google-adsense']
   ],
 
   /*
