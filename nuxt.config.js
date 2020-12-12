@@ -46,7 +46,8 @@ export default {
     '~/plugins/vue-scrollto.js',
     {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
-    '~/plugins/vue_clipboard.js'
+    '~/plugins/vue_clipboard.js',
+    { src: '~plugins/ga.js', mode: 'client' }
   ],
   /*
   ** Auto import components
@@ -98,7 +99,7 @@ export default {
       minify:{
         collapseBooleanAttributes: true,
         decodeEntities: true,
-        minifyCSS: true,
+        minifyCSS: false,
         minifyJS: true,
         processConditionalComments: true,
         removeEmptyAttributes: true,
