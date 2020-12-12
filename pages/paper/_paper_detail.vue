@@ -199,7 +199,7 @@
             v-on:click="handlePDF(false)"
           ></a>
           <iframe
-            :src="'http://docs.google.com/gview?url=' + this.paper_detail.pdf_url +'&embedded=true'"
+            :src="'https://docs.google.com/gview?url=' + this.paper_detail.pdf_url +'&embedded=true'"
             id="pdf_container"
           >
           </iframe>
@@ -569,7 +569,7 @@ export default {
             {
               hid: 'twitter:image',
               property: 'twitter:image',
-              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+              content: 'https://compasify.com/compasify.ico'
             },
             {
               hid: 'twitter:image:alt',
@@ -603,7 +603,7 @@ export default {
             {
               hid: 'og:image',
               property: 'og:image',
-              content: 'http://doit.uet.vnu.edu.vn/img/logo.png'
+              content: 'https://compasify.com/compasify.ico'
             },
             {
               hid: 'og:type',

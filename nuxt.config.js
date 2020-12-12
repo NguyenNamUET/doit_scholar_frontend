@@ -60,7 +60,11 @@ export default {
     [
       'nuxt-i18n', i18n
     ],
+    '@nuxtjs/google-analytics'
   ],
+  googleAnalytics: {
+    id: 'G-1KFEFC05EJ'
+  },
   /*
   ** Nuxt.js modules
   */
