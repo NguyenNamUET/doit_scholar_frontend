@@ -22,7 +22,7 @@
     "bulma": "^0.9.0",
     "chart.js": "^2.9.4",
     "html-to-text": "^5.1.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "nuxt": "^2.13.0",
     "nuxt-buefy": "^0.3.31",
     "nuxt-fontawesome": "^0.4.0",
