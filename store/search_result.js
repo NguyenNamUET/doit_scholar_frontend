@@ -1,6 +1,7 @@
 import {paper_by_title, paper_by_topic} from "@/API/elastic_api";
 import {paper_by_venue} from "@/API/elastic_api";
 import {author_by_id} from "@/API/elastic_api";
+import {searchByTitle} from "@/API/lucene_api";
 //Only update search_results when there is a new query
 //Update both search_results and aggregation when query changes
 
@@ -19,9 +20,10 @@ export const state = () => ({
 
 export const mutations = {
   submit_search(state, params) {
-    state.search_results = params.result
-    state.total = params.result.hits.total.value
-    state.aggregation = params.result.aggregations
+    state.search_results = params.result.data.docs
+    // state.total = params.result.hits.total.value
+    state.aggregation = params.result.data.facet
+    state.total = params.result.data.total
 
     if(params.payload.query === state.query
             || (state.query === '' && (Object.keys(params.payload).includes('author')
@@ -37,7 +39,7 @@ export const mutations = {
     }
     else if (params.payload.query !== state.query) {
       //New query, refresh all parameters
-      if(params.result.hits.hits.length !== 0) {
+      if (params.result.length !== 0) {
         state.query = params.payload.query
         state.filters = {
           fos_checked: [],
@@ -60,7 +62,7 @@ export const mutations = {
 
 export const actions = {
   async paper_by_title(context, payload) {
-    let result = await paper_by_title(payload);
+    let result = await searchByTitle(payload);
     let params = {
       result: result,
       payload: payload

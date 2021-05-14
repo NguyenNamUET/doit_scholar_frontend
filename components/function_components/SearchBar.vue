@@ -13,17 +13,18 @@
       >
         <template slot="empty">{{ $t('default_layout.header.search_bar_not_found') }} {{search_query}}</template>
         <template slot-scope="props">
+
           <a
-            :href="'/paper/' + formatTitle(props.option._source.title) + '.p-' + props.option._id"
-            :title="props.option._source.title"
+            :href="'/paper/' + formatTitle(props.option.title) + '.p-' + props.option.paper_id"
+            :title="props.option.title"
           >
             <span>
-              <i class="far fa-newspaper"></i> {{props.option._source.title}}
+                <i class="far fa-newspaper"></i> {{props.option.title}}
             </span>
 
-            <div class="text-class-3 color-class-3">
-              {{props.option._source.citations_count}} {{ $t('general_attribute.citation') }}
-            </div>
+<!--            <div class="text-class-3 color-class-3">-->
+<!--              {{props.option.year[0]}} {{ $t('general_attribute.citation') }}-->
+<!--            </div>-->
           </a>
         </template>
       </b-autocomplete>
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import {autocomplete} from "@/API/elastic_api";
+import {searchByTitle} from "@/API/lucene_api";
 import {formatTitle} from "assets/utils";
 
 export default {
@@ -56,16 +57,16 @@ export default {
           return formatTitle(title)
         },
         getAutocomplete: _.debounce(async function(name) {
-          this.is_loading = true
-          this.raw_data = await autocomplete({
-            query: name,
-            authors: this.authors,
-            venues: this.venues,
-            topics: this.topics,
-            size: 10
-          })
-          this.autocomplete_data = _.toArray(this.raw_data)
-          this.is_loading = false
+          if (name !== "") {
+            this.is_loading = true
+            this.raw_data = await searchByTitle({
+              query: name,
+              size: 10,
+              start: 0,
+            })
+            this.autocomplete_data = this.raw_data.data
+            this.is_loading = false
+          }
         }),
         submitQuery() {
           this.query_params = {
@@ -76,7 +77,7 @@ export default {
             sort: 'score'
           }
           // console.log("this.current_page", this.current_page)
-          if(this.search_query!==""){
+          if (this.search_query !== ""){
             this.$router.push({path: this.current_page, query: this.query_params})
           }
           else{

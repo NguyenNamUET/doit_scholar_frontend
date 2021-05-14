@@ -32,15 +32,14 @@
               <span
                 v-if="!author_hidden"
                 v-for="(author, index) in paper_detail.authors"
-                :key="author.authorId"
+                :key="index"
               >
-              <a
-                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
+              <span
                 class="link-class-3 secondary_description"
                 style="font-size: 14px;"
               >
                 {{author.name}}
-              </a>
+              </span>
               <span v-if="index < paper_detail.authors.length - 1">, </span>
             </span>
               <span class="text-class-3 less-more-button"
@@ -53,15 +52,14 @@
               <span
                 v-if="author_hidden"
                 v-for="(author, index) in paper_detail.authors.slice(0,3)"
-                :key="author.authorId"
+                :key="index"
               >
-              <a
+              <span
                 class="link-class-3 secondary_description"
                 style="font-size: 14px;"
-                :href="'/author/' + formatTitle(author.name) + '-' + author.authorId"
               >
                 {{author.name}}
-              </a>
+              </span>
               <span v-if="index < paper_detail.authors.slice(0,3).length-1">, </span>
             </span>
               <span class="text-class-3 less-more-button"
@@ -131,79 +129,40 @@
               <p class="is-size-6"><i>{{ $t('general_attribute.unavailable') }}</i></p>
             </div>
             <!------------------------------------------ Abstract  ------------------------------------------->
-
-            <!--------------------------------------- View pdf -------------------------------------------->
-            <nav
-              class="level is-mobile"
-              style="margin-top: 0.5rem;"
-              v-if="paper_detail.pdf_url !== null && paper_detail.pdf_url !== undefined && paper_detail.pdf_url.endsWith('.pdf')"
-            >
-              <div class="level-left is-small has-text-weight-light ">
-                <a
-                  class="level-item button is-warning"
-                  v-if="!show_pdf"
-                  v-on:click="handlePDF(true)"
-                >
-                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.show') }} PDF</span>
-                </a>
-
-                <a
-                  class="level-item button is-warning"
-                  v-if="show_pdf"
-                  v-on:click="handlePDF(false)"
-                >
-                  <span><i class="fas fa-file-pdf"></i> {{ $t('general_attribute.hide') }} PDF</span>
-                </a>
-              </div>
-            </nav>
-            <!--------------------------------------- View pdf -------------------------------------------->
           </div>
         </div>
 
-        <div class="tile is-parent is-hidden-touch">
-          <div class="tile is-child top_citation" v-if="citation_length > 0">
-            <p>
-              <i18n
-                tag="span"
-                path="paper_detail_page.highlight_citation_box.title"
-              >
-                <template v-slot:number>
-                  <span>3</span>
-                </template>
-                <template v-slot:total>
-                  <span>{{citation_length | formatNumber}}</span>
-                </template>
-              </i18n>
-              <a
-                class="button is-light is-small"
-                style="float: right"
-                v-on:click="$refs.citation_box.click()"
-              >
-                {{ $t('general_attribute.more') }}
-              </a>
-            </p>
+<!--        <div class="tile is-parent is-hidden-touch">-->
+<!--          <div class="tile is-child top_citation" v-if="citation_length > 0">-->
+<!--            <p>-->
+<!--              <i18n-->
+<!--                tag="span"-->
+<!--                path="paper_detail_page.highlight_citation_box.title"-->
+<!--              >-->
+<!--                <template v-slot:number>-->
+<!--                  <span>3</span>-->
+<!--                </template>-->
+<!--                <template v-slot:total>-->
+<!--                  <span>{{citation_length | formatNumber}}</span>-->
+<!--                </template>-->
+<!--              </i18n>-->
+<!--              <a-->
+<!--                class="button is-light is-small"-->
+<!--                style="float: right"-->
+<!--                v-on:click="$refs.citation_box.click()"-->
+<!--              >-->
+<!--                {{ $t('general_attribute.more') }}-->
+<!--              </a>-->
+<!--            </p>-->
 
-            <PaperCard
-              v-for="result in citation_data.slice(0,3)"
-              :paper_detail="result"
-              :key="result.paperId"
-            >
-            </PaperCard>
-          </div>
-        </div>
-      </div>
-      <div class="tile is-parent" id="pdf_section">
-        <div class="tile is-child" v-if="show_pdf">
-          <a
-            class="delete is-medium close_pdf"
-            v-on:click="handlePDF(false)"
-          ></a>
-          <iframe
-            :src="'https://docs.google.com/gview?url=' + this.paper_detail.pdf_url +'&embedded=true'"
-            id="pdf_container"
-          >
-          </iframe>
-        </div>
+<!--            <PaperCard-->
+<!--              v-for="result in citation_data.slice(0,3)"-->
+<!--              :data="result"-->
+<!--              :key="result.paperId"-->
+<!--            >-->
+<!--            </PaperCard>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
@@ -241,7 +200,7 @@
                && scroll_position < (abstract_height + topic_height + citation_height)}"
             ref="citation_box"
           >
-            {{citation_length | formatNumber}} {{ $t('general_attribute.citation') }}
+            {{ (citation_length | 0) | formatNumber}} {{ $t('general_attribute.citation') }}
           </a>
         </li>
         <li v-if="ref_length > 0">
@@ -255,7 +214,6 @@
           </a>
         </li>
       </ul>
-
     </div>
     <!-------------------------------------------- Navigation Bar ------------------------------------------------->
 
@@ -273,11 +231,10 @@
                 v-for="item in paper_detail.topics"
                 :key="item.topicId"
               >
-                <a
-                  :href="'/topic/' + formatTitle(item.topic) + '-' + item.topicId "
+                <span
                 >
                   {{item.topic}}
-                </a>
+                </span>
               </li>
             </ul>
           </div>
@@ -335,9 +292,9 @@
             <div class="tile is-parent">
               <div class="tile is-child is-8" style="padding-right: 0.5rem;">
                 <SearchResult
-                  v-for="result in citation_data"
+                  v-for="result in citations"
                   :key="result.paperId"
-                  :search_result="result"
+                  :data="result"
                 >
                 </SearchResult>
                 <Pagination
@@ -348,43 +305,44 @@
                   :margin-pages="2"
                   :isSmall="true">
                 </Pagination>
-              </div>
-              <div class="tile is-child is-4">
-                <div v-if="this.chart_data.length > 0" class="content_box">
-                  <CitationBar
-                    :dataset="this.chart_data"
-                    :labels="this.chart_labels"
-                    :width="250"
-                    :height="250"
-                    :title="$t('paper_detail_page.citation_chart_title')"
-                  >
-                  </CitationBar>
-                </div>
-                <div
-                  v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
-                  style="text-align: center"
-                  class="text-class-3 color-class-3"
-                >
-<!--                  <p class="text-class-3 color-class-3">-->
-<!--                    Trung bình được trích dẫn-->
 
-<!--                    lần từ {{this.paper_detail.year}} đến nay-->
-<!--                  </p>-->
-                  <i18n
-                    tag="p"
-                    path="paper_detail_page.citation_velocity"
-                  >
-                    <template v-slot:count>
-                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
-                    </template>
-                    <template v-slot:year>
-                      <span>
-                          {{paper_detail.year}}
-                      </span>
-                    </template>
-                  </i18n>
-                </div>
               </div>
+<!--              <div class="tile is-child is-4">-->
+<!--                <div v-if="this.chart_data.length > 0" class="content_box">-->
+<!--                  <CitationBar-->
+<!--                    :dataset="this.chart_data"-->
+<!--                    :labels="this.chart_labels"-->
+<!--                    :width="250"-->
+<!--                    :height="250"-->
+<!--                    :title="$t('paper_detail_page.citation_chart_title')"-->
+<!--                  >-->
+<!--                  </CitationBar>-->
+<!--                </div>-->
+<!--                <div-->
+<!--                  v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"-->
+<!--                  style="text-align: center"-->
+<!--                  class="text-class-3 color-class-3"-->
+<!--                >-->
+<!--&lt;!&ndash;                  <p class="text-class-3 color-class-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                    Trung bình được trích dẫn&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    lần từ {{this.paper_detail.year}} đến nay&ndash;&gt;-->
+<!--&lt;!&ndash;                  </p>&ndash;&gt;-->
+<!--                  <i18n-->
+<!--                    tag="p"-->
+<!--                    path="paper_detail_page.citation_velocity"-->
+<!--                  >-->
+<!--                    <template v-slot:count>-->
+<!--                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>-->
+<!--                    </template>-->
+<!--                    <template v-slot:year>-->
+<!--                      <span>-->
+<!--                          {{paper_detail.year}}-->
+<!--                      </span>-->
+<!--                    </template>-->
+<!--                  </i18n>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
           </article>
         </div>
@@ -440,9 +398,9 @@
           <div class="tile is-parent">
             <div class="tile is-child is-8">
               <SearchResult
-                v-for="result in ref_data"
+                v-for="result in references"
                 :key="result.paperId"
-                :search_result="result"
+                :data="result"
               >
               </SearchResult>
               <Pagination
@@ -460,43 +418,42 @@
     </div>
     <!----------------------------------------- References Table -------------------------------------------------->
 
-    <!----------------------------------------- Suggestion  -------------------------------------------------->
-    <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">
-      <div class="tile is-parent">
-        <div class="tile is-child">
-          <p class="content_title">{{ $t('paper_detail_page.related_paper') }}</p>
-          <b-carousel
-              :pause-hover="true"
-              :pause-info="false"
-              :arrow="false"
-              :indicator-mode="'hover'"
-              :indicator-style="'is-lines'"
-            >
-              <b-carousel-item
-                style="margin-bottom: 10px;"
-                v-for="page in Math.round(suggestion_data.length / 3)"
-                :key="page"
-              >
-                <div class="columns is-1">
-                  <div
-                    class="column is-one-third"
-                    v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"
-                    :key="result._source.paperId"
-                  >
-                    <PaperCard
-                      :paper_detail="result._source"
-                    >
-                    </PaperCard>
-                  </div>
-                </div>
-              </b-carousel-item>
-            </b-carousel>
-        </div>
-      </div>
-    </div>
-    <!----------------------------------------- Suggestion  -------------------------------------------------->
+<!--    &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Suggestion  &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--    <div class="tile is-ancestor" v-if="paper_detail.fieldsOfStudy" id="suggestion_box">-->
+<!--      <div class="tile is-parent">-->
+<!--        <div class="tile is-child">-->
+<!--          <p class="content_title">{{ $t('paper_detail_page.related_paper') }}</p>-->
+<!--          <b-carousel-->
+<!--              :pause-hover="true"-->
+<!--              :pause-info="false"-->
+<!--              :arrow="false"-->
+<!--              :indicator-mode="'hover'"-->
+<!--              :indicator-style="'is-lines'"-->
+<!--            >-->
+<!--              <b-carousel-item-->
+<!--                style="margin-bottom: 10px;"-->
+<!--                v-for="page in Math.round(suggestion_data.length / 3)"-->
+<!--                :key="page"-->
+<!--              >-->
+<!--                <div class="columns is-1">-->
+<!--                  <div-->
+<!--                    class="column is-one-third"-->
+<!--                    v-for="result in suggestion_data.slice((page-1)*carousel_size,(page-1)*carousel_size+3)"-->
+<!--                    :key="result._source.paperId"-->
+<!--                  >-->
+<!--                    <PaperCard-->
+<!--                      :paper_detail="result._source"-->
+<!--                    >-->
+<!--                    </PaperCard>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </b-carousel-item>-->
+<!--            </b-carousel>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Suggestion  &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
   </div>
-
   <!--Error page-->
   <div v-else>
     <NuxtError v-bind:error="{statusCode:404, message:'Không tìm thấy văn bản'}"></NuxtError>
@@ -512,6 +469,8 @@ import Pagination from "~/components/function_components/Pagination";
 import PaperCard from "~/components/static_components/PaperCard";
 import NuxtError from "~/components/static_components/ErrorPage";
 import CitationBar from "~/components/search_page/CitationBar";
+import {getDocById, getInboundCitations, getOutboundCitations} from "@/API/lucene_api";
+import axios from "axios";
 
 export default {
       name: "paper_detail",
@@ -532,205 +491,23 @@ export default {
       },
       head() {
         return {
-          title: this.paper_detail.title + ' | Compasify',
-          meta: this.all_meta
-        }
-      },
-      jsonld() {
-        let json_schema = []
-        json_schema.push(this.breadcrumb_schema)
-        json_schema.push(this.article_schema)
-        return {
-          "@context": "https://schema.org",
-          "@graph" : json_schema
+          title: this.paper_detail.title + ' | Compasify'
         }
       },
       computed: {
         full_fos: function () {
           return _.join(this.paper_detail.fieldsOfStudy, ', ')
         },
-        all_meta: function () {
-          let local_meta = [
-            {
-              hid: 'description',
-              name: 'description',
-              content: this.paper_detail.abstract
-            }
-          ]
-          return local_meta.concat(this.twitter_meta, this.og_meta, this.gg_scholar_meta)
-        },
-        twitter_meta: function() {
-          return [
-            {
-              hid: 'twitter:title',
-              property: 'twitter:title',
-              content: this.paper_detail.title
-            },
-            {
-              hid: 'twitter:image',
-              property: 'twitter:image',
-              content: 'https://compasify.com/compasify.ico'
-            },
-            {
-              hid: 'twitter:image:alt',
-              property: 'twitter:image:alt',
-              content: 'Compasify'
-            },
-            {
-              hid: 'twitter:card',
-              property: 'twitter:card',
-              content: 'summary_large_image'
-            },
-            {
-              hid: 'twitter:url',
-              property: 'twitter:url',
-              content: host + this.$route.path
-            },
-            {
-              hid: 'twitter:description',
-              property: 'twitter:description',
-              content: this.paper_detail.abstract
-            }
-          ]
-        },
-        og_meta: function() {
-          return [
-            {
-              hid: 'og:title',
-              property: 'og:title',
-              content: this.paper_detail.title
-            },
-            {
-              hid: 'og:image',
-              property: 'og:image',
-              content: 'https://compasify.com/compasify.ico'
-            },
-            {
-              hid: 'og:type',
-              property: 'og:type',
-              content: 'website'
-            },
-            {
-              hid: 'og:site_name',
-              property: 'og:site_name',
-              content: 'Compasify'
-            },
-            {
-              hid: 'og:url',
-              property: 'og:url',
-              content: host + this.$route.path
-            },
-            {
-              hid: 'og:description',
-              property: 'og:description',
-              content: this.paper_detail.abstract
-            }
-          ]
-        },
-        gg_scholar_meta: function () {
-          let meta = [
-            {
-              hid: 'citation_title',
-              name: 'citation_title',
-              content: this.paper_detail.title
-            },
-            {
-              hid: 'citation_abstract_html_url',
-              name: 'citation_abstract_html_url',
-              content: host + this.$route.path
-            },
-            {
-              hid: 'citation_fulltext_html_url',
-              name: 'citation_fulltext_html_url',
-              content: host + this.$route.path
-            },
-            {
-              hid: 'citation_publication_date',
-              name: 'citation_publication_date',
-              content: this.paper_detail.year
-            }
-          ]
-          this.paper_detail.authors.forEach(function (author) {
-            meta.push({
-                hid: 'citation_author',
-                name: 'citation_author',
-                content: author.name
-            })
-          })
-          if (this.paper_detail.doi !== undefined && this.paper_detail.doi !== null)
-            meta.push({
-              hid: 'citation_doi',
-              name: 'citation_doi',
-              content: this.paper_detail.doi
-            })
-          if (this.paper_detail.venue.length !== 0)
-            meta.push({
-              hid: 'citation_journal_title',
-              name: 'citation_journal_title',
-              content: this.paper_detail.venue
-            })
-          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
-            meta.push({
-              hid: 'citation_pdf_url',
-              name: 'citation_pdf_url',
-              content: this.paper_detail.pdf_url
-            })
-          return meta
-        },
-        breadcrumb_schema: function() {
-          return {
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-              {
-                "@type":"ListItem",
-                "position":1,
-                "item":{
-                  "@id": host,
-                  "name":"Home"
-                }
-              },
-              {
-                "@type":"ListItem",
-                "position": 2,
-                "item":{
-                  "@id": host + this.$route.path,
-                  "name": "Papers"
-                }
-              }
-            ]
-          }
-        },
-        article_schema: function () {
-          let schema = {
-            '@type': 'ScholarlyArticle',
-            'name': this.paper_detail.title,
-            'headline': this.paper_detail.title,
-            'mainEntityOfPage': host + this.$route.path,
-            'description': this.paper_detail.abstract,
-            'copyrightYear': this.paper_detail.year,
-            'datePublished': this.paper_detail.year,
-            'author': []
-          }
-          this.paper_detail.authors.forEach(function (author) {
-            schema['author'].push({
-              '@type': 'Person',
-              'name': author.name,
-              'mainEntityOfPage': host + '/author/' + formatTitle(author.name) + '-' + author.authorId
-            })
-          })
-          if (this.paper_detail.pdf_url !== null && this.paper_detail.pdf_url !== undefined && this.paper_detail.pdf_url.endsWith('.pdf'))
-            schema['about'] = Array({
-              '@type': 'DigitalDocument',
-              'url': this.paper_detail.pdf_url
-            })
-          return schema
-        }
       },
       data() {
         return {
           citation_length: null,
           ref_length: null,
           citation_data: null,
+
+          citations: null,
+          references: null,
+
           ref_data: null,
           per_page: 10,
           current_citation_page: 1,
@@ -754,6 +531,7 @@ export default {
           paper_id: null,
           paper_detail: null,
           suggestion_data: null,
+          detail_data: null,
 
           author_hidden: true,
           field_hidden: true,
@@ -779,34 +557,38 @@ export default {
         async updateCitation(page_num) {
           this.is_loading_citation = true
           this.$refs.citation_box.click()
-          await this.$router.push({
-            path: this.$route.path + "#citation_box",
-            query: {cit_page: page_num, ref_page: this.current_ref_page}
-          })
+          // await this.$router.push({
+          //   path: this.$route.path + "#citation_box",
+          //   query: {cit_page: page_num, ref_page: this.current_ref_page}
+          // })
           this.current_citation_page = page_num
-          let result = await paper_citation({
-            paper_id: this.paper_id,
-            start: (page_num - 1) * this.per_page,
-            size: this.per_page
-          })
-          this.citation_data = result
+          let start = (page_num - 1) * this.per_page
+          let end = start + this.per_page
+          // let result = await paper_citation({
+          //   paper_id: this.paper_id,
+          //   start: (page_num - 1) * this.per_page,
+          //   size: this.per_page
+          // })
+          this.citation_data = this.citation_data.slice(start, end)
           this.citation_height = document.getElementById('citation_box').offsetHeight
           this.is_loading_citation = false
         },
         async updateReference(page_num) {
           this.is_loading_ref = true
           this.$refs.reference_box.click()
-          await this.$router.push({
-            path: this.$route.path + "#reference_box",
-            query: {cit_page: this.current_citation_page, ref_page: page_num}
-          })
+          // await this.$router.push({
+          //   path: this.$route.path + "#reference_box",
+          //   query: {cit_page: this.current_citation_page, ref_page: page_num}
+          // })
           this.current_ref_page = page_num
-          let result = await paper_references({
-            paper_id: this.paper_id,
-            start: (page_num - 1) * this.per_page,
-            size: this.per_page
-          })
-          this.ref_data = result
+          let start = (page_num - 1) * this.per_page
+          let end = start + this.per_page
+          // let result = await paper_references({
+          //   paper_id: this.paper_id,
+          //   start: (page_num - 1) * this.per_page,
+          //   size: this.per_page
+          // })
+          this.references = this.ref_data.slice(start, end)
           this.reference_height = document.getElementById('reference_box').offsetHeight
           this.is_loading_ref = false
         },
@@ -839,56 +621,97 @@ export default {
         this.reference_height = heights[3]
       },
       async asyncData({route, $axios}) {
-        let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
-        let params = {paper_id:paper_id,
-                      cstart:0, csize:10,
-                      rstart:0, rsize:10}
-        if(Object.keys(route.query).includes('cit_page')){
-          params.cstart = route.query?.cit_page-1 ?? 0
-          this.current_citation_page = this.$route.query?.cit_page ?? 1
+        // let paper_id = /(?<=.p-)\w+$/g.exec(route.params.paper_detail)
+        let paper_id = /(?<=.p-)[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))$/.exec(route.params.paper_detail)
+        let corpusId = /(?<=.p-)[0-9]+$/.exec(route.params.paper_detail)
+
+        let id = ''
+        if (paper_id === null) {
+          id = corpusId[0]
         }
-        if(Object.keys(route.query).includes('ref_page')){
-          params.rstart = route.query?.ref_page-1 ?? 0
-          this.current_ref_page = this.$route.query?.ref_page ?? 1
+        else {
+          id = paper_id[0]
         }
-        let paper_data = await paper_detail(params)
+
+        // let params = {docId:paper_id[0],
+        //               cstart:0, csize:10,
+        //               rstart:0, rsize:10}
+        // if(Object.keys(route.query).includes('cit_page')){
+        //   params.cstart = route.query?.cit_page-1 ?? 0
+        //   this.current_citation_page = this.$route.query?.cit_page ?? 1
+        // }
+        // if(Object.keys(route.query).includes('ref_page')){
+        //   params.rstart = route.query?.ref_page-1 ?? 0
+        //   this.current_ref_page = this.$route.query?.ref_page ?? 1
+        // }
+
+        // let paper_data = await getDocById(params)
+        // let detail_data = paper_data.data[0]
+        // let paper_detail = {}
+        // if (Object.keys(detail_data).includes('title')) paper_detail['title'] = detail_data.title
+        // if (Object.keys(detail_data).includes('paper_id')) paper_detail['paperId'] = detail_data.paper_id
+        // if (Object.keys(detail_data).includes('year')) paper_detail['year'] = detail_data.year
+        // if (Object.keys(detail_data).includes('fieldsOfStudy')) paper_detail['fieldsOfStudy'] = detail_data.mag_field_of_study
+        // if (Object.keys(detail_data).includes('venue')) paper_detail['venue'] = detail_data.venue
+        // if (Object.keys(detail_data).includes('journal')) paper_detail['journal'] = detail_data.journal
+        // if (Object.keys(detail_data).includes('authors')) paper_detail['authors'] = detail_data.authors
+        // if (Object.keys(detail_data).includes('abstract')) paper_detail['abstract'] = detail_data.abstract
+        // if (Object.keys(detail_data).includes('doi')) paper_detail['doi'] = detail_data.doi
+        // console.log(paper_detail)
+
         let data_dict = {}
         let is_citation_empty = true
         let is_ref_empty = true
 
-        let suggestion_data = []
-        if(paper_data?.fieldsOfStudy){
-          suggestion_data = await paper_by_fos({
-            fields_of_study: paper_data.fieldsOfStudy,
-            size: 15
-          })
+        let s2data = null
+        if (corpusId === null) {
+          s2data = await axios.get("https://api.semanticscholar.org/v1/paper/" + id)
         }
-        if (Object.keys(paper_data).length !== 0) {
-          if (paper_data.citations_count > 0){
-            data_dict = paper_data.citations_chart
+        else {
+          s2data = await axios.get("https://api.semanticscholar.org/v1/paper/CorpusID:" + id)
+        }
+
+        let paper_detail = s2data.data
+
+        let citations = paper_detail.citations
+        let references = paper_detail.references
+        // console.log(citations)
+        // let suggestion_data = []
+        // console.log(citations)
+        // if(paper_data?.fieldsOfStudy){
+        //   suggestion_data = await paper_by_fos({
+        //     fields_of_study: paper_data.fieldsOfStudy,
+        //     size: 15
+        //   })
+        // }
+        if (Object.keys(paper_detail).length !== 0) {
+          if (citations.length > 0) {
+            // data_dict = paper_detail.citations_chart
             is_citation_empty = false
           }
           // console.log(data_dict)
-          if (paper_data.references_count > 0) {
+          if (references.length > 0) {
             is_ref_empty = false
           }
           // console.log(data)
           //Sort topics alphabetically
-          paper_data.topics.sort(function(a,b){
+          paper_detail.topics.sort(function(a,b){
             return a.topic.localeCompare(b.topic);
           })
           return {
-            suggestion_data: suggestion_data,
+            // suggestion_data: suggestion_data,
             is_citation_empty: is_citation_empty,
             is_ref_empty: is_ref_empty,
             chart_labels: Object.keys(data_dict),
             chart_data: Object.values(data_dict),
-            paper_id: paper_id[0],
-            paper_detail: paper_data,
-            citation_data: paper_data.citations,
-            ref_data: paper_data.references,
-            citation_length: paper_data.citations_count,
-            ref_length: paper_data.references_count
+            paper_id: id,
+            paper_detail: paper_detail,
+            citation_data: citations,
+            ref_data: references,
+            citations: citations.length > 10 ? citations.slice(0,10) : citations,
+            references: references.length > 10 ? references.slice(0,10) : references,
+            citation_length: citations.length,
+            ref_length: references.length
           }
         }
         else {

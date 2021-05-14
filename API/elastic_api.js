@@ -1,4 +1,4 @@
-import {SEARCH_DOCUMENTS} from "../config/elastic_api_config";
+import {SEARCH_DOCUMENTS} from "@/config/elastic_api_config";
 import axios from "axios";
 
 
@@ -177,6 +177,7 @@ const author_by_id = async (query_params) => {
       from_year: query_params.from_year, end_year: query_params.end_year, return_year_aggs: true
     })
     return result.data
+
   } catch(e) {
     console.log(e)
     return null

@@ -29,7 +29,7 @@
                         class="link-class-3 secondary_description"
                         :to="{path:'/journal/' + search_result.venue.replace(' ','-'),
                               query:{start:0, size:10, page:1, sort: 'score'}}">
-              <b>{{search_result.venue}}</b>
+              <b>{{search_result.venue || search_result.journal}}</b>
             </nuxt-link>
             <span
               v-if="Object.keys(search_result).includes('venue') && search_result.venue"
@@ -81,6 +81,7 @@
               </nuxt-link>
               <span v-if="index < search_result.topics.length - 1">,</span>
             </span>
+
             <span
               class="less-more-button"
               v-if="!topic_hidden"
@@ -89,31 +90,32 @@
             &nbsp{{ $t('general_attribute.less') }}
             </span>
 
-            <span
-              v-if="topic_hidden"
-              v-for="(topic, index) in search_result.topics.slice(0,5)"
-            >
-              <nuxt-link class="link-class-3"
-                         :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,
-                               query: {start: 0, size: 10, page: 1, sort: 'score'}}">
-                {{ topic.topic }}
-              </nuxt-link>
-              <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>
-            </span>
-            <span
-              v-if="topic_hidden && search_result.topics.length > 5"
-              class="less-more-button"
-              v-on:click="topic_hidden = false"
-            >
-            + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}
-          </span>
-          </p>
-          <!------------------------------------------ Topics ------------------------------------------->
+<!--            <span-->
+<!--              v-if="topic_hidden"-->
+<!--              v-for="(topic, index) in search_result.topics.slice(0,5)"-->
+<!--            >-->
+<!--              <nuxt-link class="link-class-3"-->
+<!--                         :to="{path: '/topic/' + formatTitle(topic.topic) + '-' + topic.topicId,-->
+<!--                               query: {start: 0, size: 10, page: 1, sort: 'score'}}">-->
+<!--                {{ topic.topic }}-->
+<!--              </nuxt-link>-->
+<!--              <span v-if="index < search_result.topics.slice(0,5).length - 1">,</span>-->
+<!--            </span>-->
 
-          <!----------------------------------------- Authors ------------------------------------------->
-          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
-                        :authors="search_result.authors">
-          </AuthorModal>
+<!--            <span-->
+<!--              v-if="topic_hidden && search_result.topics.length > 5"-->
+<!--              class="less-more-button"-->
+<!--              v-on:click="topic_hidden = false"-->
+<!--            >-->
+<!--            + {{ search_result.topics.length - 5 }} {{ $t('general_attribute.topic') }}-->
+<!--          </span>-->
+          </p>
+<!--          &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Topics -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+
+<!--          -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Authors -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"-->
+<!--                        :authors="search_result.authors">-->
+<!--          </AuthorModal>-->
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
@@ -122,7 +124,7 @@
           v-if="!abstract_hidden && Object.keys(search_result).includes('abstract') && typeof search_result.abstract !== 'object'"
           class="text-class-2"
         >
-          {{ search_result.abstract }}
+          {{ search_result.abstract}}
           <a class="text-class-3" v-on:click="abstract_hidden = true">...{{ $t('general_attribute.less') }}</a>
         </p>
         <p
@@ -242,9 +244,10 @@ export default {
   components: {
     AuthorModal
   },
-  props: ['search_result'],
+  props: ['data'],
   data() {
     return {
+      search_result: {},
       topic_hidden: true,
       field_hidden: true,
       abstract_hidden: true,
@@ -282,6 +285,21 @@ export default {
       })
     }
   },
+  mounted() {
+    this.search_result = this.data
+    // console.log('here', this.data)
+    if (Object.keys(this.data).includes('title')) this.search_result['title'] = this.data.title
+    if (Object.keys(this.data).includes('paper_id')) this.search_result['paperId'] = this.data.paper_id
+    // if (Object.keys(this.data).includes('corpusId')) this.search_result['paperId'] = this.data.corpusId
+    if (Object.keys(this.data).includes('year')) this.search_result['year'] = this.data.year
+    if (Object.keys(this.data).includes('fieldsOfStudy')) this.search_result['fieldsOfStudy'] = this.data.mag_field_of_study
+    if (Object.keys(this.data).includes('venue')) this.search_result['venue'] = this.data.venue
+    if (Object.keys(this.data).includes('journal')) this.search_result['journal'] = this.data.journal
+    if (Object.keys(this.data).includes('authors')) this.search_result['authors'] = this.data.authors
+    if (Object.keys(this.data).includes('abstract')) this.search_result['abstract'] = this.data.abstract
+    if (Object.keys(this.data).includes('doi')) this.search_result['doi'] = this.data.doi
+    if (Object.keys(this.data).includes('inbound_citations')) this.search_result['citations_count'] = this.data.inbound_citations.length
+  }
 }
 </script>
 

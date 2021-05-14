@@ -35,18 +35,19 @@
         <section class="modal-card-body">
           <div class="container">
             <div class="author_detail" v-for="author in authors">
-              <nuxt-link :to="{path:'/author/' + formatTitle(author.name) + '-' + author.authorId,
-                               query:{start:0, size:5, page:1}}">
-                <span class="author_modal_name has-text-weight-semibold">
+              <span class="author_modal_name has-text-weight-semibold">
                   {{author.name}}
                 </span>
-                <span class="author_modal_workspace has-text-weight-semibold">
-                  Nơi công tác
-                </span>
-                <span class="author_modal_hindex">
-                  h-index
-                </span>
-              </nuxt-link>
+<!--              <nuxt-link :to="{path:'/author/' + formatTitle(author.name) + '-' + author.authorId,-->
+<!--                               query:{start:0, size:5, page:1}}">-->
+
+<!--                <span class="author_modal_workspace has-text-weight-semibold">-->
+<!--                  Nơi công tác-->
+<!--                </span>-->
+<!--                <span class="author_modal_hindex">-->
+<!--                  h-index-->
+<!--                </span>-->
+<!--              </nuxt-link>-->
             </div>
           </div>
         </section>

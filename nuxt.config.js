@@ -8,6 +8,9 @@ export default {
   ** See https://nuxtjs.org/api/configuration-target
   */
   target: 'server',
+  server: {
+    port: 3000
+  },
   /*
   ** Headers of the page
   ** See https://nuxtjs.org/api/configuration-head
@@ -44,7 +47,6 @@ export default {
   plugins: [
     '~/plugins/jsonld',
     '~/plugins/vue-scrollto.js',
-    {src: '~/plugins/vue_number_animation.js', ssr: false},
     {src: '~/plugins/vue-chartjs.js', mode: 'client'},
     '~/plugins/vue_clipboard.js',
     { src: '~plugins/ga.js', mode: 'client' }
@@ -62,13 +64,9 @@ export default {
       'nuxt-i18n', i18n
     ],
     '@nuxtjs/google-analytics',
-    '@nuxtjs/google-adsense'
   ],
   googleAnalytics: {
     id: 'UA-182975929-1'
-  },
-  'google-adsense': {
-    id: 'ca-pub-7379513138624386'
   },
   /*
   ** Nuxt.js modules
@@ -77,8 +75,20 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     'nuxt-fontawesome',
-    'nuxt-buefy'
+    'nuxt-buefy',
+    '@nuxtjs/sentry'
   ],
+
+  sentry: {
+    dsn: 'https://28c8ad9e62bb4615abf09088a7b69f7e@o458414.ingest.sentry.io/5759539', // Enter your project's DSN here
+    // Additional Module Options go here
+    // https://sentry.nuxtjs.org/sentry/options
+    config: {
+      environment: 'development'
+      // Add native Sentry config here
+      // https://docs.sentry.io/platforms/javascript/guides/vue/configuration/options/
+    },
+  },
 
   /*
   ** Axios module configuration
