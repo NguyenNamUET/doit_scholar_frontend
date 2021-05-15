@@ -1,7 +1,7 @@
 import {paper_by_title, paper_by_topic} from "@/API/elastic_api";
 import {paper_by_venue} from "@/API/elastic_api";
 import {author_by_id} from "@/API/elastic_api";
-import {searchByTitle} from "@/API/lucene_api";
+import {drillDown, searchByTitle} from "@/API/lucene_api";
 //Only update search_results when there is a new query
 //Update both search_results and aggregation when query changes
 
@@ -29,7 +29,7 @@ export const mutations = {
             || (state.query === '' && (Object.keys(params.payload).includes('author')
                                       ||Object.keys(params.payload).includes('fos')
                                       ||Object.keys(params.payload).includes('venue')
-                                      ||Object.keys(params.payload).includes('end_year')))){
+                                      ||Object.keys(params.payload).includes('year')))){
       //Same query, just update the filtering parameter
       state.filters.year_check.start = params.payload?.from_year | 0
       state.filters.year_check.end = params.payload?.end_year | new Date().getFullYear()
@@ -62,12 +62,21 @@ export const mutations = {
 
 export const actions = {
   async paper_by_title(context, payload) {
-    let result = await searchByTitle(payload);
+    let result = null
+    if (payload.hasOwnProperty('venue') || payload.hasOwnProperty('year') || payload.hasOwnProperty('fos')) {
+      console.log('drilldown')
+      result = await drillDown(payload)
+    }
+    else {
+      console.log('searching')
+      result = await searchByTitle(payload)
+    }
+
     let params = {
       result: result,
       payload: payload
     }
-    context.commit('submit_search', params);
+    context.commit('submit_search', params)
   },
 
   async paper_by_venue(context, payload) {

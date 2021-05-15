@@ -61,10 +61,32 @@ const searchByTitle = async (params) => {
   }
 }
 
+const drillDown = async(params) => {
+  try {
+    let queryParams = {
+      title: params.query,
+      size: params.size,
+      offset: params.start,
+    }
+    if (params.hasOwnProperty('venue')) queryParams['drillVenue'] = params.venue[0]
+    if (params.hasOwnProperty('fos')) queryParam['drillFos'] = params.fos[0]
+    let result = await axios.get(SEARCH_DOCUMENTS.drill_down, {
+      params: queryParams
+    })
+
+    console.log(result.data)
+    return result.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
 export {
   getOutboundCitations,
   getDocById,
   getInboundCitations,
 
-  searchByTitle
+  searchByTitle,
+  drillDown
 }

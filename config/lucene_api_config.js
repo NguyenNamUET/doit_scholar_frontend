@@ -8,6 +8,7 @@ const SEARCH_DOCUMENTS = {
   get_outbound_citations: 'outbound-citations',
 
   search_by_title: SEARCH_API + '/api/search/docs-by-title',
+  drill_down: SEARCH_API + '/api/search/drilldown',
   search_by_doi: SEARCH_API + '/api/search/docs-by-doi',
   search_by_field_of_study: SEARCH_API + '/api/search/docs-by-field-of-study',
   search_by_author_name: SEARCH_API + '/api/search/docs-by-author-name',

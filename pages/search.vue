@@ -15,17 +15,24 @@
           <SimpleDropdown
             v-for="item in this.facet"
             :data="item"
+            @handleSelect="setFilters($event)"
           />
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-<!--            <span>-->
-<!--              <nuxt-link class="button is-danger is-light filter_button"-->
-<!--                :to="{path: this.$route.path,-->
-<!--                      query: {query: query_params.query, start:0, size:this.per_page, page:1}}">-->
-<!--                Clear-->
-<!--              </nuxt-link>-->
-<!--            </span>-->
+            <span>
+              <nuxt-link class="button is-danger filter_button"
+                :to="{path: this.$route.path,
+                      query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
+                Clear
+              </nuxt-link>
+            </span>
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-<!--          </div>-->
+          <span>
+              <nuxt-link class="button is-info filter_button"
+                         :to="{path: this.$route.path,
+                      query: optionList}">
+                Apply
+              </nuxt-link>
+            </span>
           <!-------------------------------------------------------------------------->
         </div>
 
@@ -101,6 +108,9 @@ export default {
           query_params: null,
 
           facet: null,
+          venueOption: null,
+          yearOption: null,
+          fosOption: null,
 
           author_hidden: true,
           msg_hidden: false,
@@ -110,12 +120,40 @@ export default {
           current_route:null
         }
       },
+      methods: {
+        setFilters(options) {
+          if (options.name === "venue") {
+            this.venueOption = options.value
+            console.log("venue ", this.venueOption)
+          }
+          else if (options.name === "mag_field_of_study") {
+            this.fosOption = options.value
+            console.log("fos ", this.fosOption)
+          }
+          else {
+            this.yearOption = options.value
+            console.log("year ", this.yearOption)
+          }
+        }
+      },
       filters: {
         formatNumber(number) {
           return formatNumber(number)
         }
       },
-      // computed: {
+      computed: {
+        optionList: function() {
+          let query = {query: this.query_params.query,
+            start: 0,
+            size: this.per_page,
+            page: 1
+          }
+          if (this.venueOption != null) query['venue'] = this.venueOption
+          if (this.fosOption != null) query['fos'] = this.fosOption
+          if (this.yearOption != null) query['year'] = this.yearOption
+          // console.log(query)
+          return query
+        }
       //   // all of the following 7 variables are needed in order for the dropdowns filters to work properly
       //   fos_list: function (){
       //     let fos_res = []
@@ -196,7 +234,7 @@ export default {
       //     })
       //     return year_res
       //   }
-      // },
+      },
       async asyncData({query, store, route}) {
         if(query.author){
           if(typeof query.author === "string"){
