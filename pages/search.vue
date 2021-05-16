@@ -13,12 +13,14 @@
           </p>
           <!------------------------      DROPDOWN HERE   --------------------------->
           <SimpleDropdown
-            v-for="item in this.facet"
+            v-for="item in facet"
             :data="item"
             @handleSelect="setFilters($event)"
           />
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-            <span>
+            <span
+              @click="handleClear"
+            >
               <nuxt-link class="button is-danger filter_button"
                 :to="{path: this.$route.path,
                       query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
@@ -38,7 +40,7 @@
 
         <div class="tile is-child">
 <!--          {{this.search_results}}-->
-          <SearchResult v-for="result in this.search_results"
+          <SearchResult v-for="result in search_results"
                         :key="result.paper_id"
                         :data="result">
           </SearchResult>
@@ -121,18 +123,18 @@ export default {
         }
       },
       methods: {
+        handleClear() {
+          console.log('clear')
+        },
         setFilters(options) {
           if (options.name === "venue") {
             this.venueOption = options.value
-            console.log("venue ", this.venueOption)
           }
           else if (options.name === "mag_field_of_study") {
             this.fosOption = options.value
-            console.log("fos ", this.fosOption)
           }
           else {
             this.yearOption = options.value
-            console.log("year ", this.yearOption)
           }
         }
       },
@@ -236,33 +238,34 @@ export default {
       //   }
       },
       async asyncData({query, store, route}) {
-        if(query.author){
-          if(typeof query.author === "string"){
-            query['author'] = Array(query['author']).map(str => _.last(_.split(str,'-')))
-          }
-          else{
-            query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
-          }
-        }
-        if(query.venue){
-          if(typeof query.venue === "string"){
-            query['venue'] = Array(query['venue']).map(str => str.replace(/-/g, ' '))
-          }
-          else{
-            query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
-          }
-        }
-        if(query.fos){
-          if(typeof query.fos === "string"){
-            query['fos'] = Array(query['fos']).map(str => str.replace(/-/g, ' '))
-          }
-          else{
-            query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
-          }
-        }
+        // if(query.year){
+        //   console.log("async data", query.year)
+        //   // if(typeof query.author === "string"){
+        //   //   query['author'] = Array(query['author']).map(str => _.last(_.split(str,'-')))
+        //   // }
+        //   // else{
+        //   //   query['author'] = query['author'].map(str => _.last(_.split(str,'-')))
+        //   // }
+        // }
+        // if(query.venue){
+        //   if(typeof query.venue === "string"){
+        //     query['venue'] = Array(query['venue']).map(str => str.replace(/-/g, ' '))
+        //   }
+        //   else{
+        //     query['venue'] = query['venue'].map(str => str.replace(/-/g, ' '))
+        //   }
+        // }
+        // if(query.fos){
+        //   if(typeof query.fos === "string"){
+        //     query['fos'] = Array(query['fos']).map(str => str.replace(/-/g, ' '))
+        //   }
+        //   else{
+        //     query['fos'] = query['fos'].map(str => str.replace(/-/g, ' '))
+        //   }
+        // }
 
         await store.dispatch('search_result/paper_by_title', query)
-        // console.log(store.state.search_result.aggregation)
+
         if(store.state.search_result.search_results.length > 0) {
           return {
             query_params: query,

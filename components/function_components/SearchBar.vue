@@ -5,11 +5,8 @@
         v-model="search_query"
         @keyup.enter.native="submitQuery"
         class="autocomplete"
-        :data="autocomplete_data"
-        @typing="getAutocomplete"
-        :loading="is_loading"
+        :loading="false"
         :placeholder="placeholder"
-        @select="option => this.selected = option"
       >
         <template slot="empty">{{ $t('default_layout.header.search_bar_not_found') }} {{search_query}}</template>
         <template slot-scope="props">

@@ -67,9 +67,10 @@ const drillDown = async(params) => {
       title: params.query,
       size: params.size,
       offset: params.start,
+      drillYear: params.year
     }
-    if (params.hasOwnProperty('venue')) queryParams['drillVenue'] = params.venue[0]
-    if (params.hasOwnProperty('fos')) queryParam['drillFos'] = params.fos[0]
+    if (params.hasOwnProperty('venue')) queryParams['drillVenue'] = params.venue
+    if (params.hasOwnProperty('fos')) queryParams['drillFos'] = params.fos
     let result = await axios.get(SEARCH_DOCUMENTS.drill_down, {
       params: queryParams
     })

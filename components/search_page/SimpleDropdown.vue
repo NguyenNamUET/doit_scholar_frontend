@@ -22,7 +22,7 @@
     >
       <div class="media">
         <div class="media-content">
-          <h3>{{item.name | beautify}} ({{item.value}})</h3>
+          <h3>{{item.name}} ({{item.value}})</h3>
         </div>
       </div>
     </b-dropdown-item>
@@ -76,11 +76,10 @@ export default {
       let data = {}
       data['name'] = this.type
       data['value'] = this.selected.name
-      console.log(data)
       this.$emit("handleSelect", data)
     }
   },
-  mounted() {
+  created() {
     let item;
     this.type = this.data.name
     for (item of this.types) {
@@ -88,7 +87,6 @@ export default {
         this.selected.name = item.value
       }
     }
-
     this.renderData = this.data.value
   }
 }

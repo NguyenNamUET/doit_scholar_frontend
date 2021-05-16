@@ -10,6 +10,7 @@ export const state = () => ({
   search_results: null,
   total: 0,
   aggregation: null,
+  clear: null,
   filters: {
     fos_checked: [],
     authors_checked: [],
@@ -22,7 +23,7 @@ export const mutations = {
   submit_search(state, params) {
     state.search_results = params.result.data.docs
     // state.total = params.result.hits.total.value
-    state.aggregation = params.result.data.facet
+    if (params.result.data.facet !== undefined) state.aggregation = params.result.data.facet
     state.total = params.result.data.total
 
     if(params.payload.query === state.query
@@ -30,6 +31,7 @@ export const mutations = {
                                       ||Object.keys(params.payload).includes('fos')
                                       ||Object.keys(params.payload).includes('venue')
                                       ||Object.keys(params.payload).includes('year')))){
+      console.log("hello filtering", params.result.data.facet)
       //Same query, just update the filtering parameter
       state.filters.year_check.start = params.payload?.from_year | 0
       state.filters.year_check.end = params.payload?.end_year | new Date().getFullYear()
@@ -64,11 +66,11 @@ export const actions = {
   async paper_by_title(context, payload) {
     let result = null
     if (payload.hasOwnProperty('venue') || payload.hasOwnProperty('year') || payload.hasOwnProperty('fos')) {
-      console.log('drilldown')
+      // console.log('drilldown')
       result = await drillDown(payload)
     }
     else {
-      console.log('searching')
+      // console.log('searching')
       result = await searchByTitle(payload)
     }
 
