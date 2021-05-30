@@ -22,7 +22,7 @@
     >
       <div class="media">
         <div class="media-content">
-          <h3>{{item.name}} ({{item.value}})</h3>
+          <h3>{{item.name}} <span v-if="item.value != null">({{item.value}})</span></h3>
         </div>
       </div>
     </b-dropdown-item>
@@ -52,6 +52,10 @@ export default {
         {
           name: 'mag_field_of_study',
           value: 'Fields of study'
+        },
+        {
+          name: "sort",
+          value: "Sort by"
         }
       ],
       renderData: null,
@@ -81,6 +85,7 @@ export default {
   },
   created() {
     let item;
+    console.log(this.data)
     this.type = this.data.name
     for (item of this.types) {
       if (item.name === this.data.name) {

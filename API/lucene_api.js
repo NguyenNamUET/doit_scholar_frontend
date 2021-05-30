@@ -49,10 +49,10 @@ const searchByTitle = async (params) => {
       params: {
         title: params.query,
         size: params.size,
-        offset: params.start
+        offset: params.start,
+        sortBy: params.sortBy
       }
     })
-
     console.log(result.data)
     return result.data
   }
@@ -67,7 +67,8 @@ const drillDown = async(params) => {
       title: params.query,
       size: params.size,
       offset: params.start,
-      drillYear: params.year
+      drillYear: params.year,
+      sortBy: params.sortBy
     }
     if (params.hasOwnProperty('venue')) queryParams['drillVenue'] = params.venue
     if (params.hasOwnProperty('fos')) queryParams['drillFos'] = params.fos

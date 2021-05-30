@@ -5,8 +5,8 @@
     id="page_container"
   >
     <!------------------------      AUTHORS CARD HERE   --------------------------->
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-8 is-vertical">
+    <div class="tile is-ancestor is-vertical">
+      <div class="tile is-parent is-full">
         <div class="tile is-child">
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
@@ -17,17 +17,21 @@
             :data="item"
             @handleSelect="setFilters($event)"
           />
-            <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-            <span
-              @click="handleClear"
-            >
+          <SimpleDropdown
+            :data="sorts"
+            @handleSelect="setFilters($event)"
+          />
+          <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+          <span
+            @click="handleClear"
+          >
               <nuxt-link class="button is-danger filter_button"
-                :to="{path: this.$route.path,
+                         :to="{path: this.$route.path,
                       query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
                 Clear
               </nuxt-link>
             </span>
-            <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+          <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
           <span>
               <nuxt-link class="button is-info filter_button"
                          :to="{path: this.$route.path,
@@ -37,7 +41,8 @@
             </span>
           <!-------------------------------------------------------------------------->
         </div>
-
+      </div>
+      <div class="tile is-parent is-8 is-vertical">
         <div class="tile is-child">
 <!--          {{this.search_results}}-->
           <SearchResult v-for="result in search_results"
@@ -113,6 +118,38 @@ export default {
           venueOption: null,
           yearOption: null,
           fosOption: null,
+          sortOption: null,
+          routingOption: [
+            {
+              name: "By Relevance",
+              value: "relevance"
+            },
+            {
+              name: "By Year",
+              value: "year"
+            },
+            {
+              name: "By Citation Count",
+              value: "inbound_count"
+            }
+          ],
+          sorts: {
+            name: "sort",
+            value: [
+              {
+                name: "By Relevance",
+                value: null
+              },
+              {
+                name: "By Year",
+                value: null
+              },
+              {
+                name: "By Citation Count",
+                value: null
+              }
+            ]
+          },
 
           author_hidden: true,
           msg_hidden: false,
@@ -133,8 +170,17 @@ export default {
           else if (options.name === "mag_field_of_study") {
             this.fosOption = options.value
           }
-          else {
+          else if (options.name === "year") {
             this.yearOption = options.value
+          }
+          else if (options.name === "sort") {
+            let item;
+            for (item of this.routingOption) {
+              if (item.name === options.value) {
+                this.sortOption = item.value
+                break
+              }
+            }
           }
         }
       },
@@ -153,6 +199,7 @@ export default {
           if (this.venueOption != null) query['venue'] = this.venueOption
           if (this.fosOption != null) query['fos'] = this.fosOption
           if (this.yearOption != null) query['year'] = this.yearOption
+          if (this.sortOption != null) query['sortBy'] = this.sortOption
           // console.log(query)
           return query
         }
