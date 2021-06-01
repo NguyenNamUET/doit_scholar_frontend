@@ -4,15 +4,14 @@
     <span style="display: inline-block; vertical-align: top;">
       <p
         v-if="authors && author_hidden"
-        v-for="(author, index) in authors.slice(0,3)"
-        :key="author.authorId"
+        v-for="(author, index) in authors.slice(0,2)"
+        :key="index"
       >
-        <nuxt-link :to="{path:'/author/' + formatTitle(author.name) + '-' + author.authorId,
-                        query:{start:0, size:5, page:1}}"
+        <span
           class="link-class-3 secondary_description"
         >
           <b>{{ author.name }}</b>
-        </nuxt-link>
+        </span>
       </p>
       <span
         class="less-more-button"

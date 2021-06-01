@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {searchByTitle} from "@/API/lucene_api";
+import {searchByDoi, searchByTitle} from "@/API/lucene_api";
 import {formatTitle} from "assets/utils";
 
 export default {
@@ -65,25 +65,35 @@ export default {
             this.is_loading = false
           }
         }),
-        submitQuery() {
-          this.query_params = {
-            query: this.search_query,
-            start: 0,
-            size: 10,
-            page: 1,
-            sort: 'score'
+        async submitQuery() {
+          let doi_re = /\b(10\.[0-9]{4,}(?:\.[0-9]+)*\/(?:(?!["&'])\S)+)\b/
+          if (doi_re.test(this.search_query)) {
+            let match = doi_re.exec(this.search_query)
+            let result = await searchByDoi({query: match[0]})
+            let doc = result.docs[0]
+            let paper_id = doc.paper_id
+            let title = doc.title
+            await this.$router.push({path: "/paper/" + formatTitle(title) + ".p-" + paper_id})
           }
-          // console.log("this.current_page", this.current_page)
-          if (this.search_query !== ""){
-            this.$router.push({path: this.current_page, query: this.query_params})
-          }
-          else{
-            this.$buefy.toast.open({
-              duration: 3000,
-              message: this.$t('default_layout.warning'),
-              position: 'is-bottom',
-              type: 'is-danger'
-            })
+          else {
+            this.query_params = {
+              query: this.search_query,
+              start: 0,
+              size: 10,
+              page: 1,
+              sort: 'score'
+            }
+            // console.log("this.current_page", this.current_page)
+            if (this.search_query !== "") {
+              await this.$router.push({path: this.current_page, query: this.query_params})
+            } else {
+              this.$buefy.toast.open({
+                duration: 3000,
+                message: this.$t('default_layout.warning'),
+                position: 'is-bottom',
+                type: 'is-danger'
+              })
+            }
           }
         }
       }

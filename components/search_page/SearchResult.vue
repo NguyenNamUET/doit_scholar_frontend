@@ -25,12 +25,12 @@
           <p v-if="Object.keys(search_result).includes('fieldsOfStudy') && search_result.fieldsOfStudy">
             <!------------------------------- Venues/Journals --------------------------------->
             <span class="small_icon"><i class="fas fa-book-open"></i></span>
-            <nuxt-link  v-if="Object.keys(search_result).includes('venue') && search_result.venue"
-                        class="link-class-3 secondary_description"
-                        :to="{path:'/journal/' + search_result.venue.replace(' ','-'),
-                              query:{start:0, size:10, page:1, sort: 'score'}}">
+            <span
+              v-if="Object.keys(search_result).includes('venue') && search_result.venue"
+              class="link-class-3 secondary_description"
+            >
               <b>{{search_result.venue || search_result.journal}}</b>
-            </nuxt-link>
+            </span>
             <span
               v-if="Object.keys(search_result).includes('venue') && search_result.venue"
             >&sdot;</span>
@@ -113,9 +113,9 @@
 <!--          &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Topics -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
 
 <!--          -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Authors -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"-->
-<!--                        :authors="search_result.authors">-->
-<!--          </AuthorModal>-->
+          <AuthorModal  v-if="Object.keys(search_result).includes('authors') && search_result.authors"
+                        :authors="search_result.authors">
+          </AuthorModal>
           <!----------------------------------------- Authors ------------------------------------------->
         </div>
 
@@ -292,13 +292,14 @@ export default {
     if (Object.keys(this.data).includes('paper_id')) this.search_result['paperId'] = this.data.paper_id
     // if (Object.keys(this.data).includes('corpusId')) this.search_result['paperId'] = this.data.corpusId
     if (Object.keys(this.data).includes('year')) this.search_result['year'] = this.data.year
-    if (Object.keys(this.data).includes('fieldsOfStudy')) this.search_result['fieldsOfStudy'] = this.data.mag_field_of_study
+    if (Object.keys(this.data).includes('mag_field_of_study')) this.search_result['fieldsOfStudy'] = this.data.mag_field_of_study
     if (Object.keys(this.data).includes('venue')) this.search_result['venue'] = this.data.venue
     if (Object.keys(this.data).includes('journal')) this.search_result['journal'] = this.data.journal
     if (Object.keys(this.data).includes('authors')) this.search_result['authors'] = this.data.authors
     if (Object.keys(this.data).includes('abstract')) this.search_result['abstract'] = this.data.abstract
     if (Object.keys(this.data).includes('doi')) this.search_result['doi'] = this.data.doi
     if (Object.keys(this.data).includes('inbound_citations')) this.search_result['citations_count'] = this.data.inbound_citations.length
+    // console.log('component', this.search_result)
   }
 }
 </script>

@@ -61,6 +61,22 @@ const searchByTitle = async (params) => {
   }
 }
 
+const searchByDoi = async (params) => {
+  try {
+    let result = await axios.get(SEARCH_DOCUMENTS.search_by_doi, {
+      params: {
+        doi: params.query,
+      }
+    })
+
+    // console.log(result.data)
+    return result.data.data
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
 const drillDown = async(params) => {
   try {
     let queryParams = {
@@ -90,5 +106,6 @@ export {
   getInboundCitations,
 
   searchByTitle,
+  searchByDoi,
   drillDown
 }

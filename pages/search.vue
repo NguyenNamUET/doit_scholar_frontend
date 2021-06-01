@@ -11,35 +11,37 @@
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
           </p>
-          <!------------------------      DROPDOWN HERE   --------------------------->
-          <SimpleDropdown
-            v-for="item in facet"
-            :data="item"
-            @handleSelect="setFilters($event)"
-          />
-          <SimpleDropdown
-            :data="sorts"
-            @handleSelect="setFilters($event)"
-          />
-          <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-          <span
-            @click="handleClear"
-          >
+          <div style="border-top: 1px solid #d4d4d4; border-bottom: 1px solid #d4d4d4; padding: 5px;">
+            <!------------------------      DROPDOWN HERE   --------------------------->
+            <SimpleDropdown
+              v-for="item in facet"
+              :data="item"
+              @handleSelect="setFilters($event)"
+            />
+            <SimpleDropdown
+              :data="sorts"
+              @handleSelect="setFilters($event)"
+            />
+            <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
+            <span
+              @click="handleClear"
+            >
               <nuxt-link class="button is-danger filter_button"
                          :to="{path: this.$route.path,
                       query: {query: query_params.query, start:0, size:this.per_page, page:1}}">
                 Clear
               </nuxt-link>
             </span>
-          <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
-          <span>
+            <!--------------------------------- APPLY FILTERS BUTTON ------------------------->
+            <span>
               <nuxt-link class="button is-info filter_button"
                          :to="{path: this.$route.path,
                       query: optionList}">
                 Apply
               </nuxt-link>
             </span>
-          <!-------------------------------------------------------------------------->
+            <!-------------------------------------------------------------------------->
+          </div>
         </div>
       </div>
       <div class="tile is-parent is-8 is-vertical">
@@ -126,7 +128,7 @@ export default {
             },
             {
               name: "By Year",
-              value: "year"
+              value: "year_sort"
             },
             {
               name: "By Citation Count",

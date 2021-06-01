@@ -66,12 +66,13 @@ function formatTitle(title) {
 }
 
 function genBibtex(paper_detail) {
-  let key = formatTitle(paper_detail.author[0]) + '-' + paper_detail?.year || ''
+  let firstAuthor = paper_detail.author[0]
+  let key = formatTitle(firstAuthor.name) + '-' + paper_detail?.year || ''
   let result = '@article{' + key + ',' + '<br>'
 
   let author = ''
   paper_detail.author.forEach(function (item, index) {
-    author += item
+    author += item.name
     if (index < paper_detail.author.length - 1) {
       author += ' and '
     }
