@@ -307,42 +307,42 @@
                 </Pagination>
 
               </div>
-              <div class="tile is-child is-4">
-                <div v-if="this.chart_data.length > 0" class="content_box">
-                  <CitationBar
-                    :dataset="this.chart_data"
-                    :labels="this.chart_labels"
-                    :width="250"
-                    :height="250"
-                    :title="$t('paper_detail_page.citation_chart_title')"
-                  >
-                  </CitationBar>
-                </div>
-                <div
-                  v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"
-                  style="text-align: center"
-                  class="text-class-3 color-class-3"
-                >
-<!--                  <p class="text-class-3 color-class-3">-->
-<!--                    Trung bình được trích dẫn-->
+<!--              <div class="tile is-child is-4">-->
+<!--                <div v-if="this.chart_data.length > 0" class="content_box">-->
+<!--                  <CitationBar-->
+<!--                    :dataset="this.chart_data"-->
+<!--                    :labels="this.chart_labels"-->
+<!--                    :width="250"-->
+<!--                    :height="250"-->
+<!--                    :title="$t('paper_detail_page.citation_chart_title')"-->
+<!--                  >-->
+<!--                  </CitationBar>-->
+<!--                </div>-->
+<!--&lt;!&ndash;                <div&ndash;&gt;-->
+<!--&lt;!&ndash;                  v-if="paper_detail.citationVelocity !== undefined && paper_detail.citationVelocity > 0"&ndash;&gt;-->
+<!--&lt;!&ndash;                  style="text-align: center"&ndash;&gt;-->
+<!--&lt;!&ndash;                  class="text-class-3 color-class-3"&ndash;&gt;-->
+<!--&lt;!&ndash;                >&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                  <p class="text-class-3 color-class-3">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                    Trung bình được trích dẫn&ndash;&gt;&ndash;&gt;-->
 
-<!--                    lần từ {{this.paper_detail.year}} đến nay-->
-<!--                  </p>-->
-                  <i18n
-                    tag="p"
-                    path="paper_detail_page.citation_velocity"
-                  >
-                    <template v-slot:count>
-                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>
-                    </template>
-                    <template v-slot:year>
-                      <span>
-                          {{paper_detail.year}}
-                      </span>
-                    </template>
-                  </i18n>
-                </div>
-              </div>
+<!--&lt;!&ndash;&lt;!&ndash;                    lần từ {{this.paper_detail.year}} đến nay&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                  </p>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                  <i18n&ndash;&gt;-->
+<!--&lt;!&ndash;                    tag="p"&ndash;&gt;-->
+<!--&lt;!&ndash;                    path="paper_detail_page.citation_velocity"&ndash;&gt;-->
+<!--&lt;!&ndash;                  >&ndash;&gt;-->
+<!--&lt;!&ndash;                    <template v-slot:count>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <span style="text-decoration: underline">{{paper_detail.citationVelocity}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <template v-slot:year>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <span>&ndash;&gt;-->
+<!--&lt;!&ndash;                          {{paper_detail.year}}&ndash;&gt;-->
+<!--&lt;!&ndash;                      </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </template>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </i18n>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--              </div>-->
             </div>
           </article>
         </div>

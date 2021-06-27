@@ -11,17 +11,18 @@
           <p class="content_title">
             {{ $t('general_attribute.publication') }}
           </p>
-          <div style="border-top: 1px solid #d4d4d4; border-bottom: 1px solid #d4d4d4; padding: 5px;">
+          <div>
             <!------------------------      DROPDOWN HERE   --------------------------->
             <SimpleDropdown
               v-for="item in facet"
               :data="item"
+              :clear="clearFilters"
               @handleSelect="setFilters($event)"
             />
-            <SimpleDropdown
-              :data="sorts"
-              @handleSelect="setFilters($event)"
-            />
+<!--            <SimpleDropdown-->
+<!--              :data="sorts"-->
+<!--              @handleSelect="setFilters($event)"-->
+<!--            />-->
             <!--------------------------------- ClEAR FILTERS BUTTON ------------------------->
             <span
               @click="handleClear"
@@ -115,6 +116,7 @@ export default {
           search_results: null,
           publication_sort: publication_type,
           query_params: null,
+          clearFilters: false,
 
           facet: null,
           venueOption: null,
@@ -163,9 +165,10 @@ export default {
       },
       methods: {
         handleClear() {
-          console.log('clear')
+          this.clearFilters = true
         },
         setFilters(options) {
+          this.clearFilters = false
           if (options.name === "venue") {
             this.venueOption = options.value
           }

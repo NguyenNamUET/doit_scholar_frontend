@@ -12,7 +12,6 @@
       />
     </template>
 
-
     <b-dropdown-item
       v-for="(item, index) in renderData"
       :key="index"
@@ -32,7 +31,14 @@
 <script>
 export default {
   name: "SimpleDropdown",
-  props: ['data'],
+  props: ['data', 'clear'],
+  // watch: {
+  //   clear: function(val, oldVal) {
+  //     if (val === true) {
+  //       this.selected.name = this.type
+  //     }
+  //   }
+  // },
   data() {
     return {
       selected: {
@@ -83,9 +89,8 @@ export default {
       this.$emit("handleSelect", data)
     }
   },
-  created() {
+  mounted() {
     let item;
-    console.log(this.data)
     this.type = this.data.name
     for (item of this.types) {
       if (item.name === this.data.name) {

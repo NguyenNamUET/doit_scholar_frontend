@@ -38,35 +38,35 @@
               </div>
             </div>
 
-            <div class="navbar-end">
-              <div class="navbar-item">
-                <div class="navbar-item has-dropdown is-hoverable">
-                  <a class="navbar-link">
-                    {{ $t('default_layout.header.lang_switch') }}
-                  </a>
+<!--            <div class="navbar-end">-->
+<!--              <div class="navbar-item">-->
+<!--                <div class="navbar-item has-dropdown is-hoverable">-->
+<!--                  <a class="navbar-link">-->
+<!--                    {{ $t('default_layout.header.lang_switch') }}-->
+<!--                  </a>-->
 
-                  <div class="navbar-dropdown">
-                    <a
-                      v-for="(locale,index) in availableLocales"
-                      :key="index"
-                      class="navbar-item"
-                    >
-                      <nuxt-link
-                        :key="locale.code"
-                        :to="switchLocalePath(locale.code)"
-                      >
-                      <span v-if="locale.code === 'en'">
-                        {{$t('general_attribute.lang.en')}}
-                      </span>
-                        <span v-else-if="locale.code === 'vi'">
-                        {{$t('general_attribute.lang.vi')}}
-                      </span>
-                      </nuxt-link>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+<!--                  <div class="navbar-dropdown">-->
+<!--                    <a-->
+<!--                      v-for="(locale,index) in availableLocales"-->
+<!--                      :key="index"-->
+<!--                      class="navbar-item"-->
+<!--                    >-->
+<!--                      <nuxt-link-->
+<!--                        :key="locale.code"-->
+<!--                        :to="switchLocalePath(locale.code)"-->
+<!--                      >-->
+<!--                      <span v-if="locale.code === 'en'">-->
+<!--                        {{$t('general_attribute.lang.en')}}-->
+<!--                      </span>-->
+<!--                        <span v-else-if="locale.code === 'vi'">-->
+<!--                        {{$t('general_attribute.lang.vi')}}-->
+<!--                      </span>-->
+<!--                      </nuxt-link>-->
+<!--                    </a>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
@@ -79,20 +79,15 @@
       <div class="container">
         <div class="columns">
           <div class="column">
-            <p>
-              <i class="fas fa-map-marker-alt"></i>
-              <b>{{ $t('default_layout.footer.address') }} </b>
-              {{ $t('default_layout.footer.address_value') }}
-            </p>
+<!--            <p>-->
+<!--              <i class="fas fa-map-marker-alt"></i>-->
+<!--              <b>{{ $t('default_layout.footer.address') }} </b>-->
+<!--              {{ $t('default_layout.footer.address_value') }}-->
+<!--            </p>-->
             <p>
               <i class="fas fa-envelope"></i>
               <b>Email: </b>
-              <a href="mailto:doit@vnu.edu.vn">doit@vnu.edu.vn</a>
-            </p>
-            <p>
-              <i class="fab fa-facebook-f"></i>
-              <b>Facebook: </b>
-              <a href="https://facebook.com/doitvn">DoIT</a>
+              <a href="namphamc99@gmail.com">namphamc99@gmail.com</a>
             </p>
           </div>
         </div>
